@@ -1,43 +1,33 @@
 {
   "expo": {
-    "name": "maha",
-    "slug": "maha",
+    "name": "Tinasha",
+    "slug": "tinasha",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "maha",
+    "scheme": "tinasha",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
+    "assetBundlePatterns": ["**/*"],
     "android": {
-      "package": "com.haashemi.maha",
+      "package": "com.haashemi.tinasha",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router", "expo-secure-store"],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "ecad0834-8c26-4fdc-8e12-01d68a22f10b"
       }
     }
   }
