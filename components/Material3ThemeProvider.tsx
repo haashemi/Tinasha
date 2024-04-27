@@ -1,6 +1,6 @@
-import { Material3Scheme, Material3Theme, useMaterial3Theme } from "@pchmn/expo-material3-theme";
+import { Material3Scheme, useMaterial3Theme } from "@pchmn/expo-material3-theme";
 import { setBackgroundColorAsync } from "expo-system-ui";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useColorScheme } from "react-native";
 import {
   MD3DarkTheme,
@@ -11,33 +11,17 @@ import {
   useTheme,
 } from "react-native-paper";
 
-type Material3ThemeProviderProps = {
-  theme: Material3Theme;
-  updateTheme: (sourceColor: string) => void;
-  resetTheme: () => void;
-};
-
-const Material3ThemeProviderContext = createContext<Material3ThemeProviderProps>({} as Material3ThemeProviderProps);
+interface M3ThemeProviderProps extends ProviderProps {
+  sourceColor?: string;
+  fallbackSourceColor?: string;
+}
 
 export const useAppTheme = useTheme<MD3Theme & { colors: Material3Scheme }>;
 
-export function useMaterial3ThemeContext() {
-  const ctx = useContext(Material3ThemeProviderContext);
-  if (!ctx) {
-    throw new Error("useMaterial3ThemeContext must be used inside Material3ThemeProvider");
-  }
-  return ctx;
-}
-
-export function Material3ThemeProvider({
-  children,
-  sourceColor,
-  fallbackSourceColor,
-  ...otherProps
-}: ProviderProps & { sourceColor?: string; fallbackSourceColor?: string }) {
+export function M3ThemeProvider({ children, sourceColor, fallbackSourceColor, ...otherProps }: M3ThemeProviderProps) {
   const colorScheme = useColorScheme();
 
-  const { theme, updateTheme, resetTheme } = useMaterial3Theme({ sourceColor, fallbackSourceColor });
+  const { theme } = useMaterial3Theme({ sourceColor, fallbackSourceColor });
 
   const paperTheme = useMemo(
     () =>
@@ -50,10 +34,8 @@ export function Material3ThemeProvider({
   }, [paperTheme]);
 
   return (
-    <Material3ThemeProviderContext.Provider value={{ theme, updateTheme, resetTheme }}>
-      <PaperProvider theme={paperTheme} {...otherProps}>
-        {children}
-      </PaperProvider>
-    </Material3ThemeProviderContext.Provider>
+    <PaperProvider theme={paperTheme} {...otherProps}>
+      {children}
+    </PaperProvider>
   );
 }
