@@ -2,7 +2,9 @@
   "cli": { "version": ">= 7.8.4" },
   "build": {
     "development": { "developmentClient": true, "distribution": "internal" },
-    "preview": { "distribution": "internal" },
+    "preview": { "android": { "buildType": "apk" } },
+    "preview2": { "android": { "gradleCommand": ":app:assembleRelease" } },
+    "preview3": { "developmentClient": true },
     "production": {}
   },
   "submit": { "production": {} }
