@@ -7,21 +7,16 @@ import { BottomNavigationBar } from "@/components";
 export default function TabLayout() {
   return (
     <Tabs
-      initialRouteName="index"
       screenOptions={{ headerShown: false }}
-      tabBar={(props) => <BottomNavigationBar tabBarProps={props} />}
+      tabBar={(props) => <BottomNavigationBar compact tabBarProps={props} />}
     >
+      <Tabs.Screen
+        name="index"
+        options={{ title: "Home", tabBarIcon: ({ color }) => <FontAwesome size={24} name="calendar" color={color} /> }}
+      />
       <Tabs.Screen
         name="list"
         options={{ title: "List", tabBarIcon: ({ color }) => <FontAwesome size={24} name="list" color={color} /> }}
-      />
-      <Tabs.Screen
-        name="index"
-        options={{ title: "Home", tabBarIcon: ({ color }) => <FontAwesome size={24} name="home" color={color} /> }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{ title: "Settings", tabBarIcon: ({ color }) => <FontAwesome size={24} name="cog" color={color} /> }}
       />
     </Tabs>
   );
