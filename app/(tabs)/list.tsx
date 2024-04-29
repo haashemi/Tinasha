@@ -5,16 +5,17 @@ import { FlatList, ScrollView, View } from "react-native";
 import { Searchbar, SegmentedButtons, Surface, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { getSeason, useSessionalAnime } from "@/api";
+import { getSeason, useSeasonalAnime } from "@/api";
 
 export default function ListTab() {
+  const safeArea = useSafeAreaInsets();
+
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("watching");
 
   const [year] = useState(new Date().getFullYear());
   const [season] = useState(getSeason(new Date().getMonth()));
-  const safeArea = useSafeAreaInsets();
-  const { data, isSuccess } = useSessionalAnime({ year, season, fields: ["start_season", "alternative_titles"] });
+  const { data, isSuccess } = useSeasonalAnime({ year, season, fields: ["start_season", "alternative_titles"] });
 
   const items = isSuccess
     ? data.data.filter(
@@ -65,10 +66,10 @@ export default function ListTab() {
             onLongPress={async () => {
               await WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`);
             }}
-            style={{ borderCurve: "continuous", borderRadius: 10, overflow: "hidden", flex: 1 }}
+            style={{ borderRadius: 10, overflow: "hidden", flex: 1 }}
           >
             <Surface mode="flat" style={{ height: 100, flexDirection: "row" }}>
-              <Image style={{ width: 100 }} source={node.main_picture.large} contentFit="cover" transition={250} />
+              <Image style={{ width: 100 }} source={node.main_picture?.large} contentFit="cover" transition={250} />
               <Text numberOfLines={2} ellipsizeMode="tail" style={{ padding: 5 }}>
                 {node.title}
               </Text>
