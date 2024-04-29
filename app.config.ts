@@ -24,7 +24,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     backgroundColor: "#0f172a",
   },
   android: {
-    package: IS_DEV ? "com.haashemi.tinasha.dev" : "com.haashemi.tinasha",
+    package: IS_DEV ? "dev.haashemi.tinasha.dev" : "dev.haashemi.tinasha",
     versionCode: 1,
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
