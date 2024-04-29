@@ -11,10 +11,13 @@ const queryClient = new QueryClient({});
 
 const Stacks = () => {
   const { colors } = useAppTheme();
-
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: colors.elevation.level2 }} />
+    <Stack
+      screenOptions={{ headerShown: false, navigationBarColor: colors.elevation.level2, contentStyle: { flex: 1 } }}
+    >
+      <Stack.Screen name="(tabs)" options={{}} />
+      <Stack.Screen name="search" options={{ presentation: "modal", navigationBarColor: colors.background }} />
+      {/* <Stack.Screen name="login" options={{ headerShown: false, navigationBarColor: colors.elevation.level2 }} /> */}
     </Stack>
   );
 };
