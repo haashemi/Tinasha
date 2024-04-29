@@ -64,7 +64,7 @@ export const useSessionalAnime = ({
   fields = ["start_season", "mean", "media_type"],
 }: SessionalAnimeOptions) =>
   useQuery({
-    queryKey: ["sessional-anime", year, season],
+    queryKey: ["sessional-anime", year, season, sort, fields],
     queryFn: async () => {
       const resp = await client.get(`${HOST}/anime/season/${year}/${season}`, {
         params: { limit: 500, sort, fields: fields.join(",") },
