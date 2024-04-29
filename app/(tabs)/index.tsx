@@ -1,22 +1,24 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
+import { Link } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useRef, useState } from "react";
 import { FlatList, View } from "react-native";
 import { Button, Chip, FAB, Icon, SegmentedButtons, Surface, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Season, getSeason, useSessionalAnime } from "@/api";
+import { Season, getSeason, useSeasonalAnime } from "@/api";
 import { useAppTheme } from "@/components";
 
 export default function SeasonTab() {
+  const [sort, setSort] = useState<"anime_score" | "anime_num_list_users">("anime_score");
   const [year, setYear] = useState(new Date().getFullYear());
   const [season, setSeason] = useState(getSeason(new Date().getMonth()));
 
   const theme = useAppTheme();
   const safeArea = useSafeAreaInsets();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const { data, isSuccess } = useSessionalAnime({ year, season });
+  const { data, isSuccess } = useSeasonalAnime({ year, season, sort });
 
   const items = isSuccess
     ? data.data.filter(({ node }) => node.start_season!.year === year && node.start_season!.season === season)
@@ -82,6 +84,15 @@ export default function SeasonTab() {
             ]}
           />
 
+          <SegmentedButtons
+            value={sort}
+            onValueChange={(v) => setSort(v as "anime_score" | "anime_num_list_users")}
+            buttons={[
+              { value: "anime_score", label: "Sort by Score" },
+              { value: "anime_num_list_users", label: "Sort by Members" },
+            ]}
+          />
+
           <Button mode="contained" style={{ marginBottom: 30 }} onPress={() => bottomSheetModalRef.current?.close()}>
             Set Filters
           </Button>
@@ -93,7 +104,7 @@ export default function SeasonTab() {
         numColumns={3}
         style={{ paddingHorizontal: 10 }}
         columnWrapperStyle={{ gap: 15 }}
-        contentContainerStyle={{ gap: 15 }}
+        contentContainerStyle={{ gap: 15, paddingBottom: 90 }}
         ListHeaderComponent={() => (
           <View
             style={{
@@ -111,9 +122,11 @@ export default function SeasonTab() {
               {season.toLocaleUpperCase()} {year}
             </Text>
 
-            <Button mode="outlined" icon="magnify" style={{ flex: 1 }} onPress={() => {}}>
-              Search
-            </Button>
+            <Link asChild href="/search">
+              <Button mode="outlined" icon="magnify" style={{ flex: 1 }} onPress={() => {}}>
+                Search
+              </Button>
+            </Link>
           </View>
         )}
         keyExtractor={(item) => item.node.id.toString()}
@@ -131,7 +144,7 @@ export default function SeasonTab() {
                 allowDownscaling
                 cachePolicy="memory-disk"
                 contentFit="fill"
-                source={node.main_picture.large}
+                source={node.main_picture?.large}
                 style={{ height: 170 }}
               />
 
