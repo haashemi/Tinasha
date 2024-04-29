@@ -8,15 +8,21 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{ headerShown: false }}
-      tabBar={(props) => <BottomNavigationBar compact tabBarProps={props} />}
+      tabBar={(props) => <BottomNavigationBar compact shifting tabBarProps={props} />}
     >
       <Tabs.Screen
         name="index"
-        options={{ title: "Home", tabBarIcon: ({ color }) => <FontAwesome size={24} name="calendar" color={color} /> }}
+        options={{
+          title: "Season",
+          tabBarIcon: ({ color }) => <FontAwesome size={24} name="calendar" color={color} />,
+        }}
       />
       <Tabs.Screen
         name="list"
-        options={{ title: "List", tabBarIcon: ({ color }) => <FontAwesome size={24} name="list" color={color} /> }}
+        options={{
+          title: "List",
+          tabBarIcon: ({ color }) => <FontAwesome size={24} name="list" color={color} />,
+        }}
       />
     </Tabs>
   );
