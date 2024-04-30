@@ -11,7 +11,7 @@ import { Season, getSeason, useSeasonalAnime } from "@/api";
 import { useAppTheme } from "@/components";
 
 export default function SeasonTab() {
-  const [sort, setSort] = useState<"anime_score" | "anime_num_list_users">("anime_score");
+  const [sort, setSort] = useState<"anime_score" | "anime_num_list_users">("anime_num_list_users");
   const [year, setYear] = useState(new Date().getFullYear());
   const [season, setSeason] = useState(getSeason(new Date().getMonth()));
 
