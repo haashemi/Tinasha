@@ -1,17 +1,18 @@
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 
-import { useAppTheme } from "@/components";
+import { useAppTheme, useAuthSession } from "@/components";
 
 export { ErrorBoundary } from "expo-router";
 
-export default function RootLayout() {
-  const { colors } = useAppTheme();
+export default function AppLayout() {
+  const theme = useAppTheme();
+  const { auth } = useAuthSession();
 
-  // TODO: Auth Guard here
+  if (!auth) return <Redirect href="/sign-in" />;
 
   return (
-    <Stack screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
-      <Stack.Screen name="(tabs)" options={{ navigationBarColor: colors.elevation.level2 }} />
+    <Stack screenOptions={{ headerShown: false, navigationBarColor: theme.colors.background }}>
+      <Stack.Screen name="(tabs)" options={{ navigationBarColor: theme.colors.elevation.level2 }} />
       <Stack.Screen name="search" options={{ presentation: "modal" }} />
     </Stack>
   );

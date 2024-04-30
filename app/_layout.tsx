@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 import { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { ThemeProvider, useAppTheme } from "@/components";
+import { AuthSessionProvider, ThemeProvider, useAppTheme } from "@/components";
 
 const queryClient = new QueryClient({});
 
@@ -14,7 +14,9 @@ const Providers = ({ children }: PropsWithChildren) => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+        <BottomSheetModalProvider>
+          <AuthSessionProvider>{children}</AuthSessionProvider>
+        </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </ThemeProvider>
   </QueryClientProvider>
