@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { HOST, client } from "./client";
 import { AnimeNode, Field, Season } from "./models";
+
+import { useAuthSession } from "@/components";
 
 interface SeasonalAnimeOptions {
   year: number;
@@ -23,14 +24,17 @@ export const useSeasonalAnime = ({
   year,
   season,
   sort = "anime_num_list_users",
-  fields = ["start_season", "mean", "media_type"],
-}: SeasonalAnimeOptions) =>
-  useQuery({
+  fields = ["start_season", "mean", "my_list_status"],
+}: SeasonalAnimeOptions) => {
+  const { client } = useAuthSession();
+
+  return useQuery({
     queryKey: ["Seasonal-anime", year, season, sort, fields],
     queryFn: async () => {
-      const resp = await client.get(`${HOST}/anime/season/${year}/${season}`, {
+      const resp = await client.get(`/anime/season/${year}/${season}`, {
         params: { limit: 500, sort, fields: fields.join(",") },
       });
       return resp.data as { data: { node: AnimeNode }[] };
     },
   });
+};
