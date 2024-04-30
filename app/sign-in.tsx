@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { exchangeCode, getAuthUrl, makeKeyCode } from "@/api";
+import { exchangeCode, getAuthUrl, makeKeyCode } from "@/api/auth";
 import { useAuthSession } from "@/components";
 
 export default function Settings() {

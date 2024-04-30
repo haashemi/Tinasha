@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo } from "react";
 
 import { useStorageState } from "./useStorageState";
 
-import { refreshToken } from "@/api";
+import { refreshToken } from "@/api/auth";
 
 const EXPIRED_TOKEN_HEADER = `Bearer error="invalid_token",error_description="The access token expired"`;
 
