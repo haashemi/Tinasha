@@ -153,9 +153,33 @@ export default function SeasonTab() {
                   {node.title}
                 </Text>
 
-                <Chip compact icon="star">
-                  {node.mean! || "N/A"}
-                </Chip>
+                <View style={{ flexDirection: "row", gap: 5 }}>
+                  <Chip compact icon="star" style={{ flexGrow: 1 }}>
+                    {node.mean! || "N/A"}
+                  </Chip>
+                  <View
+                    style={{
+                      borderRadius: 5,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      padding: 5,
+                      backgroundColor:
+                        node.my_list_status?.status === "watching"
+                          ? "#22c55e"
+                          : node.my_list_status?.status === "completed"
+                            ? "#3b82f6"
+                            : node.my_list_status?.status === "on_hold"
+                              ? "#eab308"
+                              : node.my_list_status?.status === "dropped"
+                                ? "#ef4444"
+                                : node.my_list_status?.status === "plan_to_watch"
+                                  ? "#78716c"
+                                  : "#6b7280",
+                    }}
+                  >
+                    <Icon size={20} color="white" source="list-status" />
+                  </View>
+                </View>
               </View>
             </Surface>
           </TouchableRipple>
