@@ -65,6 +65,8 @@ export interface AnimeNode {
   average_episode_duration?: number;
   rating?: string;
   studios?: Studio[];
+  end_date?: string;
+  my_list_status?: MyListStatus;
 }
 
 interface MainPicture {
@@ -96,4 +98,13 @@ interface Broadcast {
 interface Studio {
   id: number;
   name: string;
+}
+
+interface MyListStatus {
+  status: string;
+  score: number;
+  num_episodes_watched: number;
+  is_rewatching: boolean;
+  updated_at: string;
+  start_date?: string;
 }
