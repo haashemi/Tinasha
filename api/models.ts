@@ -61,7 +61,22 @@ export interface AnimeNode {
   num_episodes?: number;
   start_season?: SeasonInfo;
   broadcast?: Broadcast;
-  source?: string;
+  source?:
+    | "other"
+    | "original"
+    | "manga"
+    | "4_koma_manga"
+    | "web_manga"
+    | "digital_manga"
+    | "novel"
+    | "light_novel"
+    | "visual_novel"
+    | "game"
+    | "card_game"
+    | "book"
+    | "picture_book"
+    | "radio"
+    | "music";
   average_episode_duration?: number;
   rating?: string;
   studios?: Studio[];
@@ -100,8 +115,10 @@ interface Studio {
   name: string;
 }
 
+export type Status = "watching" | "completed" | "on_hold" | "dropped" | "plan_to_watch";
+
 interface MyListStatus {
-  status: string;
+  status: Status | null;
   score: number;
   num_episodes_watched: number;
   is_rewatching: boolean;

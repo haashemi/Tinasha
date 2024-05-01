@@ -4,7 +4,7 @@ import { AnimeNode, Field } from "./models";
 
 import { useAuthSession } from "@/components";
 
-interface SeasonalAnimeOptions {
+interface AnimeListOptions {
   query: string;
   fields?: Field[];
 }
@@ -14,11 +14,11 @@ interface Response {
   paging: { next: string };
 }
 
-export const useAnimeList = ({ query, fields = ["start_season", "mean", "media_type"] }: SeasonalAnimeOptions) => {
+export const useAnimeList = ({ query, fields = ["start_season", "mean", "media_type"] }: AnimeListOptions) => {
   const { client } = useAuthSession();
 
   return useQuery({
-    queryKey: ["Seasonal-anime", query, fields],
+    queryKey: ["anime-list", query, fields],
     queryFn: async () => {
       if (query === "") return {} as Response;
 

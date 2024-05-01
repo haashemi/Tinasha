@@ -5,30 +5,30 @@ import { FlatList, ScrollView, View } from "react-native";
 import { Searchbar, SegmentedButtons, Surface, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { getSeason, useSeasonalAnime } from "@/api";
+import { Status, useUserAnimeList } from "@/api";
 
 export default function ListTab() {
   const safeArea = useSafeAreaInsets();
 
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState("watching");
+  const [status, setStatus] = useState<Status | "">("watching");
 
-  const [year] = useState(new Date().getFullYear());
-  const [season] = useState(getSeason(new Date().getMonth()));
-  const { data, isSuccess } = useSeasonalAnime({ year, season, fields: ["start_season", "alternative_titles"] });
+  const { data, isSuccess } = useUserAnimeList("@me", {
+    sort: "anime_title",
+    status: status ? status : undefined,
+    limit: 100,
+    fields: ["alternative_titles", "mean", "my_list_status"],
+  });
 
   const items = isSuccess
-    ? data.data.filter(
-        ({ node }) =>
-          node.start_season!.year === year &&
-          node.start_season!.season === season &&
-          (query !== ""
-            ? node.title.toLowerCase().includes(query) ||
-              node.alternative_titles?.en.toLowerCase().includes(query) ||
-              node.alternative_titles?.ja.toLowerCase().includes(query) ||
-              node.alternative_titles?.synonyms.find((v) => (v.toLowerCase().includes(query) ? v : undefined)) !==
-                undefined
-            : true),
+    ? data.data.filter(({ node }) =>
+        query !== ""
+          ? node.title.toLowerCase().includes(query) ||
+            node.alternative_titles?.en.toLowerCase().includes(query) ||
+            node.alternative_titles?.ja.toLowerCase().includes(query) ||
+            node.alternative_titles?.synonyms.find((v) => (v.toLowerCase().includes(query) ? v : undefined)) !==
+              undefined
+          : true,
       )
     : [];
 
@@ -40,9 +40,9 @@ export default function ListTab() {
         <ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginBottom: 15 }}>
           <SegmentedButtons
             value={status}
-            onValueChange={setStatus}
+            onValueChange={(v) => setStatus(v as Status | "")}
             buttons={[
-              { value: "all", label: "All" },
+              { value: "", label: "All" },
               { value: "watching", label: "Watching" },
               { value: "completed", label: "Completed" },
               { value: "on_hold", label: "On Hold" },
