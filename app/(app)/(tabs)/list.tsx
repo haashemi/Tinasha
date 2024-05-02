@@ -30,6 +30,7 @@ const ListView = ({ status }: { status?: Status }) => {
         <Link asChild href={`/anime/${node.id}`}>
           <AnimeListView
             title={node.title}
+            status={node.my_list_status?.status}
             score={node.my_list_status?.score}
             meanScore={node.mean}
             totalEpisodes={node.num_episodes}
