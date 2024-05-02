@@ -1,15 +1,15 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { FlashList } from "@shopify/flash-list";
-import { StatusBar } from "expo-status-bar";
+import { Link } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Status, useUserAnimeList } from "@/api";
-import { useAppTheme } from "@/components";
-import { AnimeListView } from "@/components/AnimeView";
+import { AnimeListView, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
 
+// TODO: Use infinite query to fetch everything...
 const ListView = ({ status }: { status?: Status }) => {
   const { data, isFetching, refetch } = useUserAnimeList("@me", {
     sort: "anime_title",
@@ -21,22 +21,24 @@ const ListView = ({ status }: { status?: Status }) => {
   return (
     <FlashList
       data={data?.data}
-      contentContainerStyle={{ paddingVertical: 15, paddingHorizontal: 10 }}
+      contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 10 }}
       estimatedItemSize={30}
       refreshing={isFetching}
       onRefresh={refetch}
       keyExtractor={(item) => item.node.id.toString()}
       renderItem={({ item: { node } }) => (
-        <AnimeListView
-          title={node.title}
-          score={node.my_list_status?.score}
-          meanScore={node.mean}
-          totalEpisodes={node.num_episodes}
-          style={{ margin: 10 }}
-          watchedEpisodes={node.my_list_status?.num_episodes_watched}
-          imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
-          onLongPress={async () => WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`)}
-        />
+        <Link asChild href={`/anime/${node.id}`}>
+          <AnimeListView
+            title={node.title}
+            score={node.my_list_status?.score}
+            meanScore={node.mean}
+            totalEpisodes={node.num_episodes}
+            style={{ margin: 5 }}
+            watchedEpisodes={node.my_list_status?.num_episodes_watched}
+            imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+            onLongPress={async () => WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`)}
+          />
+        </Link>
       )}
     />
   );
@@ -60,13 +62,17 @@ export default function ListTab() {
 
   return (
     <>
-      <StatusBar backgroundColor={colors.elevation.level2} />
       <Tab.Navigator
         initialRouteName="Watching"
         screenOptions={{
           tabBarGap: 20,
           tabBarScrollEnabled: true,
-          tabBarStyle: { marginTop: safeArea.top, paddingHorizontal: 16 },
+          tabBarStyle: {
+            marginTop: safeArea.top,
+            paddingHorizontal: 16,
+            backgroundColor: colors.background,
+            shadowColor: "transparent",
+          },
           tabBarIndicatorContainerStyle: { marginHorizontal: 16 },
           tabBarItemStyle: { width: "auto", paddingHorizontal: 10 },
           tabBarLabelStyle: { marginHorizontal: 0 },
