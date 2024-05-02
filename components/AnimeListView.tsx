@@ -1,8 +1,11 @@
 import { Image } from "expo-image";
+import { ForwardedRef, forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Chip, IconButton, Surface, Text, TouchableRipple } from "react-native-paper";
 
-export interface AnimeListViewProps extends Omit<React.ComponentProps<typeof TouchableRipple>, "children"> {
+type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
+
+interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
   title: string;
   score: number | undefined;
   meanScore: number | undefined;
@@ -11,17 +14,16 @@ export interface AnimeListViewProps extends Omit<React.ComponentProps<typeof Tou
   watchedEpisodes: number | undefined;
 }
 
-export const AnimeListView = ({
-  title,
-  score,
-  meanScore,
-  imageSrc,
-  totalEpisodes,
-  watchedEpisodes,
-  ...props
-}: AnimeListViewProps) => {
+const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
+  const { title, score, meanScore, imageSrc, totalEpisodes, watchedEpisodes, style, ...otherProps } = props;
+
   return (
-    <TouchableRipple borderless style={[AnimeListViewStyles.touchable]} {...props}>
+    <TouchableRipple
+      ref={ref}
+      borderless
+      style={[typeof style === "function" ? null : style, AnimeListViewStyles.touchable]}
+      {...otherProps}
+    >
       <Surface mode="flat" style={AnimeListViewStyles.surface}>
         <Image style={AnimeListViewStyles.image} source={imageSrc} contentFit="cover" transition={150} />
 
@@ -59,3 +61,7 @@ const AnimeListViewStyles = StyleSheet.create({
   actionViewChip: { flex: 1, backgroundColor: "transparent" },
   actionViewButton: { flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center" },
 });
+
+const Component = forwardRef(AnimeListView);
+
+export default Component;
