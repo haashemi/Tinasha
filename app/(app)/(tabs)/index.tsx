@@ -1,14 +1,16 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useRef, useState } from "react";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
 import { Button, Chip, FAB, Icon, SegmentedButtons, Surface, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Season, getSeason, useSeasonalAnime } from "@/api";
 import { useAppTheme } from "@/components";
+import { getStatusColor } from "@/lib";
 
 export default function SeasonTab() {
   const [sort, setSort] = useState<"anime_score" | "anime_num_list_users">("anime_num_list_users");
@@ -18,7 +20,7 @@ export default function SeasonTab() {
   const theme = useAppTheme();
   const safeArea = useSafeAreaInsets();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const { data, isSuccess } = useSeasonalAnime({ year, season, sort });
+  const { data, isSuccess, isFetching, refetch } = useSeasonalAnime({ year, season, sort });
 
   const items = isSuccess
     ? data.data.filter(({ node }) => node.start_season!.year === year && node.start_season!.season === season)
@@ -99,12 +101,13 @@ export default function SeasonTab() {
         </BottomSheetView>
       </BottomSheetModal>
 
-      <FlatList
+      <FlashList
         data={items}
         numColumns={3}
-        style={{ paddingHorizontal: 10 }}
-        columnWrapperStyle={{ gap: 15 }}
-        contentContainerStyle={{ gap: 15, paddingBottom: 90 }}
+        estimatedItemSize={30}
+        refreshing={isFetching}
+        onRefresh={refetch}
+        contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 90 }}
         ListHeaderComponent={() => (
           <View
             style={{
@@ -112,7 +115,7 @@ export default function SeasonTab() {
               gap: 20,
               marginTop: safeArea.top,
               paddingTop: 15,
-              marginHorizontal: 25,
+              margin: 15,
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
@@ -139,7 +142,11 @@ export default function SeasonTab() {
               }}
               style={{ borderRadius: 10, overflow: "hidden", flex: 1 }}
             >
-              <Surface mode="flat" elevation={2} style={{ height: 260 }}>
+              <Surface
+                mode="flat"
+                elevation={2}
+                style={{ height: 260, margin: 5, borderRadius: 10, overflow: "hidden" }}
+              >
                 <Image
                   transition={250}
                   allowDownscaling
@@ -164,18 +171,7 @@ export default function SeasonTab() {
                         justifyContent: "center",
                         alignItems: "center",
                         padding: 5,
-                        backgroundColor:
-                          node.my_list_status?.status === "watching"
-                            ? "#22c55e"
-                            : node.my_list_status?.status === "completed"
-                              ? "#3b82f6"
-                              : node.my_list_status?.status === "on_hold"
-                                ? "#eab308"
-                                : node.my_list_status?.status === "dropped"
-                                  ? "#ef4444"
-                                  : node.my_list_status?.status === "plan_to_watch"
-                                    ? "#78716c"
-                                    : "#6b7280",
+                        backgroundColor: getStatusColor(node.my_list_status?.status),
                       }}
                     >
                       <Icon size={20} color="white" source="list-status" />
