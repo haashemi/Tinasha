@@ -3,10 +3,14 @@ import { ForwardedRef, forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Chip, IconButton, Surface, Text, TouchableRipple } from "react-native-paper";
 
+import { Status } from "@/api";
+import { getStatusColor } from "@/lib";
+
 type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
 
 interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
   title: string;
+  status: Status | null | undefined;
   score: number | undefined;
   meanScore: number | undefined;
   imageSrc: string | undefined;
@@ -15,7 +19,7 @@ interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
 }
 
 const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
-  const { title, score, meanScore, imageSrc, totalEpisodes, watchedEpisodes, style, ...otherProps } = props;
+  const { title, status, score, meanScore, imageSrc, totalEpisodes, watchedEpisodes, style, ...otherProps } = props;
 
   return (
     <TouchableRipple
@@ -42,7 +46,13 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
             </Chip>
 
             <View style={AnimeListViewStyles.actionViewButton}>
-              <IconButton onPress={() => {}} mode="contained" icon="playlist-edit" />
+              <IconButton
+                onPress={() => {}}
+                mode="contained"
+                icon="playlist-edit"
+                iconColor="white"
+                containerColor={getStatusColor(status)}
+              />
             </View>
           </View>
         </View>
