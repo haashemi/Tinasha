@@ -5,7 +5,7 @@ import * as WebBrowser from "expo-web-browser";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Status, useUserAnimeList } from "@/api";
-import { AnimeListView, useAppTheme } from "@/components";
+import { AnimeListView, LazyLoader, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -44,18 +44,6 @@ const ListView = ({ status }: { status?: Status }) => {
   );
 };
 
-const ListViewAll = () => <ListView />;
-
-const ListViewWatching = () => <ListView status="watching" />;
-
-const ListViewCompleted = () => <ListView status="completed" />;
-
-const ListViewOnHold = () => <ListView status="on_hold" />;
-
-const ListViewDropped = () => <ListView status="dropped" />;
-
-const ListViewPlanToWatch = () => <ListView status="plan_to_watch" />;
-
 export default function ListTab() {
   const { colors } = useAppTheme();
   const safeArea = useSafeAreaInsets();
@@ -65,6 +53,8 @@ export default function ListTab() {
       <Tab.Navigator
         initialRouteName="Watching"
         screenOptions={{
+          lazy: true,
+          lazyPlaceholder: LazyLoader,
           tabBarGap: 20,
           tabBarScrollEnabled: true,
           tabBarStyle: {
@@ -78,12 +68,12 @@ export default function ListTab() {
           tabBarLabelStyle: { marginHorizontal: 0 },
         }}
       >
-        <Tab.Screen name="All" component={ListViewAll} />
-        <Tab.Screen name="Watching" component={ListViewWatching} />
-        <Tab.Screen name="Completed" component={ListViewCompleted} />
-        <Tab.Screen name="On Hold" component={ListViewOnHold} />
-        <Tab.Screen name="Dropped" component={ListViewDropped} />
-        <Tab.Screen name="Plan to Watch" component={ListViewPlanToWatch} />
+        <Tab.Screen name="All">{() => <ListView />}</Tab.Screen>
+        <Tab.Screen name="Watching">{() => <ListView status="watching" />}</Tab.Screen>
+        <Tab.Screen name="Completed">{() => <ListView status="completed" />}</Tab.Screen>
+        <Tab.Screen name="On Hold">{() => <ListView status="on_hold" />}</Tab.Screen>
+        <Tab.Screen name="Dropped">{() => <ListView status="dropped" />}</Tab.Screen>
+        <Tab.Screen name="Plan to Watch">{() => <ListView status="plan_to_watch" />}</Tab.Screen>
       </Tab.Navigator>
     </>
   );
