@@ -1,17 +1,29 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { AuthSessionProvider, ThemeProvider, useAppTheme } from "@/components";
 
-const queryClient = new QueryClient({});
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: Infinity,
+    },
+  },
+});
 
-export { ErrorBoundary } from "expo-router";
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+});
 
 const Providers = ({ children }: PropsWithChildren) => (
-  <QueryClientProvider client={queryClient}>
+  <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
     <ThemeProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
@@ -19,7 +31,7 @@ const Providers = ({ children }: PropsWithChildren) => (
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </ThemeProvider>
-  </QueryClientProvider>
+  </PersistQueryClientProvider>
 );
 
 const Stacks = () => {
@@ -32,6 +44,8 @@ const Stacks = () => {
     </Stack>
   );
 };
+
+export { ErrorBoundary } from "expo-router";
 
 export default function RootLayout() {
   return (
