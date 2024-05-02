@@ -16,9 +16,30 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   userInterfaceStyle: "automatic",
   backgroundColor: "#0f172a",
   icon: "./assets/images/icon.png",
+  androidStatusBar: {
+    barStyle: "light-content",
+    backgroundColor: "#0f172a",
+  },
+  androidNavigationBar: {
+    barStyle: "light-content",
+    backgroundColor: "#0f172a",
+  },
   developmentClient: { silentLaunch: true },
   scheme: "tinasha",
-  plugins: ["expo-router", "expo-secure-store"],
+  plugins: [
+    "expo-router",
+    "expo-secure-store",
+    [
+      "expo-build-properties",
+      {
+        android: {
+          enableProguardInReleaseBuilds: true,
+          enableShrinkResourcesInReleaseBuilds: true,
+          newArchEnabled: true,
+        },
+      },
+    ],
+  ],
   splash: {
     image: "./assets/images/splash.png",
     backgroundColor: "#0f172a",
