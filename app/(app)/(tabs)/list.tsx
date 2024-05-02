@@ -1,82 +1,84 @@
-import { Image } from "expo-image";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { FlashList } from "@shopify/flash-list";
+import { StatusBar } from "expo-status-bar";
 import * as WebBrowser from "expo-web-browser";
-import { useState } from "react";
-import { FlatList, ScrollView, View } from "react-native";
-import { Searchbar, SegmentedButtons, Surface, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Status, useUserAnimeList } from "@/api";
+import { useAppTheme } from "@/components";
+import { AnimeListView } from "@/components/AnimeView";
 
-export default function ListTab() {
-  const safeArea = useSafeAreaInsets();
+const Tab = createMaterialTopTabNavigator();
 
-  const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<Status | "">("watching");
-
-  const { data, isSuccess } = useUserAnimeList("@me", {
+const ListView = ({ status }: { status?: Status }) => {
+  const { data, isFetching, refetch } = useUserAnimeList("@me", {
     sort: "anime_title",
     status: status ? status : undefined,
     limit: 100,
-    fields: ["alternative_titles", "mean", "my_list_status"],
+    fields: ["alternative_titles", "num_episodes", "mean", "my_list_status"],
   });
 
-  const items = isSuccess
-    ? data.data.filter(({ node }) =>
-        query !== ""
-          ? node.title.toLowerCase().includes(query) ||
-            node.alternative_titles?.en.toLowerCase().includes(query) ||
-            node.alternative_titles?.ja.toLowerCase().includes(query) ||
-            node.alternative_titles?.synonyms.find((v) => (v.toLowerCase().includes(query) ? v : undefined)) !==
-              undefined
-          : true,
-      )
-    : [];
+  return (
+    <FlashList
+      data={data?.data}
+      contentContainerStyle={{ paddingVertical: 15, paddingHorizontal: 10 }}
+      estimatedItemSize={30}
+      refreshing={isFetching}
+      onRefresh={refetch}
+      keyExtractor={(item) => item.node.id.toString()}
+      renderItem={({ item: { node } }) => (
+        <AnimeListView
+          title={node.title}
+          score={node.my_list_status?.score}
+          meanScore={node.mean}
+          totalEpisodes={node.num_episodes}
+          style={{ margin: 10 }}
+          watchedEpisodes={node.my_list_status?.num_episodes_watched}
+          imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+          onLongPress={async () => WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`)}
+        />
+      )}
+    />
+  );
+};
+
+const ListViewAll = () => <ListView />;
+
+const ListViewWatching = () => <ListView status="watching" />;
+
+const ListViewCompleted = () => <ListView status="completed" />;
+
+const ListViewOnHold = () => <ListView status="on_hold" />;
+
+const ListViewDropped = () => <ListView status="dropped" />;
+
+const ListViewPlanToWatch = () => <ListView status="plan_to_watch" />;
+
+export default function ListTab() {
+  const { colors } = useAppTheme();
+  const safeArea = useSafeAreaInsets();
 
   return (
     <>
-      <View style={{ gap: 15, marginTop: safeArea.top }}>
-        <Searchbar value={query} onChangeText={setQuery} style={{ marginTop: 10, marginHorizontal: 10 }} />
-
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginBottom: 15 }}>
-          <SegmentedButtons
-            value={status}
-            onValueChange={(v) => setStatus(v as Status | "")}
-            buttons={[
-              { value: "", label: "All" },
-              { value: "watching", label: "Watching" },
-              { value: "completed", label: "Completed" },
-              { value: "on_hold", label: "On Hold" },
-              { value: "dropped", label: "Dropped" },
-              { value: "plan_to_watch", label: "Plan to Watch" },
-            ]}
-            style={{ paddingHorizontal: 15 }}
-          />
-        </ScrollView>
-      </View>
-
-      <FlatList
-        data={items}
-        style={{ paddingHorizontal: 10 }}
-        contentContainerStyle={{ gap: 15 }}
-        keyExtractor={(item) => item.node.id.toString()}
-        renderItem={({ item: { node } }) => (
-          <TouchableRipple
-            key={node.id.toString()}
-            borderless
-            onLongPress={async () => {
-              await WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`);
-            }}
-            style={{ borderRadius: 10, overflow: "hidden", flex: 1 }}
-          >
-            <Surface mode="flat" style={{ height: 100, flexDirection: "row" }}>
-              <Image style={{ width: 100 }} source={node.main_picture?.large} contentFit="cover" transition={250} />
-              <Text numberOfLines={2} ellipsizeMode="tail" style={{ padding: 5 }}>
-                {node.title}
-              </Text>
-            </Surface>
-          </TouchableRipple>
-        )}
-      />
+      <StatusBar backgroundColor={colors.elevation.level2} />
+      <Tab.Navigator
+        initialRouteName="Watching"
+        screenOptions={{
+          tabBarGap: 20,
+          tabBarScrollEnabled: true,
+          tabBarStyle: { marginTop: safeArea.top, paddingHorizontal: 16 },
+          tabBarIndicatorContainerStyle: { marginHorizontal: 16 },
+          tabBarItemStyle: { width: "auto", paddingHorizontal: 10 },
+          tabBarLabelStyle: { marginHorizontal: 0 },
+        }}
+      >
+        <Tab.Screen name="All" component={ListViewAll} />
+        <Tab.Screen name="Watching" component={ListViewWatching} />
+        <Tab.Screen name="Completed" component={ListViewCompleted} />
+        <Tab.Screen name="On Hold" component={ListViewOnHold} />
+        <Tab.Screen name="Dropped" component={ListViewDropped} />
+        <Tab.Screen name="Plan to Watch" component={ListViewPlanToWatch} />
+      </Tab.Navigator>
     </>
   );
 }
