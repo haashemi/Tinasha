@@ -131,58 +131,60 @@ export default function SeasonTab() {
         )}
         keyExtractor={(item) => item.node.id.toString()}
         renderItem={({ item: { node } }) => (
-          <TouchableRipple
-            borderless
-            onLongPress={async () => {
-              await WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`);
-            }}
-            style={{ borderRadius: 10, overflow: "hidden", flex: 1 }}
-          >
-            <Surface mode="flat" elevation={2} style={{ height: 260 }}>
-              <Image
-                transition={250}
-                allowDownscaling
-                cachePolicy="memory-disk"
-                contentFit="fill"
-                source={node.main_picture?.large}
-                style={{ height: 170 }}
-              />
+          <Link asChild href={`/anime/${node.id}`}>
+            <TouchableRipple
+              borderless
+              onLongPress={async () => {
+                await WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`);
+              }}
+              style={{ borderRadius: 10, overflow: "hidden", flex: 1 }}
+            >
+              <Surface mode="flat" elevation={2} style={{ height: 260 }}>
+                <Image
+                  transition={250}
+                  allowDownscaling
+                  cachePolicy="memory-disk"
+                  contentFit="fill"
+                  source={node.main_picture?.large}
+                  style={{ height: 170 }}
+                />
 
-              <View style={{ padding: 5, flex: 1, justifyContent: "space-between" }}>
-                <Text variant="titleMedium" numberOfLines={2} ellipsizeMode="tail">
-                  {node.title}
-                </Text>
+                <View style={{ padding: 5, flex: 1, justifyContent: "space-between" }}>
+                  <Text variant="titleMedium" numberOfLines={2} ellipsizeMode="tail">
+                    {node.title}
+                  </Text>
 
-                <View style={{ flexDirection: "row", gap: 5 }}>
-                  <Chip compact icon="star" style={{ flexGrow: 1 }}>
-                    {node.mean! || "N/A"}
-                  </Chip>
-                  <View
-                    style={{
-                      borderRadius: 5,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      padding: 5,
-                      backgroundColor:
-                        node.my_list_status?.status === "watching"
-                          ? "#22c55e"
-                          : node.my_list_status?.status === "completed"
-                            ? "#3b82f6"
-                            : node.my_list_status?.status === "on_hold"
-                              ? "#eab308"
-                              : node.my_list_status?.status === "dropped"
-                                ? "#ef4444"
-                                : node.my_list_status?.status === "plan_to_watch"
-                                  ? "#78716c"
-                                  : "#6b7280",
-                    }}
-                  >
-                    <Icon size={20} color="white" source="list-status" />
+                  <View style={{ flexDirection: "row", gap: 5 }}>
+                    <Chip compact icon="star" style={{ flexGrow: 1 }}>
+                      {node.mean! || "N/A"}
+                    </Chip>
+                    <View
+                      style={{
+                        borderRadius: 5,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 5,
+                        backgroundColor:
+                          node.my_list_status?.status === "watching"
+                            ? "#22c55e"
+                            : node.my_list_status?.status === "completed"
+                              ? "#3b82f6"
+                              : node.my_list_status?.status === "on_hold"
+                                ? "#eab308"
+                                : node.my_list_status?.status === "dropped"
+                                  ? "#ef4444"
+                                  : node.my_list_status?.status === "plan_to_watch"
+                                    ? "#78716c"
+                                    : "#6b7280",
+                      }}
+                    >
+                      <Icon size={20} color="white" source="list-status" />
+                    </View>
                   </View>
                 </View>
-              </View>
-            </Surface>
-          </TouchableRipple>
+              </Surface>
+            </TouchableRipple>
+          </Link>
         )}
       />
     </>
