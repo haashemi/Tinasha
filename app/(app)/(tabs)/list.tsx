@@ -10,7 +10,7 @@ import { AnimeListView, LazyLoader, useAppTheme } from "@/components";
 const Tab = createMaterialTopTabNavigator();
 
 const ListView = ({ status }: { status?: Status }) => {
-  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList("@me", { status });
+  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList({ status });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
 

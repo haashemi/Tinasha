@@ -6,6 +6,7 @@ import { AnimeNode, Status } from "./models";
 import { useAuthSession } from "@/components";
 
 interface UserAnimeListOptions {
+  userName?: string;
   status?: Status;
   sort?: "list_score" | "list_updated_at" | "anime_title" | "anime_start_date" | "anime_id";
   limit?: number;
@@ -36,17 +37,15 @@ interface Response {
   paging: { previous: string; next: string };
 }
 
-export const useUserAnimeList = (user_name: string, opts: UserAnimeListOptions) => {
-  const { status, sort = "anime_title", limit = 24 } = opts;
+export const useUserAnimeList = (opts: UserAnimeListOptions) => {
+  const { userName = "@me", status, sort = "anime_title", limit = 24 } = opts;
 
   const { client } = useAuthSession();
 
   return useInfiniteQuery({
-    queryKey: ["anime-list", user_name, status, sort, limit],
+    queryKey: ["user-anime-list", userName, status, sort, limit],
     queryFn: async ({ pageParam }) => {
-      if (user_name === "") return {} as Response;
-
-      const resp = await client.get(`/users/${user_name}/animelist`, {
+      const resp = await client.get(`/users/${userName}/animelist`, {
         params: { status, sort, limit, offset: pageParam * limit, fields: DefaultUserAnimeListFields },
       });
 
