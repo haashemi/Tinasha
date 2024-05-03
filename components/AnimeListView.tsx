@@ -41,7 +41,13 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
       {...otherProps}
     >
       <Surface mode="flat" style={AnimeListViewStyles.surface}>
-        <Image style={AnimeListViewStyles.image} source={imageSrc} contentFit="cover" transition={150} />
+        <Image
+          recyclingKey={`${animeId}-${title}`}
+          style={AnimeListViewStyles.image}
+          source={imageSrc}
+          contentFit="cover"
+          transition={100}
+        />
 
         <View style={AnimeListViewStyles.contentView}>
           <Text variant="titleMedium" numberOfLines={1} ellipsizeMode="middle" style={AnimeListViewStyles.titleText}>
