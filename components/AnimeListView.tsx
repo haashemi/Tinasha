@@ -1,4 +1,6 @@
+import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { ForwardedRef, forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Chip, IconButton, Surface, Text, TouchableRipple } from "react-native-paper";
@@ -9,6 +11,7 @@ import { getStatusColor } from "@/lib";
 type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
 
 interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
+  animeId: number;
   title: string;
   status: Status | null | undefined;
   score: number | undefined;
@@ -19,13 +22,22 @@ interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
 }
 
 const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
-  const { title, status, score, meanScore, imageSrc, totalEpisodes, watchedEpisodes, style, ...otherProps } = props;
+  const { animeId, title, status, score, meanScore, imageSrc, totalEpisodes, watchedEpisodes, style, ...otherProps } =
+    props;
+
+  const pushToDetailsPage = () => router.push(`/anime/details/${animeId}`);
+  const pushToEditPage = () => router.push(`/anime/edit/${animeId}`);
 
   return (
     <TouchableRipple
       ref={ref}
       borderless
-      style={[typeof style === "function" ? null : style, AnimeListViewStyles.touchable]}
+      onPress={pushToDetailsPage}
+      onLongPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        pushToEditPage();
+      }}
+      style={[AnimeListViewStyles.touchable, typeof style === "function" ? null : style]}
       {...otherProps}
     >
       <Surface mode="flat" style={AnimeListViewStyles.surface}>
@@ -42,12 +54,14 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
             </Chip>
 
             <Chip compact style={AnimeListViewStyles.actionViewChip} icon="motion-play-outline">
-              {watchedEpisodes ? `${watchedEpisodes}/${totalEpisodes || "??"}` : totalEpisodes || "N/A"}
+              {watchedEpisodes || status === "watching"
+                ? `${watchedEpisodes ?? 0}/${totalEpisodes || "??"}`
+                : totalEpisodes || "N/A"}
             </Chip>
 
             <View style={AnimeListViewStyles.actionViewButton}>
               <IconButton
-                onPress={() => {}}
+                onPress={pushToEditPage}
                 mode="contained"
                 icon="playlist-edit"
                 iconColor="white"
