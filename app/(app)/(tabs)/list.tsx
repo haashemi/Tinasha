@@ -1,30 +1,32 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { FlashList } from "@shopify/flash-list";
+import { useCallback, useMemo } from "react";
+import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Status, useUserAnimeList } from "@/api";
+import { Status, UserAnimeListEdge, useUserAnimeList } from "@/api";
 import { AnimeListView, LazyLoader, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
 
-// TODO: use useInfiniteQuery instead of useQuery
-// TODO: maybe some optimizations, if possible?
 const ListView = ({ status }: { status?: Status }) => {
-  const { data, isFetching, refetch } = useUserAnimeList("@me", {
-    sort: "anime_title",
-    status: status ? status : undefined,
-    limit: 100,
-    fields: ["alternative_titles", "num_episodes", "mean", "my_list_status"],
-  });
+  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList("@me", { status });
+
+  const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
+
+  const keyExtractor = useCallback((item: UserAnimeListEdge, i: number) => `${i}-${item.node.id}`, []);
 
   return (
     <FlashList
-      data={data?.data}
+      data={allItems}
       contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 10 }}
-      estimatedItemSize={30}
+      estimatedItemSize={300}
       refreshing={isFetching}
       onRefresh={refetch}
-      keyExtractor={(item) => item.node.id.toString()}
+      onEndReached={hasNextPage ? fetchNextPage : undefined}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={() => (hasNextPage && isFetching ? <ProgressBar indeterminate /> : null)}
+      keyExtractor={keyExtractor}
       renderItem={({ item: { node } }) => (
         <AnimeListView
           animeId={node.id}

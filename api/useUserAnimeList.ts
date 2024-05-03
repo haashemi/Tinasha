@@ -1,15 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { AnimeNode, Field, Status } from "./models";
+import { DefaultUserAnimeListFields } from "./fields";
+import { AnimeNode, Status } from "./models";
 
 import { useAuthSession } from "@/components";
 
 interface UserAnimeListOptions {
   status?: Status;
-  sort: "list_score" | "list_updated_at" | "anime_title" | "anime_start_date" | "anime_id";
+  sort?: "list_score" | "list_updated_at" | "anime_title" | "anime_start_date" | "anime_id";
   limit?: number;
-  offset?: number;
-  fields: Field[];
 }
 
 interface AnimeListStatus {
@@ -27,29 +26,34 @@ interface AnimeListStatus {
   updated_at: string; // date-time
 }
 
-interface UserAnimeListEdge {
+export interface UserAnimeListEdge {
   node: AnimeNode;
   list_status: AnimeListStatus;
 }
 
 interface Response {
   data: UserAnimeListEdge[];
-  paging: { next: string };
+  paging: { previous: string; next: string };
 }
 
-export const useUserAnimeList = (user_name: string, { status, sort, limit, offset, fields }: UserAnimeListOptions) => {
+export const useUserAnimeList = (user_name: string, opts: UserAnimeListOptions) => {
+  const { status, sort = "anime_title", limit = 24 } = opts;
+
   const { client } = useAuthSession();
 
-  return useQuery({
-    queryKey: ["anime-list", user_name, status, sort, limit, offset, fields],
-    queryFn: async () => {
+  return useInfiniteQuery({
+    queryKey: ["anime-list", user_name, status, sort, limit],
+    queryFn: async ({ pageParam }) => {
       if (user_name === "") return {} as Response;
 
       const resp = await client.get(`/users/${user_name}/animelist`, {
-        params: { status, sort, limit, offset, fields: fields.join(",") },
+        params: { status, sort, limit, offset: pageParam * limit, fields: DefaultUserAnimeListFields },
       });
 
       return resp.data as Response;
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
+      lastPage.paging.next ? lastPageParam + 1 : undefined,
   });
 };
