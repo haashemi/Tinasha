@@ -6166,6 +6166,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-navigation-bar@npm:~2.8.1":
+  version: 2.8.1
+  resolution: "expo-navigation-bar@npm:2.8.1"
+  dependencies:
+    "@react-native/normalize-color": "npm:^2.0.0"
+    debug: "npm:^4.3.2"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/435d2d66f1ff3e02f546179c2633dd3a8b28d2e682b9295dce68c4b64c50c5496d9d273695d395015b0328b8f6145c876909c5763cd2b4b2fec52a462c9b2ede
+  languageName: node
+  linkType: hard
+
 "expo-router@npm:~3.4.10":
   version: 3.4.10
   resolution: "expo-router@npm:3.4.10"
@@ -11478,6 +11490,7 @@ __metadata:
     expo-haptics: "npm:~12.8.1"
     expo-image: "npm:~1.10.6"
     expo-linking: "npm:~6.2.2"
+    expo-navigation-bar: "npm:~2.8.1"
     expo-router: "npm:~3.4.10"
     expo-secure-store: "npm:12.8.1"
     expo-status-bar: "npm:~1.11.1"

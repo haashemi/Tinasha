@@ -11,7 +11,7 @@ export default function AppLayout() {
   if (!auth) return <Redirect href="/sign-in" />;
 
   return (
-    <Stack screenOptions={{ navigationBarColor: theme.colors.background }}>
+    <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: theme.colors.elevation.level2 }} />
       <Stack.Screen name="anime/details/[id]" />
       <Stack.Screen name="anime/edit/[id]" />
