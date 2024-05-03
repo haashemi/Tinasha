@@ -21,20 +21,21 @@ export default function Search() {
 
   const { data, isLoading, isError } = useAnimeList({
     query,
-    fields: ["alternative_titles", "num_episodes", "mean", "my_list_status"],
   });
 
   return (
     <>
-      <Searchbar
-        autoFocus
-        icon="arrow-left"
-        onIconPress={() => navigation.goBack()}
-        placeholder="Search"
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        style={{ position: "absolute", zIndex: 1, top: safeArea.top + 10, marginHorizontal: 10 }}
-      />
+      <View style={{ position: "absolute", width: "100%", zIndex: 1, top: safeArea.top + 10, paddingHorizontal: 10 }}>
+        <Searchbar
+          autoFocus
+          icon="arrow-left"
+          onIconPress={() => navigation.goBack()}
+          placeholder="Search"
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+          style={{ flex: 1 }}
+        />
+      </View>
 
       <FlashList
         data={data?.data}
