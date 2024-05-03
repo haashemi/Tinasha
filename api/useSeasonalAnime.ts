@@ -24,7 +24,7 @@ export const useSeasonalAnime = ({ year, season, sort = "anime_num_list_users" }
   const { client } = useAuthSession();
 
   return useQuery({
-    queryKey: ["Seasonal-anime", year, season, sort],
+    queryKey: ["seasonal-anime", year, season, sort],
     queryFn: async () => {
       const resp = await client.get(`/anime/season/${year}/${season}`, {
         params: { limit: 500, sort, fields: DefaultSeasonalAnimeFields },
