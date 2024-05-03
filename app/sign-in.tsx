@@ -7,8 +7,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { exchangeCode, getAuthUrl, makeKeyCode } from "@/api/auth";
 import { useAuthSession } from "@/components";
 
+// TODO: totally rewrite this page.
+// TODO: use the state param
+// TODO: show a proper Ui and Loading state
 export default function Settings() {
-  // TODO: use the state param
   const { code } = useLocalSearchParams<{ code?: string; state?: string }>();
   const [state] = useState(makeKeyCode(24));
   const [codeChallenge] = useState(makeKeyCode(128));
@@ -29,7 +31,6 @@ export default function Settings() {
     return <Redirect href="/(app)/(tabs)/" />;
   }
 
-  // TODO: show a proper Ui and Loading state
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Button mode="contained" onPress={() => onLogin()}>

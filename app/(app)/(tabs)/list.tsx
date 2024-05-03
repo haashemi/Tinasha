@@ -1,7 +1,5 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { FlashList } from "@shopify/flash-list";
-import { Link } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Status, useUserAnimeList } from "@/api";
@@ -9,7 +7,8 @@ import { AnimeListView, LazyLoader, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
 
-// TODO: Use infinite query to fetch everything...
+// TODO: use useInfiniteQuery instead of useQuery
+// TODO: maybe some optimizations, if possible?
 const ListView = ({ status }: { status?: Status }) => {
   const { data, isFetching, refetch } = useUserAnimeList("@me", {
     sort: "anime_title",
@@ -27,19 +26,17 @@ const ListView = ({ status }: { status?: Status }) => {
       onRefresh={refetch}
       keyExtractor={(item) => item.node.id.toString()}
       renderItem={({ item: { node } }) => (
-        <Link asChild href={`/anime/${node.id}`}>
-          <AnimeListView
-            title={node.title}
-            status={node.my_list_status?.status}
-            score={node.my_list_status?.score}
-            meanScore={node.mean}
-            totalEpisodes={node.num_episodes}
-            style={{ margin: 5 }}
-            watchedEpisodes={node.my_list_status?.num_episodes_watched}
-            imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
-            onLongPress={async () => WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`)}
-          />
-        </Link>
+        <AnimeListView
+          animeId={node.id}
+          title={node.title}
+          status={node.my_list_status?.status}
+          score={node.my_list_status?.score}
+          meanScore={node.mean}
+          totalEpisodes={node.num_episodes}
+          style={{ margin: 5 }}
+          watchedEpisodes={node.my_list_status?.num_episodes_watched}
+          imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+        />
       )}
     />
   );

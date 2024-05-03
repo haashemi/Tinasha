@@ -41,6 +41,7 @@ const Stacks = () => {
     <Stack screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
       <Stack.Screen name="(app)" />
       <Stack.Screen name="sign-in" />
+      {/* <Stack.Screen name="+not-found" /> */}
     </Stack>
   );
 };

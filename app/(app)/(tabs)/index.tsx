@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { Link } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useRef, useState } from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Button, Chip, FAB, Icon, SegmentedButtons, Surface, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -12,6 +12,8 @@ import { Season, getSeason, useSeasonalAnime } from "@/api";
 import { useAppTheme } from "@/components";
 import { getStatusColor } from "@/lib";
 
+// TODO: totally rewrite this page.
+// TODO: use useInfiniteQuery instead of useQuery
 export default function SeasonTab() {
   const [sort, setSort] = useState<"anime_score" | "anime_num_list_users">("anime_num_list_users");
   const [year, setYear] = useState(new Date().getFullYear());
@@ -134,7 +136,7 @@ export default function SeasonTab() {
         )}
         keyExtractor={(item) => item.node.id.toString()}
         renderItem={({ item: { node } }) => (
-          <Link asChild href={`/anime/${node.id}`}>
+          <Link asChild href={`/anime/details/${node.id}`}>
             <TouchableRipple
               borderless
               onLongPress={async () => {
@@ -165,17 +167,19 @@ export default function SeasonTab() {
                     <Chip compact icon="star" style={{ flexGrow: 1 }}>
                       {node.mean! || "N/A"}
                     </Chip>
-                    <View
-                      style={{
-                        borderRadius: 5,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        padding: 5,
-                        backgroundColor: getStatusColor(node.my_list_status?.status),
-                      }}
-                    >
-                      <Icon size={20} color="white" source="list-status" />
-                    </View>
+                    <Link asChild href={`/anime/edit/${node.id}`}>
+                      <Pressable
+                        style={{
+                          borderRadius: 5,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          padding: 5,
+                          backgroundColor: getStatusColor(node.my_list_status?.status),
+                        }}
+                      >
+                        <Icon size={20} color="white" source="list-status" />
+                      </Pressable>
+                    </Link>
                   </View>
                 </View>
               </Surface>

@@ -1,6 +1,5 @@
 import { FlashList } from "@shopify/flash-list";
-import { Link, useNavigation } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
+import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 import { Searchbar, Text } from "react-native-paper";
@@ -10,6 +9,9 @@ import { useDebounce } from "use-debounce";
 import { useAnimeList } from "@/api";
 import { AnimeListView } from "@/components";
 
+// TODO: Show a proper loading state
+// TODO: use useInfiniteQuery instead of useQuery
+// TODO: cleanup styles
 export default function Search() {
   const safeArea = useSafeAreaInsets();
   const navigation = useNavigation();
@@ -57,19 +59,17 @@ export default function Search() {
         )}
         keyExtractor={(item) => item.node.id.toString()}
         renderItem={({ item: { node } }) => (
-          <Link asChild href={`/anime/${node.id}`}>
-            <AnimeListView
-              title={node.title}
-              status={node.my_list_status?.status}
-              score={node.my_list_status?.score}
-              meanScore={node.mean}
-              totalEpisodes={node.num_episodes}
-              style={{ margin: 5 }}
-              watchedEpisodes={node.my_list_status?.num_episodes_watched}
-              imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
-              onLongPress={async () => WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/${node.id}`)}
-            />
-          </Link>
+          <AnimeListView
+            animeId={node.id}
+            title={node.title}
+            status={node.my_list_status?.status}
+            score={node.my_list_status?.score}
+            meanScore={node.mean}
+            totalEpisodes={node.num_episodes}
+            style={{ margin: 5 }}
+            watchedEpisodes={node.my_list_status?.num_episodes_watched}
+            imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+          />
         )}
       />
     </>
