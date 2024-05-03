@@ -10,7 +10,7 @@ import { useAuthSession } from "@/components";
 // TODO: totally rewrite this page.
 // TODO: use the state param
 // TODO: show a proper Ui and Loading state
-export default function Settings() {
+export default function SignIn() {
   const { code } = useLocalSearchParams<{ code?: string; state?: string }>();
   const [state] = useState(makeKeyCode(24));
   const [codeChallenge] = useState(makeKeyCode(128));
