@@ -3,7 +3,9 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import { ForwardedRef, forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
-import { Chip, IconButton, Surface, Text, TouchableRipple } from "react-native-paper";
+import { Chip, IconButton, Text, TouchableRipple } from "react-native-paper";
+
+import { useAppTheme } from "./providers";
 
 import { Status } from "@/api";
 import { getStatusColor } from "@/lib";
@@ -25,6 +27,8 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
   const { animeId, title, status, score, meanScore, imageSrc, totalEpisodes, watchedEpisodes, style, ...otherProps } =
     props;
 
+  const { colors, roundness } = useAppTheme();
+
   const pushToDetailsPage = () => router.push(`/anime/details/${animeId}`);
   const pushToEditPage = () => router.push(`/anime/edit/${animeId}`);
 
@@ -37,10 +41,14 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         pushToEditPage();
       }}
-      style={[AnimeListViewStyles.touchable, typeof style === "function" ? null : style]}
+      style={[
+        AnimeListViewStyles.touchable,
+        { borderRadius: roundness * 2 },
+        typeof style === "function" ? null : style,
+      ]}
       {...otherProps}
     >
-      <Surface mode="flat" style={AnimeListViewStyles.surface}>
+      <View style={[{ backgroundColor: colors.elevation.level1 }, AnimeListViewStyles.surface]}>
         <Image
           recyclingKey={`${animeId}-${title}`}
           style={AnimeListViewStyles.image}
@@ -76,13 +84,13 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
             </View>
           </View>
         </View>
-      </Surface>
+      </View>
     </TouchableRipple>
   );
 };
 
 const AnimeListViewStyles = StyleSheet.create({
-  touchable: { height: 100, borderRadius: 10 },
+  touchable: { height: 100 },
   surface: { flexDirection: "row" },
   image: { height: 100, width: 100 },
   contentView: { paddingTop: 10, paddingLeft: 5, flex: 1, justifyContent: "space-around" },
