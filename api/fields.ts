@@ -34,5 +34,5 @@ export type Field =
   | "ending_themes";
 
 export const DefaultAnimeListFields = ["alternative_titles", "num_episodes", "mean", "my_list_status"].join(",");
-export const DefaultSeasonalAnimeFields = ["start_season", "mean", "my_list_status"].join(",");
+export const DefaultSeasonalAnimeFields = ["start_season", "mean", "my_list_status", "media_type"].join(",");
 export const DefaultUserAnimeListFields = ["alternative_titles", "num_episodes", "mean", "my_list_status"].join(",");
