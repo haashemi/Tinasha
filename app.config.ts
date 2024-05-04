@@ -1,4 +1,5 @@
 import { ConfigContext, ExpoConfig } from "expo/config";
+import type { PluginConfigType as BuildPropertiesConfigType } from "expo-build-properties/build/pluginConfig";
 
 const IS_DEV = process.env.APP_VARIANT === "development";
 
@@ -26,7 +27,20 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   developmentClient: { silentLaunch: true },
   scheme: "tinasha",
-  plugins: ["expo-router", "expo-secure-store"],
+  plugins: [
+    "expo-router",
+    "expo-secure-store",
+    [
+      "expo-build-properties",
+      {
+        android: {
+          enableProguardInReleaseBuilds: true,
+          enableShrinkResourcesInReleaseBuilds: true,
+          useLegacyPackaging: true,
+        },
+      } as BuildPropertiesConfigType,
+    ],
+  ],
   splash: {
     image: "./assets/images/splash.png",
     backgroundColor: "#0f172a",
