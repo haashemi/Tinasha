@@ -7,7 +7,7 @@ import { Button, FAB, Icon, SegmentedButtons, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AnimeNode, Season, SeasonalAnimeSort, getSeason, useSeasonalAnime } from "@/api";
-import { AnimeCardView, LazyLoader, useAppTheme } from "@/components";
+import { AnimeCardView, LoadingView, useAppTheme } from "@/components";
 
 const seasonsList = [
   { value: "winter", label: "Winter" },
@@ -40,7 +40,7 @@ const Header = ({ season, year }: { season: Season; year: number }) => {
 };
 
 const Footer = ({ isLoading }: { isLoading: boolean }) => (
-  <View style={{ height: 90 }}>{isLoading ? <LazyLoader /> : null}</View>
+  <View style={{ height: 90 }}>{isLoading ? <LoadingView /> : null}</View>
 );
 
 const SeasonTab = () => {

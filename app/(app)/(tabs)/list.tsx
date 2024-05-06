@@ -5,7 +5,7 @@ import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Status, UserAnimeListEdge, useUserAnimeList } from "@/api";
-import { AnimeListView, LazyLoader, useAppTheme } from "@/components";
+import { AnimeListView, LoadingView, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -54,7 +54,7 @@ export default function ListTab() {
         initialRouteName="Watching"
         screenOptions={{
           lazy: true,
-          lazyPlaceholder: LazyLoader,
+          lazyPlaceholder: LoadingView,
           tabBarGap: 20,
           tabBarScrollEnabled: true,
           tabBarStyle: {
