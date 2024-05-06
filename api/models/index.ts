@@ -2,6 +2,7 @@ export * from "./AnimeListStatus";
 export * from "./AnimeNode";
 export * from "./AnimeRecommendationAggregationEdgeBase";
 export * from "./AnimeStudio";
+export * from "./CharacterNode";
 export * from "./Genre";
 export * from "./Paging";
 export * from "./Picture";

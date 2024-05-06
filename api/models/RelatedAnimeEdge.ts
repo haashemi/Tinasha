@@ -1,5 +1,12 @@
+import { MainPicture } from "./MainPicture";
+
 export interface RelatedAnimeEdge {
-  node: any; //TODO: fuck around and find out
+  node: {
+    id: number;
+    title: string;
+    main_picture: MainPicture;
+  };
+  /**The type of the relationship between this work and related work. */
   relation_type:
     | "sequel"
     | "prequel"
@@ -8,6 +15,7 @@ export interface RelatedAnimeEdge {
     | "side_story"
     | "parent_story"
     | "summary"
-    | "full_story"; // The type of the relationship between this work and related work.
-  relation_type_formatted: string; // The format of relation_type for human like "Alternative version".
+    | "full_story";
+  /**The format of relation_type for human like "Alternative version". */
+  relation_type_formatted: string;
 }

@@ -1,4 +1,10 @@
+import { MainPicture } from "./MainPicture";
+
 export interface AnimeRecommendationAggregationEdgeBase {
-  node: any; //TODO: fuck around and find out
+  node: {
+    id: number;
+    title: string;
+    main_picture: MainPicture;
+  };
   num_recommendations: number;
 }
