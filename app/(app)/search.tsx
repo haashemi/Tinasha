@@ -1,17 +1,14 @@
 import { FlashList } from "@shopify/flash-list";
 import { useNavigation } from "expo-router";
-import { useState } from "react";
-import { View } from "react-native";
-import { Searchbar, Text } from "react-native-paper";
+import { useCallback, useMemo, useState } from "react";
+import { KeyboardAvoidingView, View } from "react-native";
+import { ActivityIndicator, Searchbar, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebounce } from "use-debounce";
 
-import { useAnimeList } from "@/api";
-import { AnimeListView } from "@/components";
+import { AnimeNode, useAnimeList } from "@/api";
+import { AnimeListView, LoadingView } from "@/components";
 
-// TODO: Show a proper loading state
-// TODO: use useInfiniteQuery instead of useQuery
-// TODO: cleanup styles
 export default function Search() {
   const safeArea = useSafeAreaInsets();
   const navigation = useNavigation();
@@ -19,9 +16,13 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [query] = useDebounce(searchQuery, 500);
 
-  const { data, isLoading, isError } = useAnimeList({
-    query,
-  });
+  const { fetchNextPage, hasNextPage, data, isSuccess, isFetching, isError } = useAnimeList({ query });
+
+  const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
+
+  const keyExtractor = useCallback((item: { node: AnimeNode }, i: number) => `${i}-${item.node.id}`, []);
+
+  const [paddingTop, paddingBottom] = [safeArea.top + 80, safeArea.bottom + 20];
 
   return (
     <>
@@ -37,42 +38,46 @@ export default function Search() {
         />
       </View>
 
-      <FlashList
-        data={data?.data}
-        contentContainerStyle={{
-          paddingHorizontal: 10,
-          paddingTop: safeArea.top + 80,
-          paddingBottom: safeArea.bottom + 20,
-        }}
-        estimatedItemSize={30}
-        ListEmptyComponent={() => (
-          <View style={{ height: 200, justifyContent: "center", alignItems: "center" }}>
-            <Text>
-              {query === ""
-                ? "Search for something"
-                : isLoading
-                  ? "Loading..."
-                  : isError
-                    ? "Failed to fetch"
-                    : "Nothing was found"}
-            </Text>
-          </View>
-        )}
-        keyExtractor={(item) => item.node.id.toString()}
-        renderItem={({ item: { node } }) => (
-          <AnimeListView
-            animeId={node.id}
-            title={node.title}
-            status={node.my_list_status?.status}
-            score={node.my_list_status?.score}
-            meanScore={node.mean}
-            totalEpisodes={node.num_episodes}
-            style={{ margin: 5 }}
-            watchedEpisodes={node.my_list_status?.num_episodes_watched}
-            imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
-          />
-        )}
-      />
+      {query !== "" && isSuccess && allItems?.length ? (
+        <FlashList
+          data={allItems}
+          contentContainerStyle={{ paddingHorizontal: 10, paddingTop, paddingBottom }}
+          estimatedItemSize={100}
+          onEndReached={hasNextPage ? fetchNextPage : undefined}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() => hasNextPage && isFetching && <LoadingView style={{ paddingVertical: 20 }} />}
+          keyExtractor={keyExtractor}
+          renderItem={({ item: { node } }) => (
+            <AnimeListView
+              animeId={node.id}
+              title={node.title}
+              status={node.my_list_status?.status}
+              score={node.my_list_status?.score}
+              meanScore={node.mean}
+              totalEpisodes={node.num_episodes}
+              style={{ margin: 5 }}
+              watchedEpisodes={node.my_list_status?.num_episodes_watched}
+              imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+            />
+          )}
+        />
+      ) : (
+        <KeyboardAvoidingView
+          enabled
+          behavior="height"
+          style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingTop, paddingBottom }}
+        >
+          {!searchQuery || !query ? (
+            <Text variant="bodyLarge">Search for something</Text>
+          ) : isFetching ? (
+            <ActivityIndicator size="large" />
+          ) : isError ? (
+            <Text variant="bodyLarge">Error ocurred</Text>
+          ) : (
+            <Text variant="bodyLarge">No results</Text>
+          )}
+        </KeyboardAvoidingView>
+      )}
     </>
   );
 }
