@@ -14,9 +14,9 @@ export default function Search() {
   const navigation = useNavigation();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [query] = useDebounce(searchQuery, 500);
+  const [q] = useDebounce(searchQuery, 500);
 
-  const { fetchNextPage, hasNextPage, data, isSuccess, isFetching, isError } = useAnimeList({ query });
+  const { fetchNextPage, hasNextPage, data, isSuccess, isFetching, isError } = useAnimeList({ q });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
 
@@ -38,7 +38,7 @@ export default function Search() {
         />
       </View>
 
-      {query !== "" && isSuccess && allItems?.length ? (
+      {q !== "" && isSuccess && allItems?.length ? (
         <FlashList
           data={allItems}
           contentContainerStyle={{ paddingHorizontal: 10, paddingTop, paddingBottom }}
@@ -67,7 +67,7 @@ export default function Search() {
           behavior="height"
           style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingTop, paddingBottom }}
         >
-          {!searchQuery || !query ? (
+          {!searchQuery || !q ? (
             <Text variant="bodyLarge">Search for something</Text>
           ) : isFetching ? (
             <ActivityIndicator size="large" />

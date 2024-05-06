@@ -1,35 +1,27 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { DefaultSeasonalAnimeFields } from "./fields";
-import { AnimeNode, Season } from "./models";
+import { AnimeNode, Paging, Season } from "./models";
 
 import { useAuthSession } from "@/components";
 
-export type SeasonalAnimeSort = "anime_score" | "anime_num_list_users";
-
-interface SeasonalAnimeOptions {
-  year: number;
-  season: Season;
+interface Request {
   sort: SeasonalAnimeSort;
+  /**Default: 100. The maximum value is 500. */
   limit?: number;
+  /**Default: 0 */
+  offset?: number;
+  fields?: string;
 }
 
 interface Response {
   data: { node: AnimeNode }[];
-  paging: { previous: string; next: string };
+  paging: Paging;
 }
 
-export const getSeason = (month: number): Season =>
-  month >= 0 && month <= 2
-    ? Season.Winter
-    : month >= 3 && month <= 5
-      ? Season.Spring
-      : month >= 6 && month <= 8
-        ? Season.Summer
-        : Season.Fall;
+export type SeasonalAnimeSort = "anime_score" | "anime_num_list_users";
 
-export const useSeasonalAnime = (opts: SeasonalAnimeOptions) => {
-  const { year, season, sort, limit = 27 } = opts;
+export const useSeasonalAnime = (year: number, season: Season, opts: Request) => {
+  const { sort, limit = 27, offset = 0, fields = "start_season,mean,my_list_status,media_type" } = opts;
 
   const { client } = useAuthSession();
 
@@ -37,7 +29,7 @@ export const useSeasonalAnime = (opts: SeasonalAnimeOptions) => {
     queryKey: ["seasonal-anime", year, season.toString(), sort],
     queryFn: async ({ pageParam }) => {
       const resp = await client.get(`/anime/season/${year}/${season}`, {
-        params: { sort, limit, offset: pageParam * limit, fields: DefaultSeasonalAnimeFields },
+        params: { sort, limit, offset: offset + pageParam * limit, fields },
       });
 
       return resp.data as Response;

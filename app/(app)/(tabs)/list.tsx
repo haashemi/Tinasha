@@ -4,12 +4,12 @@ import { useCallback, useMemo } from "react";
 import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Status, UserAnimeListEdge, useUserAnimeList } from "@/api";
+import { UserAnimeListEdge, WatchingStatus, useUserAnimeList } from "@/api";
 import { AnimeListView, LoadingView, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
 
-const ListView = ({ status }: { status?: Status }) => {
+const ListView = ({ status }: { status?: WatchingStatus }) => {
   const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList({ status });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);

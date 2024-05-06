@@ -7,15 +7,15 @@ import { Icon, Text, TouchableRipple } from "react-native-paper";
 
 import { useAppTheme } from "./providers";
 
-import { Status } from "@/api";
+import { WatchingStatus } from "@/api";
 
 type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
 
 interface AnimeCardViewProps extends Omit<TouchableRippleProps, "children"> {
   animeId: number;
   title: string;
-  status: Status | null | undefined;
-  meanScore: number | undefined;
+  status: WatchingStatus | null | undefined;
+  meanScore: number | null | undefined;
   imageSrc: string | undefined;
   mediaType: string | undefined;
 }

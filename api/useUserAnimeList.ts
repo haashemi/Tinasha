@@ -1,52 +1,49 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { DefaultUserAnimeListFields } from "./fields";
-import { AnimeNode, Status } from "./models";
+import { Paging, UserAnimeListEdge, WatchingStatus } from "./models";
 
 import { useAuthSession } from "@/components";
 
-interface UserAnimeListOptions {
-  userName?: string;
-  status?: Status;
-  sort?: "list_score" | "list_updated_at" | "anime_title" | "anime_start_date" | "anime_id";
+interface Request {
+  /**User name or \@me. */
+  username?: string;
+  /**Filters returned anime list by these statuses.
+   *
+   * To return all anime, don't specify this field.
+   */
+  status?: WatchingStatus;
+  sort?: UserAnimeListSort;
+  /**Default: 100. The maximum value is 1000. */
   limit?: number;
-}
-
-interface AnimeListStatus {
-  status?: "watching" | "completed" | "on_hold" | "dropped" | "plan_to_watch" | null;
-  score: number;
-  num_episodes_watched: number;
-  is_rewatching: boolean;
-  start_date: string | null; // date
-  finish_date: string | null; // date
-  priority: number;
-  num_times_rewatched: number;
-  rewatch_value: number;
-  tags: string[];
-  comments: string;
-  updated_at: string; // date-time
-}
-
-export interface UserAnimeListEdge {
-  node: AnimeNode;
-  list_status: AnimeListStatus;
+  /**Default: 0 */
+  offset?: number;
+  fields?: string;
 }
 
 interface Response {
   data: UserAnimeListEdge[];
-  paging: { previous: string; next: string };
+  paging: Paging;
 }
 
-export const useUserAnimeList = (opts: UserAnimeListOptions) => {
-  const { userName = "@me", status, sort = "anime_title", limit = 24 } = opts;
+export type UserAnimeListSort = "list_score" | "list_updated_at" | "anime_title" | "anime_start_date" | "anime_id";
+
+export const useUserAnimeList = (opts: Request) => {
+  const {
+    username = "@me",
+    status,
+    sort = "anime_title",
+    limit = 24,
+    offset = 0,
+    fields = "alternative_titles,num_episodes,mean,my_list_status",
+  } = opts;
 
   const { client } = useAuthSession();
 
   return useInfiniteQuery({
-    queryKey: ["user-anime-list", userName, status, sort, limit],
+    queryKey: ["user-anime-list", username, status, sort, limit],
     queryFn: async ({ pageParam }) => {
-      const resp = await client.get(`/users/${userName}/animelist`, {
-        params: { status, sort, limit, offset: pageParam * limit, fields: DefaultUserAnimeListFields },
+      const resp = await client.get(`/users/${username}/animelist`, {
+        params: { status, sort, limit, offset: offset + pageParam * limit, fields },
       });
 
       return resp.data as Response;

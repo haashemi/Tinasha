@@ -1,32 +1,34 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { DefaultAnimeListFields } from "./fields";
-import { AnimeNode } from "./models";
+import { AnimeNode, Paging } from "./models";
 
 import { useAuthSession } from "@/components";
 
-interface AnimeListOptions {
-  query: string;
+interface Request {
+  /**Search. */
+  q: string;
+  /**Default: 100. The maximum value is 100. */
   limit?: number;
+  /**Default: 0 */
+  offset?: number;
+  fields?: string;
 }
 
 interface Response {
   data: { node: AnimeNode }[];
-  paging: { next: string };
+  paging: Paging;
 }
 
-export const useAnimeList = (opts: AnimeListOptions) => {
-  const { query, limit = 24 } = opts;
+export const useAnimeList = (opts: Request) => {
+  const { q, limit = 24, offset = 0, fields = "alternative_titles,num_episodes,mean,my_list_status" } = opts;
   const { client } = useAuthSession();
 
   return useInfiniteQuery({
-    queryKey: ["anime-list", query],
+    queryKey: ["anime-list", q],
     queryFn: async ({ pageParam }) => {
-      if (query === "") return {} as Response;
+      if (q === "") return {} as Response;
 
-      const resp = await client.get("/anime", {
-        params: { q: query, limit, offset: pageParam * limit, fields: DefaultAnimeListFields },
-      });
+      const resp = await client.get("/anime", { params: { q, limit, offset: offset + pageParam * limit, fields } });
 
       return resp.data as Response;
     },

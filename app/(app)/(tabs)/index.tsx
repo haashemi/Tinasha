@@ -51,7 +51,7 @@ const SeasonTab = () => {
   const { colors } = useAppTheme();
   const safeArea = useSafeAreaInsets();
   const filterSheet = useRef<BottomSheetModal>(null);
-  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useSeasonalAnime({ year, season, sort });
+  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useSeasonalAnime(year, season, { sort });
 
   const allItems = useMemo(
     () =>

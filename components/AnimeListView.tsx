@@ -7,7 +7,7 @@ import { Chip, IconButton, Text, TouchableRipple } from "react-native-paper";
 
 import { useAppTheme } from "./providers";
 
-import { Status } from "@/api";
+import { WatchingStatus } from "@/api";
 import { getStatusColor } from "@/lib";
 
 type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
@@ -15,9 +15,9 @@ type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
 interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
   animeId: number;
   title: string;
-  status: Status | null | undefined;
+  status: WatchingStatus | null | undefined;
   score: number | undefined;
-  meanScore: number | undefined;
+  meanScore: number | null | undefined;
   imageSrc: string | undefined;
   totalEpisodes: number | undefined;
   watchedEpisodes: number | undefined;
