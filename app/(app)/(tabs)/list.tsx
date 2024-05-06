@@ -54,7 +54,7 @@ export default function ListTab() {
         initialRouteName="Watching"
         screenOptions={{
           lazy: true,
-          lazyPlaceholder: LoadingView,
+          lazyPlaceholder: () => <LoadingView />,
           tabBarGap: 20,
           tabBarScrollEnabled: true,
           tabBarStyle: {
