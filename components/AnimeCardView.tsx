@@ -8,6 +8,7 @@ import { Icon, Text, TouchableRipple } from "react-native-paper";
 import { useAppTheme } from "./providers";
 
 import { WatchingStatus } from "@/api";
+import { getMediaType } from "@/lib";
 
 type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
 
@@ -76,7 +77,7 @@ const AnimeCardView = (props: AnimeCardViewProps, ref: ForwardedRef<View>) => {
                   adjustsFontSizeToFit
                   style={[{ color: colors.onSecondaryContainer }, fonts.labelLarge]}
                 >
-                  {mediaType.includes("special") ? "SPECIAL" : mediaType.toUpperCase().replaceAll("_", " ")}
+                  {getMediaType(mediaType)}
                 </Text>
               ) : null}
             </View>
