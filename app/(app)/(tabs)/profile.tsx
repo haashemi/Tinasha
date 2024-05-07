@@ -15,7 +15,13 @@ export default function ProfileTab() {
   return (
     <ScrollView style={{ paddingTop: safeArea.top }}>
       <View style={{ padding: 30, flexDirection: "row" }}>
-        <Image style={{ width: 150, height: 200, borderRadius: theme.roundness * 4 }} source={data?.picture} />
+        <Image
+          recyclingKey={`${data?.id}-${data?.name}`}
+          style={{ width: 150, height: 200, borderRadius: theme.roundness * 4 }}
+          source={data?.picture}
+          contentFit="cover"
+          transition={100}
+        />
 
         <View style={{ justifyContent: "space-around", padding: 20 }}>
           <Text numberOfLines={1} adjustsFontSizeToFit variant="headlineMedium">
