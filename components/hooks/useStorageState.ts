@@ -8,8 +8,8 @@ export async function setStorageItemAsync(key: string, value: string | null) {
   return await SecureStore.setItemAsync(key, value);
 }
 
-export function useStorageState(key: string): UseStateHook<string> {
-  const [state, setState] = React.useState<string | null>(null);
+export function useStorageState(key: string): UseStateHook<string | undefined> {
+  const [state, setState] = React.useState<string | null>();
 
   // Get
   React.useEffect(() => {
@@ -18,9 +18,9 @@ export function useStorageState(key: string): UseStateHook<string> {
 
   // Set
   const setValue = React.useCallback(
-    (value: string | null) => {
+    (value: string | null | undefined) => {
       setState(value);
-      setStorageItemAsync(key, value);
+      setStorageItemAsync(key, value ?? null);
     },
     [key, setState],
   );

@@ -33,7 +33,7 @@ export function useAuthSession() {
 export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
   const [authData, setAuthData] = useStorageState("auth");
 
-  const auth = useMemo(() => (authData ? JSON.parse(authData) : null), [authData]);
+  const auth = useMemo(() => (authData ? JSON.parse(authData) : authData), [authData]);
 
   const client = useMemo(() => {
     const axiosClient = axios.create({
