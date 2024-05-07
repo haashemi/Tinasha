@@ -2,11 +2,14 @@ import { Redirect, Stack } from "expo-router";
 
 import { useAppTheme, useAuthSession } from "@/components";
 
-export { ErrorBoundary } from "expo-router";
-
-export default function AppLayout() {
+// TODO: Find a better way to manage the async storage
+const AppLayout = () => {
   const theme = useAppTheme();
   const { auth } = useAuthSession();
+
+  if (auth === undefined) {
+    return null;
+  }
 
   if (!auth) return <Redirect href="/sign-in" />;
 
@@ -18,4 +21,8 @@ export default function AppLayout() {
       <Stack.Screen name="search" options={{ headerShown: false }} />
     </Stack>
   );
-}
+};
+
+export { ErrorBoundary } from "expo-router";
+
+export default AppLayout;
