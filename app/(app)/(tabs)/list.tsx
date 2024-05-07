@@ -1,15 +1,17 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { FlashList } from "@shopify/flash-list";
+import * as Haptics from "expo-haptics";
 import { useCallback, useMemo } from "react";
 import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { UserAnimeListEdge, WatchingStatus, useUserAnimeList } from "@/api";
+import { UserAnimeListEdge, WatchingStatus, useUpdateMyAnimeListStatus, useUserAnimeList } from "@/api";
 import { AnimeListView, LoadingView, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
 
 const ListView = ({ status }: { status?: WatchingStatus }) => {
+  const { mutate } = useUpdateMyAnimeListStatus();
   const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList({ status });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
@@ -38,6 +40,20 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
           style={{ margin: 5 }}
           watchedEpisodes={node.my_list_status?.num_episodes_watched}
           imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+          mpPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            mutate({
+              animeId: node.id,
+              body: { num_watched_episodes: (node.my_list_status?.num_episodes_watched ?? 0) + 1 },
+            });
+          }}
+          mpLongPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            mutate({
+              animeId: node.id,
+              body: { num_watched_episodes: (node.my_list_status?.num_episodes_watched ?? 0) - 1 },
+            });
+          }}
         />
       )}
     />

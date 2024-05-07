@@ -21,11 +21,25 @@ interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
   imageSrc: string | undefined;
   totalEpisodes: number | undefined;
   watchedEpisodes: number | undefined;
+  mpPress?: () => void;
+  mpLongPress?: () => void;
 }
 
 const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
-  const { animeId, title, status, score, meanScore, imageSrc, totalEpisodes, watchedEpisodes, style, ...otherProps } =
-    props;
+  const {
+    animeId,
+    title,
+    status,
+    score,
+    meanScore,
+    imageSrc,
+    totalEpisodes,
+    watchedEpisodes,
+    style,
+    mpPress,
+    mpLongPress,
+    ...otherProps
+  } = props;
 
   const { colors, roundness } = useAppTheme();
 
@@ -74,6 +88,16 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
             </Chip>
 
             <View style={AnimeListViewStyles.actionViewButton}>
+              {status === "watching" && (
+                <IconButton
+                  onPress={mpPress}
+                  onLongPress={mpLongPress}
+                  mode="contained"
+                  icon="plus-minus"
+                  iconColor="white"
+                  containerColor="transparent"
+                />
+              )}
               <IconButton
                 onPress={pushToEditPage}
                 mode="contained"
