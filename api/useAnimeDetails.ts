@@ -38,7 +38,7 @@ interface Response extends AnimeNode {
 export const useAnimeDetails = (opts: Request) => {
   const {
     animeId,
-    fields = "id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,genres,created_at,updated_at,media_type,status,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,studios,pictures,background,related_anime,related_manga,recommendations,statistics,opening_themes,ending_themes",
+    fields = "id,title,main_picture,alternative_titles,mean,popularity,genres,media_type,status,num_episodes,start_season,source,average_episode_duration,studios,statistics",
   } = opts;
   const { client } = useAuthSession();
 
