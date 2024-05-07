@@ -8,14 +8,18 @@
       "distribution": "internal",
       "env": {
         "APP_VARIANT": "development"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
+      "channel": "preview",
       "android": {
         "buildType": "apk"
       }
     },
-    "production": {}
+    "production": {
+      "channel": "production"
+    }
   },
   "submit": {
     "production": {}

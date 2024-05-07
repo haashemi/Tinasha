@@ -1,5 +1,5 @@
-import { ConfigContext, ExpoConfig } from "expo/config";
 import type { PluginConfigType as BuildPropertiesConfigType } from "expo-build-properties/build/pluginConfig";
+import { ConfigContext, ExpoConfig } from "expo/config";
 
 const IS_DEV = process.env.APP_VARIANT === "development";
 
@@ -58,5 +58,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   extra: {
     router: { origin: false },
     eas: { projectId: "20bb87cb-0cc2-4c74-bc1e-55c4c48f8158" },
+  },
+  updates: {
+    url: "https://u.expo.dev/20bb87cb-0cc2-4c74-bc1e-55c4c48f8158",
+  },
+  runtimeVersion: {
+    policy: "appVersion",
   },
 });
