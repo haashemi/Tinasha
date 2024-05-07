@@ -1,99 +1,41 @@
 import { Image } from "expo-image";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { ScrollView, View } from "react-native";
+import ContentLoader, { Rect } from "react-content-loader/native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Chip, FAB, Icon, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useAnimeCharacters, useAnimeDetails } from "@/api";
-import { useAppTheme } from "@/components";
+import { AnimeStudio, useAnimeCharacters, useAnimeDetails } from "@/api";
+import { AlternativeTitles } from "@/api/models/AlternativeTitles";
+import { AnimeCharactersView, TitledText, useAppTheme } from "@/components";
 import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
 
-const Thing = ({ title, text, center }: { title: string; text: any; center?: boolean }) => (
-  <View style={{ flex: 1, justifyContent: "space-around", alignItems: center ? "center" : "baseline", height: 60 }}>
-    <Text variant="bodyMedium">{title}:</Text>
-    <Text variant="titleMedium" style={{ paddingLeft: 5 }}>
-      {text}
-    </Text>
-  </View>
-);
-
-const Characters = ({ animeId }: { animeId: string }) => {
-  const theme = useAppTheme();
-  const { data } = useAnimeCharacters({ animeId });
-
-  return (
-    <View
-      style={{
-        overflow: "hidden",
-        borderRadius: theme.roundness * 3,
-        backgroundColor: theme.colors.elevation.level1,
-      }}
-    >
-      <Text variant="titleMedium" style={{ paddingTop: 8, paddingHorizontal: 15 }}>
-        Characters:
-      </Text>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ padding: 5, paddingHorizontal: 10 }}
-      >
-        {data?.data.map((character) => (
-          <View
-            key={character.node.id.toString()}
-            style={{
-              margin: 5,
-              width: 90,
-              height: 180,
-              borderRadius: theme.roundness * 2.5,
-              backgroundColor: theme.colors.elevation.level3,
-            }}
-          >
-            <Image
-              source={character.node.main_picture.medium}
-              style={{ width: 90, aspectRatio: "4/5", borderRadius: theme.roundness * 2.5 }}
-              contentFit="cover"
-              transition={100}
-            />
-
-            <View style={{ height: 70, padding: 7, gap: 5, justifyContent: "space-between" }}>
-              <Text numberOfLines={2}>
-                {character.node.first_name} {character.node.last_name}
-              </Text>
-              <Text variant="bodySmall" style={{ textAlign: "right", color: theme.colors.tertiary }}>
-                {character.role}
-              </Text>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
-    </View>
-  );
-};
-
-export default function AnimeDetails() {
-  const theme = useAppTheme();
+// TODO: Code Cleanup
+// TODO: Statistics View
+const AnimeDetailsScreen = () => {
   const router = useRouter();
   const safeArea = useSafeAreaInsets();
+
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data } = useAnimeDetails({ animeId: id });
+  const { colors, fonts, roundness } = useAppTheme();
+
+  const { data, isSuccess } = useAnimeDetails({ animeId: id });
+  const characters = useAnimeCharacters({ animeId: id });
 
   return (
     <>
-      <Stack.Screen options={{ headerTitle: data?.title }} />
+      <Stack.Screen options={{ headerTitle: data?.title ?? "Loading..." }} />
 
-      <FAB
-        icon="playlist-edit"
-        style={{ zIndex: 1, position: "absolute", margin: 16, right: 0, bottom: 10 }}
-        onPress={() => router.push(`/anime/edit/${id}`)}
-      />
+      <FAB icon="playlist-edit" style={Styles.fab} onPress={() => router.push(`/anime/edit/${id}`)} />
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 15, paddingBottom: safeArea.bottom + 80 }}>
-        <View style={{ paddingVertical: 25, flexDirection: "row", alignItems: "center", gap: 15 }}>
+        <View style={Styles.detailsView}>
           <Image
-            transition={200}
+            recyclingKey={`${data?.id}-${data?.title}`}
             source={data?.main_picture.large || data?.main_picture.medium}
-            style={{ height: 200, aspectRatio: "4/6", borderRadius: theme.roundness * 3 }}
+            style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
+            contentFit="cover"
+            transition={100}
           />
 
           <View style={{ flex: 1, flexGrow: 1, height: "100%", paddingVertical: 10, gap: 10 }}>
@@ -125,11 +67,11 @@ export default function AnimeDetails() {
             </View>
 
             <View style={{ flexDirection: "row", gap: 5, paddingLeft: 8, marginRight: 20 }}>
-              <Icon source="drama-masks" size={20} color={theme.colors.primary} />
+              <Icon source="drama-masks" size={20} color={colors.primary} />
               <Text
                 numberOfLines={3}
                 adjustsFontSizeToFit
-                style={{ ...theme.fonts.labelLarge, color: theme.colors.onPrimaryContainer }}
+                style={{ ...fonts.labelLarge, color: colors.onPrimaryContainer }}
               >
                 {data?.genres.map((v) => v.name).join(", ") || "N/A"}
               </Text>
@@ -137,37 +79,74 @@ export default function AnimeDetails() {
           </View>
         </View>
 
-        <View
-          style={{
-            padding: 15,
-            flexDirection: "row",
-            borderRadius: theme.roundness * 3,
-            backgroundColor: theme.colors.elevation.level1,
-          }}
-        >
-          <Thing center title="Studios" text={data?.studios.map((v) => v.name).join(", ") || "N/A"} />
-          <Thing center title="Source" text={getSource(data?.source)} />
-        </View>
+        {isSuccess ? (
+          <>
+            <ProductionDetailsView studios={data.studios} source={data.source ?? "Unknown"} />
+            <AlternativeTitlesView data={data.alternative_titles} />
+          </>
+        ) : (
+          <ContentLoader
+            width="100%"
+            height={265}
+            backgroundColor={colors.elevation.level1}
+            foregroundColor={colors.elevation.level3}
+          >
+            <Rect x="0" y="000" rx="12" ry="12" width="100%" height="100" />
+            <Rect x="0" y="115" rx="12" ry="12" width="100%" height="150" />
+          </ContentLoader>
+        )}
 
-        <View
-          style={{
-            gap: 15,
-            padding: 15,
-            borderRadius: theme.roundness * 3,
-            backgroundColor: theme.colors.elevation.level1,
-          }}
-        >
-          <Thing title="Enlgish" text={data?.alternative_titles.en || "N/A"} />
-
-          <Thing title="Native" text={data?.alternative_titles.ja || "N/A"} />
-
-          {data?.alternative_titles.synonyms && data?.alternative_titles.synonyms.length > 0 ? (
-            <Thing title="Synonyms" text={data?.alternative_titles.synonyms.join(", ")} />
-          ) : null}
-        </View>
-
-        <Characters animeId={id} />
+        <AnimeCharactersView isLoading={characters.isLoading} characters={characters.data?.data} />
       </ScrollView>
     </>
   );
-}
+};
+
+const ProductionDetailsView = ({ studios, source }: { studios: AnimeStudio[]; source: string }) => {
+  const {
+    colors: { elevation },
+    roundness,
+  } = useAppTheme();
+
+  return (
+    <View style={[Styles.productionDetailsView, { borderRadius: roundness * 3, backgroundColor: elevation.level1 }]}>
+      <TitledText
+        style={{ justifyContent: "center", alignItems: "center" }}
+        title="Studios"
+        text={studios.map((v) => v.name).join(", ") || "N/A"}
+        textProps={{ numberOfLines: 2 }}
+      />
+      <TitledText
+        style={{ justifyContent: "center", alignItems: "center" }}
+        title="Source"
+        text={getSource(source)}
+        textProps={{ numberOfLines: 1 }}
+      />
+    </View>
+  );
+};
+
+const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
+  const {
+    colors: { elevation },
+    roundness,
+  } = useAppTheme();
+
+  return (
+    <View style={[Styles.alternativeTitlesView, { borderRadius: roundness * 3, backgroundColor: elevation.level1 }]}>
+      <TitledText title="Enlgish" text={data.en || "Unknown"} textProps={{ numberOfLines: 1 }} />
+      <TitledText title="Native" text={data.ja || "Unknown"} textProps={{ numberOfLines: 1 }} />
+    </View>
+  );
+};
+
+const Styles = StyleSheet.create({
+  fab: { zIndex: 1, position: "absolute", margin: 16, right: 0, bottom: 10 },
+
+  detailsView: { paddingVertical: 25, flexDirection: "row", alignItems: "center", gap: 15 },
+
+  productionDetailsView: { padding: 15, height: 100, flexDirection: "row" },
+  alternativeTitlesView: { gap: 10, padding: 15, height: 150 },
+});
+
+export default AnimeDetailsScreen;
