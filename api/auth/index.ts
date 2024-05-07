@@ -2,7 +2,7 @@ import axios from "axios";
 import { makeRedirectUri } from "expo-auth-session";
 
 const clientId = process.env.EXPO_PUBLIC_MAL_CLIENT_ID!;
-const redirectUri = makeRedirectUri({ scheme: "tinasha", path: "sign-in" });
+export const redirectUri = makeRedirectUri({ scheme: "tinasha", path: "sign-in" });
 
 const tokenEndpoint = "https://myanimelist.net/v1/oauth2/token";
 

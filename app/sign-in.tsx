@@ -1,41 +1,69 @@
-import { Redirect, useLocalSearchParams } from "expo-router";
+import axios from "axios";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import { useEffect, useState } from "react";
-import { Button } from "react-native-paper";
+import { useCallback, useEffect, useState } from "react";
+import { Alert, View } from "react-native";
+import { Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { exchangeCode, getAuthUrl, makeKeyCode } from "@/api/auth";
-import { useAuthSession } from "@/components";
+import { exchangeCode, getAuthUrl, makeKeyCode, redirectUri } from "@/api/auth";
+import { Tinasha, useAuthSession } from "@/components";
 
-// TODO: totally rewrite this page.
-// TODO: use the state param
-// TODO: show a proper Ui and Loading state
 export default function SignIn() {
-  const { code } = useLocalSearchParams<{ code?: string; state?: string }>();
-  const [state] = useState(makeKeyCode(24));
+  const [codeState] = useState(makeKeyCode(24));
   const [codeChallenge] = useState(makeKeyCode(128));
-  const session = useAuthSession();
+  const [loading, setLoading] = useState(false);
 
-  const onLogin = async () => {
-    await WebBrowser.openAuthSessionAsync(getAuthUrl(state, codeChallenge));
+  const router = useRouter();
+  const { auth, setAuthData } = useAuthSession();
+
+  const { code, state } = useLocalSearchParams<{ code?: string; state?: string }>();
+
+  const login = async () => {
+    setAuthData(null);
+    await WebBrowser.openAuthSessionAsync(getAuthUrl(codeState, codeChallenge), redirectUri);
   };
 
-  // TODO: handle the errors.
+  const authorize = useCallback(async () => {
+    if (!code || !state || auth) return;
+
+    if (state !== codeState) {
+      Alert.alert("Unmatched state!", "Authorization failed because oAuth state codes are not matched.");
+      return;
+    }
+
+    try {
+      const resp = await exchangeCode({ code, codeChallenge });
+      setAuthData(JSON.stringify(resp.data));
+      router.replace("/");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        Alert.alert("Failed to exchange-code!", error.message);
+      } else {
+        Alert.alert("Authorization failed!", "Something unexpected went wrong, please report it to us.");
+      }
+    }
+  }, [auth, code, codeChallenge, codeState, router, setAuthData, state]);
+
   useEffect(() => {
-    if (!code || session.auth) return;
-
-    exchangeCode({ code, codeChallenge }).then((resp) => session.setAuthData(JSON.stringify(resp.data)));
-  }, [code, codeChallenge, session]);
-
-  if (session.auth) {
-    return <Redirect href="/(app)/(tabs)/" />;
-  }
+    setLoading(true);
+    authorize().then(() => setLoading(false));
+  }, [authorize]);
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button mode="contained" onPress={() => onLogin()}>
-        Login
-      </Button>
+    <SafeAreaView style={{ flex: 1, alignItems: "center", paddingHorizontal: 24 }}>
+      <Tinasha width="60%" height={400} fill="white" />
+
+      <View style={{ width: "75%", gap: 10, alignItems: "center" }}>
+        <Text variant="headlineSmall">Welcome to Tinasha!</Text>
+        <Text variant="bodyLarge">Please sign in with your MyAnimeList account.</Text>
+      </View>
+
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Button loading={loading} onPress={() => login()} icon="login" buttonColor="#1d4ed8" textColor="white">
+          Sign in with MyAnimeList
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }
