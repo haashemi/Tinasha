@@ -10,7 +10,7 @@ import { Stack, useNavigationContainerRef } from "expo-router";
 import { PropsWithChildren, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { AuthSessionProvider, ThemeProvider } from "@/components";
+import { AuthSessionProvider, ColorSchemeProvider, ThemeProvider } from "@/components";
 
 NavigationBar.setPositionAsync("absolute");
 NavigationBar.setBackgroundColorAsync("#000000");
@@ -34,8 +34,9 @@ const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
 Sentry.init({
   enabled: process.env.EXPO_PUBLIC_USE_SENTRY === "true",
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-  debug: process.env.NODE_ENV === "development",
+  debug: false,
   enableAutoPerformanceTracing: true,
+  tracesSampleRate: 0.2,
   integrations: [
     new Sentry.ReactNativeTracing({
       routingInstrumentation,
@@ -46,13 +47,15 @@ Sentry.init({
 
 const Providers = ({ children }: PropsWithChildren) => (
   <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
-    <ThemeProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <AuthSessionProvider>{children}</AuthSessionProvider>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+    <ColorSchemeProvider>
+      <ThemeProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <AuthSessionProvider>{children}</AuthSessionProvider>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </ColorSchemeProvider>
   </PersistQueryClientProvider>
 );
 

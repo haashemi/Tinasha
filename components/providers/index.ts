@@ -1,3 +1,3 @@
-export * from "./AuthSessionContext";
-export * from "./BottomNavigationBar";
+export * from "./AuthSessionProvider";
+export * from "./ColorSchemeProvider";
 export * from "./ThemeProvider";
