@@ -1,6 +1,7 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useRef } from "react";
 import { Appearance, ScrollView, View, useColorScheme } from "react-native";
@@ -8,11 +9,12 @@ import { Divider, Icon, List, RadioButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMyUserInformation } from "@/api";
-import { useAppTheme } from "@/components";
+import { useAppTheme, useAuthSession } from "@/components";
 
 export default function ProfileTab() {
   const theme = useAppTheme();
   const safeArea = useSafeAreaInsets();
+  const { setAuthData } = useAuthSession();
   const { data } = useMyUserInformation();
 
   const themeSheet = useRef<BottomSheetModal>(null);
@@ -21,6 +23,11 @@ export default function ProfileTab() {
   const setColorScheme = (v: string) => {
     Appearance.setColorScheme(v === "dark" ? "dark" : v === "light" ? "light" : null);
     themeSheet.current?.close();
+  };
+
+  const logout = () => {
+    setAuthData(null);
+    router.replace("/sign-in");
   };
 
   return (
@@ -90,6 +97,12 @@ export default function ProfileTab() {
           description="Tinasha's source code is publicly available! Give a star."
           left={(props) => <List.Icon {...props} icon="github" />}
           onPress={() => WebBrowser.openBrowserAsync("https://github.com/haashemi/Tinasha")}
+        />
+        <List.Item
+          title="Logout"
+          description="Logout from Tinasha. or maybe switch accounts?"
+          left={({ style }) => <List.Icon color={theme.colors.error} style={style} icon="logout" />}
+          onPress={logout}
         />
 
         {/* TODO: Add Statistics */}
