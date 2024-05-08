@@ -40,6 +40,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       } as BuildPropertiesConfigType,
     ],
+    [
+      "@sentry/react-native/expo",
+      {
+        organization: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        url: process.env.SENTRY_HOST,
+      },
+    ],
   ],
   splash: {
     image: "./assets/images/splash.png",

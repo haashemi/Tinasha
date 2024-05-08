@@ -1,11 +1,13 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Sentry from "@sentry/react-native";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { isRunningInExpoGo } from "expo";
 import * as NavigationBar from "expo-navigation-bar";
-import { Stack } from "expo-router";
-import { PropsWithChildren } from "react";
+import { Stack, useNavigationContainerRef } from "expo-router";
+import { PropsWithChildren, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { AuthSessionProvider, ThemeProvider } from "@/components";
@@ -25,6 +27,21 @@ const queryClient = new QueryClient({
 
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
+});
+
+const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+
+Sentry.init({
+  enabled: process.env.EXPO_PUBLIC_USE_SENTRY === "true",
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  debug: process.env.NODE_ENV === "development",
+  enableAutoPerformanceTracing: true,
+  integrations: [
+    new Sentry.ReactNativeTracing({
+      routingInstrumentation,
+      enableNativeFramesTracking: !isRunningInExpoGo(),
+    }),
+  ],
 });
 
 const Providers = ({ children }: PropsWithChildren) => (
@@ -47,12 +64,20 @@ const Stacks = () => (
   </Stack>
 );
 
-export { ErrorBoundary } from "expo-router";
+const RootLayout = () => {
+  const ref = useNavigationContainerRef();
 
-export default function RootLayout() {
+  useEffect(() => {
+    if (ref) routingInstrumentation.registerNavigationContainer(ref);
+  }, [ref]);
+
   return (
     <Providers>
       <Stacks />
     </Providers>
   );
-}
+};
+
+export { ErrorBoundary } from "expo-router";
+
+export default Sentry.wrap(RootLayout);
