@@ -74,10 +74,10 @@ const SeasonTab = () => {
         enableDynamicSizing
         stackBehavior="replace"
         handleIndicatorStyle={{ backgroundColor: colors.onSurface }}
-        backgroundStyle={{ backgroundColor: colors.elevation.level3 }}
+        backgroundStyle={{ backgroundColor: colors.elevation.level2 }}
       >
         <BottomSheetView
-          style={[{ backgroundColor: colors.elevation.level3, paddingBottom: safeArea.bottom }, Styles.bottomSheetView]}
+          style={[{ backgroundColor: colors.elevation.level2, paddingBottom: safeArea.bottom }, Styles.bottomSheetView]}
         >
           <View style={Styles.bottomSheetYearView}>
             <Button mode="outlined" onPress={() => setYear((y) => y - 1)}>
