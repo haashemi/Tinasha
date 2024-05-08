@@ -10,7 +10,7 @@ interface BottomNavigationBarProps extends RNBottomNavigationBarProps {
   tabBarProps: BottomTabBarProps;
 }
 
-export const BottomNavigationBar = ({ tabBarProps, ...props }: BottomNavigationBarProps) => {
+const BottomNavigationBar = ({ tabBarProps, ...props }: BottomNavigationBarProps) => {
   const { navigation, state, descriptors, insets } = tabBarProps;
 
   return (
@@ -44,3 +44,5 @@ export const BottomNavigationBar = ({ tabBarProps, ...props }: BottomNavigationB
     />
   );
 };
+
+export default BottomNavigationBar;
