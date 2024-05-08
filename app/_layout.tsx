@@ -40,8 +40,8 @@ const Providers = ({ children }: PropsWithChildren) => (
 );
 
 const Stacks = () => (
-  <Stack screenOptions={{ headerShown: false, navigationBarColor: "transparent" }}>
-    <Stack.Screen name="(app)" options={{ animation: "fade" }} />
+  <Stack screenOptions={{ headerShown: false, navigationBarColor: "transparent", animation: "fade" }}>
+    <Stack.Screen name="(app)" />
     <Stack.Screen name="sign-in" />
     {/* <Stack.Screen name="+not-found" /> */}
   </Stack>
