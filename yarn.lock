@@ -6610,15 +6610,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-sharing@npm:~11.10.0":
-  version: 11.10.0
-  resolution: "expo-sharing@npm:11.10.0"
-  peerDependencies:
-    expo: "*"
-  checksum: 10c0/af26c5a78351d0ac8fe47a41283a486af1b287c227396103eebb4a59d4d22cec530f80d61c0eaaf2bd2a64f0229a11a5f18a844bc6b8df2e209bceea9dad4e7b
-  languageName: node
-  linkType: hard
-
 "expo-splash-screen@npm:~0.26.5":
   version: 0.26.5
   resolution: "expo-splash-screen@npm:0.26.5"
@@ -12020,7 +12011,6 @@ __metadata:
     expo-navigation-bar: "npm:~2.8.1"
     expo-router: "npm:~3.4.10"
     expo-secure-store: "npm:12.8.1"
-    expo-sharing: "npm:~11.10.0"
     expo-status-bar: "npm:~1.11.1"
     expo-system-ui: "npm:2.9.4"
     expo-updates: "npm:~0.24.12"
