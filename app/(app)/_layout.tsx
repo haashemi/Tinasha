@@ -1,16 +1,25 @@
 import { Redirect, Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 
 import { useAppTheme, useAuthSession } from "@/components";
 
-// TODO: Find a better way to manage the async storage
+SplashScreen.preventAutoHideAsync();
+
 const AppLayout = () => {
   const theme = useAppTheme();
   const { auth } = useAuthSession();
 
-  if (auth === undefined) {
-    return null;
-  }
+  useEffect(() => {
+    if (auth === undefined) return;
 
+    const hideSplashScreen = async () => {
+      await SplashScreen.hideAsync();
+    };
+    hideSplashScreen();
+  }, [auth]);
+
+  if (auth === undefined) return null;
   if (!auth) return <Redirect href="/sign-in" />;
 
   return (
