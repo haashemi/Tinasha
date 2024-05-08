@@ -7,7 +7,7 @@ import { Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { exchangeCode, getAuthUrl, makeKeyCode, redirectUri } from "@/api/auth";
-import { Tinasha, useAuthSession } from "@/components";
+import { TinashaLogo, useAuthSession } from "@/components";
 
 export default function SignIn() {
   const [codeState] = useState(makeKeyCode(24));
@@ -52,7 +52,7 @@ export default function SignIn() {
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center", paddingHorizontal: 24 }}>
-      <Tinasha width="60%" height={400} fill="white" />
+      <TinashaLogo width="60%" height={400} fill="white" />
 
       <View style={{ width: "75%", gap: 10, alignItems: "center" }}>
         <Text variant="headlineSmall">Welcome to Tinasha!</Text>

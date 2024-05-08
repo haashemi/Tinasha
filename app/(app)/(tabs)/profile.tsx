@@ -4,12 +4,12 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useRef } from "react";
-import { Appearance, ScrollView, View, useColorScheme } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Divider, Icon, List, RadioButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMyUserInformation } from "@/api";
-import { useAppTheme, useAuthSession } from "@/components";
+import { useAppTheme, useAuthSession, useColorScheme } from "@/components";
 
 export default function ProfileTab() {
   const theme = useAppTheme();
@@ -17,11 +17,12 @@ export default function ProfileTab() {
   const { setAuthData } = useAuthSession();
   const { data } = useMyUserInformation();
 
+  const { scheme: colorScheme, setScheme } = useColorScheme();
+
   const themeSheet = useRef<BottomSheetModal>(null);
-  const colorScheme = useColorScheme();
 
   const setColorScheme = (v: string) => {
-    Appearance.setColorScheme(v === "dark" ? "dark" : v === "light" ? "light" : null);
+    setScheme(v === "dark" ? "dark" : v === "light" ? "light" : null);
     themeSheet.current?.close();
   };
 
