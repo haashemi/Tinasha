@@ -1,8 +1,8 @@
 import { Image } from "expo-image";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import ContentLoader, { Rect } from "react-content-loader/native";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { Chip, FAB, Icon, Text } from "react-native-paper";
+import { ScrollView, Share, StyleSheet, View } from "react-native";
+import { Chip, FAB, Icon, IconButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AnimeStudio, useAnimeCharacters, useAnimeDetails } from "@/api";
@@ -24,7 +24,19 @@ const AnimeDetailsScreen = () => {
 
   return (
     <>
-      <Stack.Screen options={{ headerTitle: data?.title ?? "Loading..." }} />
+      <Stack.Screen
+        options={{
+          headerTitle: data?.title ?? "Loading...",
+          headerRight: () => {
+            return (
+              <IconButton
+                icon="share-variant"
+                onPress={() => Share.share({ title: data?.title, message: `https://myanimelist.net/anime/${id}` })}
+              />
+            );
+          },
+        }}
+      />
 
       <FAB icon="playlist-edit" style={Styles.fab} onPress={() => router.push(`/anime/edit/${id}`)} />
 
