@@ -29,7 +29,7 @@ export const useSeasonalAnime = (year: number, season: Season, opts: Request) =>
     queryKey: ["seasonal-anime", year, season.toString(), sort],
     queryFn: async ({ pageParam }) => {
       const resp = await client.get(`/anime/season/${year}/${season}`, {
-        params: { sort, limit, offset: offset + pageParam * limit, fields },
+        params: { sort, limit, offset: offset + pageParam * limit, fields, nsfw: 1 },
       });
 
       return resp.data as Response;

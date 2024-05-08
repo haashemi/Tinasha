@@ -28,7 +28,9 @@ export const useAnimeList = (opts: Request) => {
     queryFn: async ({ pageParam }) => {
       if (q === "") return {} as Response;
 
-      const resp = await client.get("/anime", { params: { q, limit, offset: offset + pageParam * limit, fields } });
+      const resp = await client.get("/anime", {
+        params: { q, limit, offset: offset + pageParam * limit, fields, nsfw: 1 },
+      });
 
       return resp.data as Response;
     },

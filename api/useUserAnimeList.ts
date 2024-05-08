@@ -43,7 +43,7 @@ export const useUserAnimeList = (opts: Request) => {
     queryKey: ["user-anime-list", username, status, sort, limit],
     queryFn: async ({ pageParam }) => {
       const resp = await client.get(`/users/${username}/animelist`, {
-        params: { status, sort, limit, offset: offset + pageParam * limit, fields },
+        params: { status, sort, limit, offset: offset + pageParam * limit, fields, nsfw: 1 },
       });
 
       return resp.data as Response;
