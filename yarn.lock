@@ -12027,6 +12027,7 @@ __metadata:
     expo-web-browser: "npm:12.8.2"
     formik: "npm:^2.4.6"
     prettier: "npm:3.2.5"
+    promise: "npm:^8.3.0"
     react: "npm:18.2.0"
     react-content-loader: "npm:^7.0.0"
     react-native: "npm:0.73.6"
