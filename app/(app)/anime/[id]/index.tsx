@@ -5,8 +5,7 @@ import { ScrollView, Share, StyleSheet, View } from "react-native";
 import { Chip, FAB, Icon, IconButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { AnimeStudio, useAnimeCharacters, useAnimeDetails } from "@/api";
-import { AlternativeTitles } from "@/api/models/AlternativeTitles";
+import { AlternativeTitles, AnimeStudio, useAnimeCharacters, useAnimeDetails } from "@/api";
 import { AnimeCharactersView, TitledText, useAppTheme } from "@/components";
 import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
 

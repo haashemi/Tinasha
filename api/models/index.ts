@@ -1,3 +1,4 @@
+export * from "./AlternativeTitles";
 export * from "./AnimeListStatus";
 export * from "./AnimeNode";
 export * from "./AnimeRecommendationAggregationEdgeBase";

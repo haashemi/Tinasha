@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { client } from "../client";
 import {
   AnimeNode,
   AnimeRecommendationAggregationEdgeBase,
@@ -7,8 +8,6 @@ import {
   RelatedAnimeEdge,
   RelatedMangaEdge,
 } from "../models";
-
-import { useAuthSession } from "@/components";
 
 interface Request {
   animeId: string;
@@ -40,9 +39,8 @@ export { Response as AnimeDetails };
 export const useAnimeDetails = (opts: Request) => {
   const {
     animeId,
-    fields = "id,title,main_picture,alternative_titles,mean,popularity,genres,media_type,status,num_episodes,start_season,source,average_episode_duration,studios,statistics",
+    fields = "id,title,main_picture,alternative_titles,mean,popularity,genres,media_type,status,my_list_status,num_episodes,start_season,source,average_episode_duration,studios,statistics",
   } = opts;
-  const { client } = useAuthSession();
 
   return useQuery({
     queryKey: ["anime-details", animeId, fields],

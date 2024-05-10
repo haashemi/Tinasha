@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { client } from "../client";
 import { CharacterNode, Paging } from "../models";
-
-import { useAuthSession } from "@/components";
 
 interface Request {
   animeId: string;
@@ -16,7 +15,6 @@ interface Response {
 
 export const useAnimeCharacters = (opts: Request) => {
   const { animeId, fields = "id,first_name,last_name,alternative_name,main_picture,role" } = opts;
-  const { client } = useAuthSession();
 
   return useQuery({
     queryKey: ["anime-characters", animeId, fields],

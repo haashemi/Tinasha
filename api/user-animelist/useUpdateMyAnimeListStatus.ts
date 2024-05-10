@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { client } from "../client";
 import { WatchingStatus } from "../models";
-
-import { useAuthSession } from "@/components";
 
 interface Request {
   status?: WatchingStatus;
@@ -41,7 +40,6 @@ export { Request as UpdateAnimeListStatusBody };
 
 export const useUpdateMyAnimeListStatus = () => {
   const queryClient = useQueryClient();
-  const { client } = useAuthSession();
 
   return useMutation({
     mutationKey: ["update-my-anime-list-status"],

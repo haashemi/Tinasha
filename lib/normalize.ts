@@ -1,4 +1,4 @@
-import { Season } from "@/api/models/Season";
+import { Season } from "@/api";
 
 export const getMediaType = (mediaType: string) =>
   mediaType.includes("special") ? "SPECIAL" : mediaType.toUpperCase().replaceAll("_", " ");

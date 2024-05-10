@@ -1,8 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { client } from "../client";
 import { Paging, UserAnimeListEdge, WatchingStatus } from "../models";
-
-import { useAuthSession } from "@/components";
 
 interface Request {
   /**User name or \@me. */
@@ -36,8 +35,6 @@ export const useUserAnimeList = (opts: Request) => {
     offset = 0,
     fields = "alternative_titles,num_episodes,mean,my_list_status",
   } = opts;
-
-  const { client } = useAuthSession();
 
   return useInfiniteQuery({
     queryKey: ["user-anime-list", username, status, sort, limit],

@@ -1,5 +1,8 @@
 export * from "./models";
 
+// Authentication
+export * from "./auth";
+
 // Anime:
 export * from "./anime/useAnimeCharacters";
 export * from "./anime/useAnimeDetails";

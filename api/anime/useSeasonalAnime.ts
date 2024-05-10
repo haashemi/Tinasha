@@ -1,8 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { client } from "../client";
 import { AnimeNode, Paging, Season } from "../models";
-
-import { useAuthSession } from "@/components";
 
 interface Request {
   sort: SeasonalAnimeSort;
@@ -22,8 +21,6 @@ export type SeasonalAnimeSort = "anime_score" | "anime_num_list_users";
 
 export const useSeasonalAnime = (year: number, season: Season, opts: Request) => {
   const { sort, limit = 27, offset = 0, fields = "start_season,mean,my_list_status,media_type" } = opts;
-
-  const { client } = useAuthSession();
 
   return useInfiniteQuery({
     queryKey: ["seasonal-anime", year, season.toString(), sort],

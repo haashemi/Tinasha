@@ -1,47 +1,40 @@
-import axios, { AxiosInstance } from "axios";
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 
 import { useSecureStorage } from "../hooks";
 
-import { refreshToken } from "@/api/auth";
+import { refreshToken } from "@/api";
+import { client } from "@/api/client";
 
 const EXPIRED_TOKEN_HEADER = `Bearer error="invalid_token",error_description="The access token expired"`;
 
-const AuthSessionContext = createContext<{
+interface AuthSessionContextValues {
   setAuthData: (value: string | null) => void;
   signOut: () => void;
   auth?: string | null;
-  client: AxiosInstance;
-}>({
+}
+
+const AuthSessionContext = createContext<AuthSessionContextValues>({
   setAuthData: () => null,
   signOut: () => null,
   auth: null,
-  client: axios.create({ baseURL: "https://api.myanimelist.net/v2" }),
 });
 
-export function useAuthSession() {
-  const value = useContext(AuthSessionContext);
-  if (process.env.NODE_ENV !== "production") {
-    if (!value) {
-      throw new Error("useAuthSession must be wrapped in a <AuthSessionProvider />");
-    }
-  }
-
-  return value;
-}
+export const useAuthSession = () => useContext(AuthSessionContext);
 
 export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
   const [authData, setAuthData] = useSecureStorage("auth");
 
   const auth = useMemo(() => (authData ? JSON.parse(authData) : authData), [authData]);
 
-  const client = useMemo(() => {
-    const axiosClient = axios.create({
-      baseURL: "https://api.myanimelist.net/v2",
-      headers: { Authorization: `Bearer ${auth?.access_token}` },
+  useEffect(() => {
+    client.interceptors.request.clear();
+    client.interceptors.request.use((req) => {
+      req.headers.setAuthorization(`Bearer ${auth?.access_token}`);
+      return req;
     });
 
-    axiosClient.interceptors.response.use(
+    client.interceptors.response.clear();
+    client.interceptors.response.use(
       (response) => response,
       async (error) => {
         const originalRequest = error.config;
@@ -54,30 +47,21 @@ export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
         ) {
           originalRequest._retry = true;
 
-          const newToken = await refreshToken(auth.refresh_token);
+          const newToken = await refreshToken(auth?.refresh_token);
           setAuthData(JSON.stringify(newToken.data));
 
-          axiosClient.defaults.headers.common["Authorization"] = `Bearer ${newToken.data.access_token}`;
+          client.defaults.headers.common["Authorization"] = `Bearer ${newToken.data.access_token}`;
 
-          return axiosClient(originalRequest);
+          return client(originalRequest);
         }
 
         return Promise.reject(error);
       },
     );
-
-    return axiosClient;
-  }, [auth, setAuthData]);
+  }, [auth?.access_token, auth?.refresh_token, setAuthData]);
 
   return (
-    <AuthSessionContext.Provider
-      value={{
-        setAuthData,
-        signOut: () => setAuthData(null),
-        auth,
-        client,
-      }}
-    >
+    <AuthSessionContext.Provider value={{ setAuthData, signOut: () => setAuthData(null), auth }}>
       {children}
     </AuthSessionContext.Provider>
   );

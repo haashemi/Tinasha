@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useAuthSession } from "@/components";
+import { client } from "../client";
 
 interface Response {
   id: number;
@@ -34,8 +34,6 @@ interface Response {
 }
 
 export const useMyUserInformation = () => {
-  const { client } = useAuthSession();
-
   return useQuery({
     queryKey: ["my-user-information"],
     queryFn: async () => {

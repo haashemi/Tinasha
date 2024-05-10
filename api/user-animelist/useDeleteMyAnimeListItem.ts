@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { useAuthSession } from "@/components";
+import { client } from "../client";
 
 export const useDeleteMyAnimeListItem = () => {
   const queryClient = useQueryClient();
-  const { client } = useAuthSession();
 
   return useMutation({
     mutationKey: ["delete-my-anime-list-item"],
