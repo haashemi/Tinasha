@@ -1,7 +1,6 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { FlashList } from "@shopify/flash-list";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
 import { useCallback, useMemo } from "react";
 import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -55,7 +54,6 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
               body: { num_watched_episodes: (node.my_list_status?.num_episodes_watched ?? 0) - 1 },
             });
           }}
-          onPressEdit={() => router.push({ pathname: `/anime/edit`, params: { nodeJson: JSON.stringify(node) } })}
         />
       )}
     />

@@ -1,5 +1,5 @@
 import { FlashList } from "@shopify/flash-list";
-import { router, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { KeyboardAvoidingView, View } from "react-native";
 import { ActivityIndicator, Searchbar, Text } from "react-native-paper";
@@ -58,7 +58,6 @@ export default function Search() {
               style={{ margin: 5 }}
               watchedEpisodes={node.my_list_status?.num_episodes_watched}
               imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
-              onPressEdit={() => router.push({ pathname: `/anime/edit`, params: { nodeJson: JSON.stringify(node) } })}
             />
           )}
         />

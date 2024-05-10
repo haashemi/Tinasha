@@ -23,7 +23,6 @@ interface AnimeListViewProps extends Omit<TouchableRippleProps, "children"> {
   watchedEpisodes: number | undefined;
   mpPress?: () => void;
   mpLongPress?: () => void;
-  onPressEdit: () => void;
 }
 
 const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
@@ -39,7 +38,6 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
     style,
     mpPress,
     mpLongPress,
-    onPressEdit,
     ...otherProps
   } = props;
 
@@ -52,7 +50,7 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
       onPress={() => router.push(`/anime/${animeId}`)}
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        onPressEdit();
+        router.push(`/anime/${animeId}/edit`);
       }}
       style={[
         AnimeListViewStyles.touchable,
@@ -98,7 +96,7 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
                 />
               )}
               <IconButton
-                onPress={onPressEdit}
+                onPress={() => router.push(`/anime/${animeId}/edit`)}
                 mode="contained"
                 icon="playlist-edit"
                 iconColor="white"
