@@ -30,7 +30,7 @@ const Header = ({ season, year }: { season: Season; year: number }) => {
         {season.toLocaleUpperCase()} {year}
       </Text>
 
-      <Link asChild href="/search">
+      <Link asChild href="/anime/search">
         <Button mode="outlined" icon="magnify" style={{ flex: 1 }} onPress={() => {}}>
           Search
         </Button>
