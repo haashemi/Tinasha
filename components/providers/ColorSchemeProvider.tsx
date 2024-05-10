@@ -1,28 +1,17 @@
-import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { Appearance, ColorSchemeName, useColorScheme as useNativeColorScheme } from "react-native";
 
 import { useAsyncStorage } from "../hooks";
 
-const Context = createContext<{
+interface ContextValues {
   scheme: ColorSchemeName;
   preferredScheme: ColorSchemeName;
   setScheme: (newScheme: "dark" | "light" | null) => void;
-}>({
-  scheme: null,
-  preferredScheme: "dark",
-  setScheme: () => null,
-});
+}
 
-export const useColorScheme = () => {
-  const value = useContext(Context);
-  if (process.env.NODE_ENV !== "production") {
-    if (!value) {
-      throw new Error("useAuthSession must be wrapped in a <AuthSessionProvider />");
-    }
-  }
+const Context = createContext<ContextValues>({ scheme: null, preferredScheme: "dark", setScheme: () => null });
 
-  return value;
-};
+export const useColorScheme = () => useContext(Context);
 
 export const ColorSchemeProvider = ({ children }: { children: React.ReactNode }) => {
   const systemColorScheme = useNativeColorScheme();
@@ -31,13 +20,10 @@ export const ColorSchemeProvider = ({ children }: { children: React.ReactNode })
   const scheme = colorScheme as ColorSchemeName;
   const preferredScheme = useMemo(() => scheme ?? systemColorScheme, [scheme, systemColorScheme]);
 
-  const setScheme = useCallback(
-    (newScheme: "dark" | "light" | null) => {
-      Appearance.setColorScheme(newScheme);
-      setColorScheme(newScheme);
-    },
-    [setColorScheme],
-  );
+  const setScheme = (newScheme: "dark" | "light" | null) => {
+    setColorScheme(newScheme);
+    Appearance.setColorScheme(newScheme);
+  };
 
   useEffect(() => Appearance.setColorScheme(preferredScheme), [preferredScheme]);
 

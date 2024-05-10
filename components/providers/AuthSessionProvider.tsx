@@ -7,19 +7,15 @@ import { client } from "@/api/client";
 
 const EXPIRED_TOKEN_HEADER = `Bearer error="invalid_token",error_description="The access token expired"`;
 
-interface AuthSessionContextValues {
+interface ContextValues {
   setAuthData: (value: string | null) => void;
   signOut: () => void;
   auth?: string | null;
 }
 
-const AuthSessionContext = createContext<AuthSessionContextValues>({
-  setAuthData: () => null,
-  signOut: () => null,
-  auth: null,
-});
+const Context = createContext<ContextValues>({ setAuthData: () => null, signOut: () => null, auth: null });
 
-export const useAuthSession = () => useContext(AuthSessionContext);
+export const useAuthSession = () => useContext(Context);
 
 export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
   const [authData, setAuthData] = useSecureStorage("auth");
@@ -61,8 +57,6 @@ export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
   }, [auth?.access_token, auth?.refresh_token, setAuthData]);
 
   return (
-    <AuthSessionContext.Provider value={{ setAuthData, signOut: () => setAuthData(null), auth }}>
-      {children}
-    </AuthSessionContext.Provider>
+    <Context.Provider value={{ setAuthData, signOut: () => setAuthData(null), auth }}>{children}</Context.Provider>
   );
 };
