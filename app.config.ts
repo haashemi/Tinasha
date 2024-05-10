@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "tinasha",
   owner: "haashemi",
   privacy: "public",
-  version: "0.1.1",
+  version: "0.2.0",
   platforms: ["android"],
   githubUrl: "https://github.com/haashemi/Tinasha",
   orientation: "portrait",
