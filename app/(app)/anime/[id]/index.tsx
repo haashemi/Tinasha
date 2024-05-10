@@ -41,7 +41,7 @@ const AnimeDetailsScreen = () => {
         <FAB
           disabled={!data}
           icon="playlist-edit"
-          style={Styles.fab}
+          style={[Styles.fab, { bottom: safeArea.bottom + 10 }]}
           onPress={() => router.push(`/anime/${data.id}/edit`)}
         />
       )}
@@ -159,7 +159,7 @@ const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
 };
 
 const Styles = StyleSheet.create({
-  fab: { zIndex: 1, position: "absolute", margin: 16, right: 0, bottom: 10 },
+  fab: { zIndex: 1, position: "absolute", margin: 16, right: 0 },
 
   detailsView: { paddingVertical: 25, flexDirection: "row", alignItems: "center", gap: 15 },
 
