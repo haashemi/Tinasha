@@ -6,7 +6,7 @@ import { Chip, FAB, Icon, IconButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AlternativeTitles, AnimeStudio, useAnimeCharacters, useAnimeDetails } from "@/api";
-import { AnimeCharactersView, TitledText, useAppTheme } from "@/components";
+import { AnimeCharactersView, useAppTheme } from "@/components";
 import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
 
 // TODO: Code Cleanup
@@ -127,18 +127,19 @@ const ProductionDetailsView = ({ studios, source }: { studios: AnimeStudio[]; so
 
   return (
     <View style={[Styles.productionDetailsView, { borderRadius: roundness * 3, backgroundColor: elevation.level1 }]}>
-      <TitledText
-        style={{ justifyContent: "center", alignItems: "center" }}
-        title="Studios"
-        text={studios.map((v) => v.name).join(", ") || "N/A"}
-        textProps={{ numberOfLines: 2 }}
-      />
-      <TitledText
-        style={{ justifyContent: "center", alignItems: "center" }}
-        title="Source"
-        text={getSource(source)}
-        textProps={{ numberOfLines: 1 }}
-      />
+      <View style={[Styles.titledTextView, { justifyContent: "center", alignItems: "center" }]}>
+        <Text variant="bodyMedium">Studios:</Text>
+        <Text variant="titleMedium" style={[Styles.titledText, { paddingLeft: 0 }]} numberOfLines={2}>
+          {studios.map((v) => v.name).join(", ") || "N/A"}
+        </Text>
+      </View>
+
+      <View style={[Styles.titledTextView, { justifyContent: "center", alignItems: "center" }]}>
+        <Text variant="bodyMedium">Source:</Text>
+        <Text variant="titleMedium" style={[Styles.titledText, { paddingLeft: 0 }]} numberOfLines={1}>
+          {getSource(source)}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -151,8 +152,19 @@ const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
 
   return (
     <View style={[Styles.alternativeTitlesView, { borderRadius: roundness * 3, backgroundColor: elevation.level1 }]}>
-      <TitledText title="Enlgish" text={data.en || "Unknown"} textProps={{ numberOfLines: 1 }} />
-      <TitledText title="Native" text={data.ja || "Unknown"} textProps={{ numberOfLines: 1 }} />
+      <View style={Styles.titledTextView}>
+        <Text variant="bodyMedium">English:</Text>
+        <Text variant="titleMedium" style={Styles.titledText} numberOfLines={3}>
+          {data.en || "Unknown"}
+        </Text>
+      </View>
+
+      <View style={Styles.titledTextView}>
+        <Text variant="bodyMedium">Native:</Text>
+        <Text variant="titleMedium" style={Styles.titledText} numberOfLines={3}>
+          {data.ja || "Unknown"}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -161,6 +173,9 @@ const Styles = StyleSheet.create({
   fab: { zIndex: 1, position: "absolute", margin: 16, right: 0 },
 
   detailsView: { paddingVertical: 25, flexDirection: "row", alignItems: "center", gap: 15 },
+
+  titledTextView: { flex: 1, minHeight: 60, gap: 10 },
+  titledText: { paddingLeft: 5 },
 
   productionDetailsView: { padding: 15, height: 100, flexDirection: "row" },
   alternativeTitlesView: { gap: 10, padding: 15, height: 150 },

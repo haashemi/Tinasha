@@ -4,6 +4,5 @@ export { default as AnimeListView } from "./AnimeListView";
 export { default as BottomNavigationBar } from "./BottomNavigationBar";
 export { default as LoadingView } from "./LoadingView";
 export { default as TinashaLogo } from "./TinashaLogo";
-export { default as TitledText } from "./TitledText";
 export * from "./hooks";
 export * from "./providers";
