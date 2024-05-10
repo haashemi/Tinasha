@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, ScrollView, View } from "react-native";
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -10,18 +10,20 @@ import { useAppTheme } from "@/components";
 import { getStatusColor } from "@/lib";
 
 export default function AnimeEdit() {
-  const safeArea = useSafeAreaInsets();
+  const [status, setStatus] = useState<WatchingStatus>("watching");
+  const [episode, setEpisode] = useState(0);
+  const [score, setScore] = useState(0);
+
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { bottom } = useSafeAreaInsets();
   const { colors, roundness, dark } = useAppTheme();
 
+  const detailAnime = useAnimeDetails({ animeId: id });
   const deleteAnime = useDeleteMyAnimeListItem();
   const updateAnime = useUpdateMyAnimeListStatus();
 
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const { data } = useAnimeDetails({ animeId: id });
-
-  const [status, setStatus] = useState<WatchingStatus>(data?.my_list_status?.status ?? "watching");
-  const [episode, setEpisode] = useState(data?.my_list_status?.num_episodes_watched ?? 0);
-  const [score, setScore] = useState(data?.my_list_status?.score ?? 0);
+  const data = detailAnime.data;
+  const isLoading = updateAnime.isPending || deleteAnime.isPending || detailAnime.isFetching;
 
   const updateEpisode = (ep: number) => {
     if (!data) return;
@@ -60,7 +62,13 @@ export default function AnimeEdit() {
     router.back();
   };
 
-  const isLoading = updateAnime.isPending || deleteAnime.isPending;
+  useEffect(() => {
+    if (!data || !data.my_list_status) return;
+
+    setStatus(data.my_list_status.status);
+    setEpisode(data.my_list_status.num_episodes_watched);
+    setScore(data.my_list_status.score);
+  }, [data]);
 
   return (
     <>
@@ -86,7 +94,7 @@ export default function AnimeEdit() {
         enabled
         keyboardVerticalOffset={100}
       >
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 20, paddingBottom: safeArea.bottom + 80 }}>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 20, paddingBottom: bottom + 80 }}>
           <View style={{ height: 200, marginVertical: 20, flexDirection: "row", alignItems: "center", gap: 15 }}>
             <Image
               recyclingKey={`${data?.id}-${data?.title}`}
