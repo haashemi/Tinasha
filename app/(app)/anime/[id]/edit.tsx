@@ -1,11 +1,11 @@
 import { Image } from "expo-image";
-import { Redirect, Stack, router, useLocalSearchParams } from "expo-router";
-import { useMemo, useState } from "react";
+import { Stack, router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import { Alert, KeyboardAvoidingView, ScrollView, View } from "react-native";
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { AnimeNode, WatchingStatus, useDeleteMyAnimeListItem, useUpdateMyAnimeListStatus } from "@/api";
+import { WatchingStatus, useAnimeDetails, useDeleteMyAnimeListItem, useUpdateMyAnimeListStatus } from "@/api";
 import { useAppTheme } from "@/components";
 import { getStatusColor } from "@/lib";
 
@@ -13,11 +13,11 @@ export default function AnimeEdit() {
   const safeArea = useSafeAreaInsets();
   const { colors, roundness, dark } = useAppTheme();
 
-  const updateAnime = useUpdateMyAnimeListStatus();
   const deleteAnime = useDeleteMyAnimeListItem();
+  const updateAnime = useUpdateMyAnimeListStatus();
 
-  const { nodeJson } = useLocalSearchParams<{ nodeJson: string }>();
-  const data = useMemo(() => (nodeJson ? (JSON.parse(nodeJson) as AnimeNode) : null), [nodeJson]);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data } = useAnimeDetails({ animeId: id });
 
   const [status, setStatus] = useState<WatchingStatus>(data?.my_list_status?.status ?? "watching");
   const [episode, setEpisode] = useState(data?.my_list_status?.num_episodes_watched ?? 0);
@@ -25,7 +25,7 @@ export default function AnimeEdit() {
 
   const updateEpisode = (ep: number) => {
     if (!data) return;
-    setEpisode(ep < 0 ? 0 : data.num_episodes === 0 || ep <= data.num_episodes ? ep : data.num_episodes);
+    setEpisode(ep < 0 ? 0 : data?.num_episodes === 0 || ep <= data?.num_episodes ? ep : data?.num_episodes);
   };
 
   const updateScore = (newScore: number) => {
@@ -62,10 +62,6 @@ export default function AnimeEdit() {
 
   const isLoading = updateAnime.isPending || deleteAnime.isPending;
 
-  if (!data) {
-    return <Redirect href="/" />;
-  }
-
   return (
     <>
       <Stack.Screen
@@ -93,8 +89,8 @@ export default function AnimeEdit() {
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 20, paddingBottom: safeArea.bottom + 80 }}>
           <View style={{ height: 200, marginVertical: 20, flexDirection: "row", alignItems: "center", gap: 15 }}>
             <Image
-              recyclingKey={`${data.id}-${data.title}`}
-              source={data.main_picture.large || data.main_picture.medium}
+              recyclingKey={`${data?.id}-${data?.title}`}
+              source={data?.main_picture.large || data?.main_picture.medium}
               style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
               contentFit="cover"
               transition={100}
@@ -103,9 +99,9 @@ export default function AnimeEdit() {
             <View
               style={{ flex: 1, flexGrow: 1, height: "100%", paddingVertical: 20, justifyContent: "space-between" }}
             >
-              <Text variant="titleMedium">{data.title}</Text>
+              <Text variant="titleMedium">{data?.title}</Text>
               <Chip style={{ backgroundColor: "transparent" }} icon="star">
-                {data.mean || "N/A"}
+                {data?.mean || "N/A"}
               </Chip>
             </View>
           </View>
@@ -142,10 +138,10 @@ export default function AnimeEdit() {
               value={episode.toString()}
               onChangeText={(v) => updateEpisode(v ? parseInt(v, 10) : 0)}
               style={{ textAlign: "center" }}
-              right={<TextInput.Affix text={`/${data.num_episodes || "??"}`} />}
+              right={<TextInput.Affix text={`/${data?.num_episodes || "??"}`} />}
             />
             <IconButton
-              disabled={data.num_episodes ? episode === data.num_episodes : false}
+              disabled={data?.num_episodes ? episode === data?.num_episodes : false}
               mode="outlined"
               icon="plus"
               onPress={() => updateEpisode(episode + 1)}
