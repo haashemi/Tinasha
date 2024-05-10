@@ -42,7 +42,7 @@ const AnimeDetailsScreen = () => {
           disabled={!data}
           icon="playlist-edit"
           style={Styles.fab}
-          onPress={() => router.push({ pathname: `/anime/edit`, params: { nodeJson: JSON.stringify(data) } })}
+          onPress={() => router.push(`/anime/${data.id}/edit`)}
         />
       )}
 
