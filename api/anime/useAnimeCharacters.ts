@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { CharacterNode, Paging } from "./models";
+import { CharacterNode, Paging } from "../models";
 
 import { useAuthSession } from "@/components";
 

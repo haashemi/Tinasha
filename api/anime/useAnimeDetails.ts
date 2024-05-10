@@ -6,7 +6,7 @@ import {
   Picture,
   RelatedAnimeEdge,
   RelatedMangaEdge,
-} from "./models";
+} from "../models";
 
 import { useAuthSession } from "@/components";
 

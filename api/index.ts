@@ -1,9 +1,21 @@
 export * from "./models";
-export * from "./useAnimeCharacters";
-export * from "./useAnimeDetails";
-export * from "./useAnimeList";
-export * from "./useDeleteMyAnimeListItem";
-export * from "./useMyUserInformation";
-export * from "./useSeasonalAnime";
-export * from "./useUpdateMyAnimeListStatus";
-export * from "./useUserAnimeList";
+
+// Anime:
+export * from "./anime/useAnimeCharacters";
+export * from "./anime/useAnimeDetails";
+export * from "./anime/useAnimeList";
+export * from "./anime/useSeasonalAnime";
+// TODO: "./anime/useAnimeRanking"
+// TODO: "./anime/useSuggestedAnime"
+
+// User Anime List
+export * from "./user-animelist/useDeleteMyAnimeListItem";
+export * from "./user-animelist/useUpdateMyAnimeListStatus";
+export * from "./user-animelist/useUserAnimeList";
+
+// TODO: Manga
+
+// TODO: User Manga List
+
+// User
+export * from "./user/useMyUserInformation";

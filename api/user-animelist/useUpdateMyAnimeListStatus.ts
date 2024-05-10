@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { WatchingStatus } from "./models";
+import { WatchingStatus } from "../models";
 
 import { useAuthSession } from "@/components";
 

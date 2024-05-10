@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { AnimeNode, Paging, Season } from "./models";
+import { AnimeNode, Paging, Season } from "../models";
 
 import { useAuthSession } from "@/components";
 
