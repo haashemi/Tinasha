@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { ScrollView, Share, StyleSheet, View } from "react-native";
 import { Chip, FAB, Icon, IconButton, Text } from "react-native-paper";
@@ -13,7 +13,6 @@ import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@
 // TODO: Code Cleanup
 // TODO: Statistics View
 const AnimeDetailsScreen = () => {
-  const router = useRouter();
   const safeArea = useSafeAreaInsets();
 
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -38,7 +37,14 @@ const AnimeDetailsScreen = () => {
         }}
       />
 
-      <FAB icon="playlist-edit" style={Styles.fab} onPress={() => router.push(`/anime/edit/${id}`)} />
+      {data && (
+        <FAB
+          disabled={!data}
+          icon="playlist-edit"
+          style={Styles.fab}
+          onPress={() => router.push({ pathname: `/anime/edit`, params: { nodeJson: JSON.stringify(data) } })}
+        />
+      )}
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 15, paddingBottom: safeArea.bottom + 80 }}>
         <View style={Styles.detailsView}>
