@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "tinasha",
   owner: "haashemi",
   privacy: "public",
-  version: "0.2.0",
+  version: "0.2.1",
   platforms: ["android"],
   githubUrl: "https://github.com/haashemi/Tinasha",
   orientation: "portrait",
@@ -40,14 +40,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       } as BuildPropertiesConfigType,
     ],
-    [
-      "@sentry/react-native/expo",
-      {
-        organization: process.env.SENTRY_ORG,
-        project: process.env.SENTRY_PROJECT,
-        url: process.env.SENTRY_HOST,
-      },
-    ],
   ],
   splash: {
     image: "./assets/images/splash.png",
@@ -56,6 +48,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: IS_DEV ? "dev.haashemi.tinasha.dev" : "dev.haashemi.tinasha",
     versionCode: 1,
+    userInterfaceStyle: "automatic",
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#0f172a",
