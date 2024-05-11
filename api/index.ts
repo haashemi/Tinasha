@@ -2,6 +2,7 @@ export * from "./models";
 export * from "./useAnimeCharacters";
 export * from "./useAnimeDetails";
 export * from "./useAnimeList";
+export * from "./useDeleteMyAnimeListItem";
 export * from "./useMyUserInformation";
 export * from "./useSeasonalAnime";
 export * from "./useUpdateMyAnimeListStatus";

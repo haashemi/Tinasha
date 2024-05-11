@@ -4,6 +4,7 @@ export * from "./AnimeRecommendationAggregationEdgeBase";
 export * from "./AnimeStudio";
 export * from "./CharacterNode";
 export * from "./Genre";
+export * from "./MyListStatus";
 export * from "./Paging";
 export * from "./Picture";
 export * from "./RankingInfo";
