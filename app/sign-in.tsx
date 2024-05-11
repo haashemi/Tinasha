@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, View } from "react-native";
@@ -14,7 +14,6 @@ export default function SignIn() {
   const [codeChallenge] = useState(makeKeyCode(128));
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
   const { auth, setAuthData } = useAuthSession();
 
   const { code, state } = useLocalSearchParams<{ code?: string; state?: string }>();
@@ -43,7 +42,7 @@ export default function SignIn() {
         Alert.alert("Authorization failed!", "Something unexpected went wrong, please report it to us.");
       }
     }
-  }, [auth, code, codeChallenge, codeState, router, setAuthData, state]);
+  }, [auth, code, codeChallenge, codeState, setAuthData, state]);
 
   useEffect(() => {
     setLoading(true);
