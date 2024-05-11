@@ -19,24 +19,22 @@ interface AnimeCardViewProps extends Omit<TouchableRippleProps, "children"> {
   meanScore: number | null | undefined;
   imageSrc: string | undefined;
   mediaType: string | undefined;
+  onPressEdit: () => void;
 }
 
 const AnimeCardView = (props: AnimeCardViewProps, ref: ForwardedRef<View>) => {
-  const { animeId, title, status, meanScore, imageSrc, mediaType, style, ...otherProps } = props;
+  const { animeId, title, status, meanScore, imageSrc, mediaType, style, onPressEdit, ...otherProps } = props;
 
   const { colors, roundness, fonts } = useAppTheme();
-
-  const pushToDetailsPage = () => router.push(`/anime/details/${animeId}`);
-  const pushToEditPage = () => router.push(`/anime/edit/${animeId}`);
 
   return (
     <TouchableRipple
       ref={ref}
       borderless
-      onPress={pushToDetailsPage}
+      onPress={() => router.push(`/anime/${animeId}`)}
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        pushToEditPage();
+        onPressEdit();
       }}
       style={[
         AnimeCardViewStyles.touchable,

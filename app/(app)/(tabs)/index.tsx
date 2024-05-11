@@ -1,6 +1,6 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, FAB, Icon, SegmentedButtons, Text } from "react-native-paper";
@@ -118,6 +118,7 @@ const SeasonTab = () => {
             meanScore={node.mean}
             imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
             mediaType={node.media_type}
+            onPressEdit={() => router.push({ pathname: `/anime/edit`, params: { nodeJson: JSON.stringify(node) } })}
             style={{ margin: 5 }}
           />
         )}
