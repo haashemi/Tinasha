@@ -51,8 +51,8 @@ export const useUpdateMyAnimeListStatus = () => {
       });
       return resp.data as Response;
     },
-    onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });
     },
   });
 };
