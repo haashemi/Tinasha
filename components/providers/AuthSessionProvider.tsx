@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { createContext, useContext, useMemo } from "react";
 
-import { useSecureStorageSync } from "../hooks";
+import { useSecureStorage } from "../hooks";
 
 import { refreshToken } from "@/api/auth";
 
@@ -31,7 +31,7 @@ export function useAuthSession() {
 }
 
 export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
-  const [authData, setAuthData] = useSecureStorageSync("auth");
+  const [authData, setAuthData] = useSecureStorage("auth");
 
   const auth = useMemo(() => (authData ? JSON.parse(authData) : authData), [authData]);
 
