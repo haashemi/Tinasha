@@ -35,6 +35,8 @@ interface Response extends AnimeNode {
   };
 }
 
+export { Response as AnimeDetails };
+
 export const useAnimeDetails = (opts: Request) => {
   const {
     animeId,
