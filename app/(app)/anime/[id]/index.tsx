@@ -17,8 +17,8 @@ const AnimeDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors, fonts, roundness } = useAppTheme();
 
-  const { data, isSuccess } = useAnimeDetails({ animeId: id });
-  const characters = useAnimeCharacters({ animeId: id });
+  const { data, isSuccess } = useAnimeDetails({ animeId: id! });
+  const characters = useAnimeCharacters({ animeId: id! });
 
   return (
     <>

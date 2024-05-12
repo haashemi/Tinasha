@@ -18,7 +18,7 @@ export default function AnimeEdit() {
   const { bottom } = useSafeAreaInsets();
   const { colors, roundness, dark } = useAppTheme();
 
-  const detailAnime = useAnimeDetails({ animeId: id });
+  const detailAnime = useAnimeDetails({ animeId: id! });
   const deleteAnime = useDeleteMyAnimeListItem();
   const updateAnime = useUpdateMyAnimeListStatus();
 
