@@ -53,6 +53,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#0f172a",
     },
+    intentFilters: [
+      {
+        action: "VIEW",
+        autoVerify: true,
+        data: [{ scheme: "https", host: "myanimelist.net", pathPrefix: "/anime/" }],
+        category: ["BROWSABLE", "DEFAULT"],
+      },
+    ],
     softwareKeyboardLayoutMode: "pan",
   },
   experiments: { tsconfigPaths: true, typedRoutes: true, turboModules: true },
