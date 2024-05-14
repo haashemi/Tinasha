@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, ScrollView, View } from "react-native";
@@ -6,7 +5,7 @@ import { Button, Chip, Divider, IconButton, SegmentedButtons, Text, TextInput } 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { WatchingStatus, useAnimeDetails, useDeleteMyAnimeListItem, useUpdateMyAnimeListStatus } from "@/api";
-import { useAppTheme } from "@/components";
+import { Image, useAppTheme } from "@/components";
 import { getStatusColor } from "@/lib";
 
 export default function AnimeEdit() {
@@ -97,11 +96,8 @@ export default function AnimeEdit() {
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 20, paddingBottom: bottom + 80 }}>
           <View style={{ height: 200, marginVertical: 20, flexDirection: "row", alignItems: "center", gap: 15 }}>
             <Image
-              recyclingKey={`${data?.id}-${data?.title}`}
               source={data?.main_picture.large || data?.main_picture.medium}
               style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
-              contentFit="cover"
-              transition={100}
             />
 
             <View

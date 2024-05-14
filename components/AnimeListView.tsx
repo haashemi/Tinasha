@@ -1,10 +1,10 @@
 import * as Haptics from "expo-haptics";
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import { ForwardedRef, forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Chip, IconButton, Text, TouchableRipple } from "react-native-paper";
 
+import Image from "./Image";
 import { useAppTheme } from "./providers";
 
 import { WatchingStatus } from "@/api";
@@ -60,13 +60,7 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
       {...otherProps}
     >
       <View style={[{ backgroundColor: colors.elevation.level1 }, AnimeListViewStyles.surface]}>
-        <Image
-          recyclingKey={`${animeId}-${title}`}
-          style={AnimeListViewStyles.image}
-          source={imageSrc}
-          contentFit="cover"
-          transition={100}
-        />
+        <Image recyclingKey={`${animeId}-${title}`} style={AnimeListViewStyles.image} source={imageSrc} />
 
         <View style={AnimeListViewStyles.contentView}>
           <Text variant="titleMedium" numberOfLines={1} ellipsizeMode="middle" style={AnimeListViewStyles.titleText}>

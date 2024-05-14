@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { ScrollView, Share, StyleSheet, View } from "react-native";
@@ -6,7 +5,7 @@ import { Chip, FAB, Icon, IconButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AlternativeTitles, AnimeStudio, useAnimeCharacters, useAnimeDetails } from "@/api";
-import { AnimeCharactersView, useAppTheme } from "@/components";
+import { AnimeCharactersView, Image, useAppTheme } from "@/components";
 import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
 
 // TODO: Code Cleanup
@@ -48,11 +47,8 @@ const AnimeDetailsScreen = () => {
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 15, paddingBottom: safeArea.bottom + 80 }}>
         <View style={Styles.detailsView}>
           <Image
-            recyclingKey={`${data?.id}-${data?.title}`}
             source={data?.main_picture.large || data?.main_picture.medium}
             style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
-            contentFit="cover"
-            transition={100}
           />
 
           <View style={{ flex: 1, flexGrow: 1, height: "100%", paddingVertical: 10, gap: 10 }}>

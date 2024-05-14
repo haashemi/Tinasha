@@ -1,10 +1,10 @@
 import * as Haptics from "expo-haptics";
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import { ForwardedRef, forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Icon, Text, TouchableRipple } from "react-native-paper";
 
+import Image from "./Image";
 import { useAppTheme } from "./providers";
 
 import { WatchingStatus } from "@/api";
@@ -43,13 +43,7 @@ const AnimeCardView = (props: AnimeCardViewProps, ref: ForwardedRef<View>) => {
       {...otherProps}
     >
       <View style={[{ backgroundColor: colors.elevation.level1 }, AnimeCardViewStyles.surface]}>
-        <Image
-          recyclingKey={`${animeId}-${title}`}
-          style={AnimeCardViewStyles.image}
-          source={imageSrc}
-          contentFit="cover"
-          transition={100}
-        />
+        <Image recyclingKey={`${animeId}-${title}`} style={AnimeCardViewStyles.image} source={imageSrc} />
 
         <View style={AnimeCardViewStyles.contentView}>
           <Text variant="titleSmall" numberOfLines={2} ellipsizeMode="tail" style={AnimeCardViewStyles.titleText}>

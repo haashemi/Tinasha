@@ -1,8 +1,8 @@
-import { Image } from "expo-image";
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
+import Image from "./Image";
 import { useAppTheme } from "./providers";
 
 import { CharacterNode } from "@/api";
@@ -49,11 +49,8 @@ const AnimeCharactersView = ({ isLoading, characters }: AnimeCharactersViewProps
               ]}
             >
               <Image
-                recyclingKey={`${node.id}-${node.first_name}-${node.last_name}`}
                 source={node.main_picture?.medium ?? ""}
                 style={[Styles.image, { borderRadius: roundness * 2.5 }]}
-                contentFit="cover"
-                transition={100}
               />
 
               <View style={Styles.nameView}>

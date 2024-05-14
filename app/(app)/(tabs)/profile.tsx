@@ -1,6 +1,5 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useRef } from "react";
@@ -9,7 +8,7 @@ import { Divider, Icon, List, RadioButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMyUserInformation } from "@/api";
-import { useAppTheme, useAuthSession, useColorScheme } from "@/components";
+import { Image, useAppTheme, useAuthSession, useColorScheme } from "@/components";
 
 export default function ProfileTab() {
   const theme = useAppTheme();
@@ -56,13 +55,7 @@ export default function ProfileTab() {
 
       <ScrollView style={{ paddingTop: safeArea.top }}>
         <View style={{ padding: 30, flexDirection: "row" }}>
-          <Image
-            recyclingKey={`${data?.id}-${data?.name}`}
-            style={{ width: 150, height: 200, borderRadius: theme.roundness * 4 }}
-            source={data?.picture}
-            contentFit="cover"
-            transition={100}
-          />
+          <Image source={data?.picture} style={{ width: 150, height: 200, borderRadius: theme.roundness * 4 }} />
 
           <View style={{ justifyContent: "space-around", padding: 20 }}>
             <Text numberOfLines={1} adjustsFontSizeToFit variant="headlineMedium">
