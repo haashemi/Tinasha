@@ -4,10 +4,30 @@ import { Alert, KeyboardAvoidingView, ScrollView, View } from "react-native";
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import type { WatchingStatus } from "@/api";
+import type { AnimeDetails, WatchingStatus } from "@/api";
 import { useAnimeDetails, useDeleteMyAnimeListItem, useUpdateMyAnimeListStatus } from "@/api";
 import { Image, useAppTheme } from "@/components";
 import { getStatusColor } from "@/lib";
+
+const AnimeDetailsView = ({ data }: { data?: AnimeDetails }) => {
+  const { roundness } = useAppTheme();
+
+  return (
+    <View style={{ height: 200, marginVertical: 20, flexDirection: "row", alignItems: "center", gap: 15 }}>
+      <Image
+        source={data?.main_picture.large ?? data?.main_picture.medium}
+        style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
+      />
+
+      <View style={{ flex: 1, flexGrow: 1, height: "100%", paddingVertical: 20, justifyContent: "space-between" }}>
+        <Text variant="titleMedium">{data?.title}</Text>
+        <Chip style={{ backgroundColor: "transparent" }} icon="star">
+          {data?.mean ?? "N/A"}
+        </Chip>
+      </View>
+    </View>
+  );
+};
 
 const AnimeEditScreen = () => {
   const [status, setStatus] = useState<WatchingStatus>("watching");
@@ -16,7 +36,7 @@ const AnimeEditScreen = () => {
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const { bottom } = useSafeAreaInsets();
-  const { colors, roundness, dark } = useAppTheme();
+  const { colors, dark } = useAppTheme();
 
   const detailAnime = useAnimeDetails({ animeId: id });
   const deleteAnime = useDeleteMyAnimeListItem();
@@ -29,26 +49,28 @@ const AnimeEditScreen = () => {
     if (!data) return;
 
     if (ep < 0) return setEpisode(0);
-    if (ep > 0) return setEpisode(data.num_episodes);
-    setEpisode(ep);
+    else if (ep > data.num_episodes) return setEpisode(data.num_episodes);
+    else setEpisode(ep);
   };
 
   const updateScore = (newScore: number) => {
-    if (!data) return;
-    setScore(newScore < 0 ? 0 : newScore > 10 ? 10 : newScore);
+    if (newScore < 0) return setScore(0);
+    else if (newScore > 10) return setScore(10);
+    else setScore(newScore);
   };
 
-  const onDeleteAnime = async () => {
+  const onDeleteAnime = () => {
+    if (!data) return;
+
     Alert.alert(
       "Are you sure?",
-      `You're going to remove ${data?.title ?? "this anime"} from your list.`,
+      `You're going to remove ${data.title} from your list.`,
       [
         { text: "No" },
         {
           text: "Yes",
-          isPreferred: true,
           onPress: () => {
-            deleteAnime.mutate({ animeId: data?.id });
+            deleteAnime.mutate({ animeId: data.id });
             router.back();
           },
         },
@@ -61,7 +83,9 @@ const AnimeEditScreen = () => {
   };
 
   const onUpdateAnime = async () => {
-    await updateAnime.mutateAsync({ animeId: data?.id, body: { status, num_watched_episodes: episode, score } });
+    if (!data) return;
+
+    await updateAnime.mutateAsync({ animeId: data.id, body: { status, num_watched_episodes: episode, score } });
     router.back();
   };
 
@@ -98,22 +122,7 @@ const AnimeEditScreen = () => {
         keyboardVerticalOffset={100}
       >
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 20, paddingBottom: bottom + 80 }}>
-          <View style={{ height: 200, marginVertical: 20, flexDirection: "row", alignItems: "center", gap: 15 }}>
-            <Image
-              source={data?.main_picture.large ?? data?.main_picture.medium}
-              style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
-            />
-
-            <View
-              style={{ flex: 1, flexGrow: 1, height: "100%", paddingVertical: 20, justifyContent: "space-between" }}
-            >
-              <Text variant="titleMedium">{data?.title}</Text>
-              <Chip style={{ backgroundColor: "transparent" }} icon="star">
-                {data?.mean ?? "N/A"}
-              </Chip>
-            </View>
-          </View>
-
+          <AnimeDetailsView data={data} />
           <Divider />
 
           <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={{ gap: 5 }}>

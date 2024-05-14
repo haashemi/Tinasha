@@ -66,7 +66,6 @@ const SeasonTab = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* eslint-disable-next-line react/jsx-pascal-case */}
       <FAB icon="filter" loading={isFetching} style={Styles.fab} onPress={showFilterSheet} />
 
       <BottomSheetModal

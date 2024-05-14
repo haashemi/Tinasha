@@ -1,5 +1,4 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import ContentLoader, { Rect } from "react-content-loader/native";
 import { ScrollView, Share, StyleSheet, View } from "react-native";
 import { Chip, FAB, Icon, IconButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,6 +8,19 @@ import { useAnimeCharacters, useAnimeDetails } from "@/api";
 import { AnimeCharactersView, Image, useAppTheme } from "@/components";
 import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
 
+// TODO: Re-add this
+// const OneOfTheLoaders = () => (
+//   <ContentLoader
+//     width="100%"
+//     height={265}
+//     backgroundColor={colors.elevation.level1}
+//     foregroundColor={colors.elevation.level3}
+//   >
+//     <Rect x="0" y="000" rx="12" ry="12" width="100%" height="100" />
+//     <Rect x="0" y="115" rx="12" ry="12" width="100%" height="150" />
+//   </ContentLoader>
+// );
+
 // TODO: Code Cleanup
 // TODO: Statistics View
 const AnimeDetailsScreen = () => {
@@ -17,7 +29,7 @@ const AnimeDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors, fonts, roundness } = useAppTheme();
 
-  const { data, isSuccess } = useAnimeDetails({ animeId: id });
+  const { data } = useAnimeDetails({ animeId: id });
   const characters = useAnimeCharacters({ animeId: id });
 
   return (
@@ -27,21 +39,20 @@ const AnimeDetailsScreen = () => {
           headerTitle: data?.title ?? "Loading...",
           headerRight: () => (
             <IconButton
+              disabled={!id}
               icon="share-variant"
-              onPress={() => Share.share({ title: data?.title, message: `https://myanimelist.net/anime/${id}` })}
+              onPress={() => Share.share({ title: data?.title, message: `https://myanimelist.net/anime/${id ?? ""}` })}
             />
           ),
         }}
       />
 
-      {data ? (
-        <FAB
-          disabled={!data}
-          icon="playlist-edit"
-          style={[Styles.fab, { bottom: safeArea.bottom + 10 }]}
-          onPress={() => router.push(`/anime/${data.id}/edit`)}
-        />
-      ) : null}
+      <FAB
+        disabled={!data}
+        icon="playlist-edit"
+        style={[Styles.fab, { bottom: safeArea.bottom + 10 }]}
+        onPress={() => router.push(data ? `/anime/${data.id}/edit` : "/")}
+      />
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 15, paddingBottom: safeArea.bottom + 80 }}>
         <View style={Styles.detailsView}>
@@ -91,23 +102,8 @@ const AnimeDetailsScreen = () => {
           </View>
         </View>
 
-        {isSuccess ? (
-          <>
-            <ProductionDetailsView studios={data?.studios ?? "Unknown"} source={data?.source ?? "Unknown"} />
-            <AlternativeTitlesView data={data?.alternative_titles} />
-          </>
-        ) : (
-          <ContentLoader
-            width="100%"
-            height={265}
-            backgroundColor={colors.elevation.level1}
-            foregroundColor={colors.elevation.level3}
-          >
-            <Rect x="0" y="000" rx="12" ry="12" width="100%" height="100" />
-            <Rect x="0" y="115" rx="12" ry="12" width="100%" height="150" />
-          </ContentLoader>
-        )}
-
+        <ProductionDetailsView studios={data?.studios ?? []} source={data?.source ?? "Unknown"} />
+        <AlternativeTitlesView data={data?.alternative_titles ?? ({} as AlternativeTitles)} />
         <AnimeCharactersView isLoading={characters.isLoading} characters={characters.data?.data} />
       </ScrollView>
     </>
@@ -160,6 +156,15 @@ const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
           {data.ja ?? "Unknown"}
         </Text>
       </View>
+
+      {data.synonyms ? (
+        <View style={Styles.titledTextView}>
+          <Text variant="bodyMedium">Synonyms:</Text>
+          <Text variant="titleMedium" style={Styles.titledText}>
+            {data.synonyms.join("\n")}
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -173,7 +178,7 @@ const Styles = StyleSheet.create({
   titledText: { paddingLeft: 5 },
 
   productionDetailsView: { padding: 15, height: 100, flexDirection: "row" },
-  alternativeTitlesView: { gap: 10, padding: 15, height: 150 },
+  alternativeTitlesView: { gap: 10, padding: 15 },
 });
 
 export default AnimeDetailsScreen;

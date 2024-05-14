@@ -19,5 +19,7 @@ module.exports = init({
 
     "react/jsx-pascal-case": "off",
     "react-hooks/exhaustive-deps": "warn",
+
+    "max-lines-per-function": "off",
   },
 });
