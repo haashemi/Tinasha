@@ -1,16 +1,17 @@
 import { createContext, useContext, useEffect, useMemo } from "react";
 
-import { useSecureStorage } from "../hooks";
-
-import { refreshToken } from "@/api";
+import type { AuthResponse } from "@/api";
+import { clientId, refreshToken } from "@/api";
 import { client } from "@/api/client";
+
+import { useSecureStorage } from "../hooks";
 
 const EXPIRED_TOKEN_HEADER = `Bearer error="invalid_token",error_description="The access token expired"`;
 
 interface ContextValues {
+  auth: AuthResponse | null | undefined;
   setAuthData: (value: string | null) => void;
   signOut: () => void;
-  auth?: string | null;
 }
 
 const Context = createContext<ContextValues>({ setAuthData: () => null, signOut: () => null, auth: null });
@@ -20,12 +21,17 @@ export const useAuthSession = () => useContext(Context);
 export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
   const [authData, setAuthData] = useSecureStorage("auth");
 
-  const auth = useMemo(() => (authData ? JSON.parse(authData) : authData), [authData]);
+  const auth = useMemo(() => (authData ? (JSON.parse(authData) as AuthResponse) : undefined), [authData]);
 
   useEffect(() => {
     client.interceptors.request.clear();
     client.interceptors.request.use((req) => {
-      req.headers.setAuthorization(`Bearer ${auth?.access_token}`);
+      if (auth) {
+        req.headers.setAuthorization(`Bearer ${auth.access_token}`);
+      } else {
+        req.headers.set("X-MAL-CLIENT-ID", clientId);
+      }
+
       return req;
     });
 
@@ -46,7 +52,7 @@ export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
           const newToken = await refreshToken(auth?.refresh_token);
           setAuthData(JSON.stringify(newToken.data));
 
-          client.defaults.headers.common["Authorization"] = `Bearer ${newToken.data.access_token}`;
+          client.defaults.headers.common.Authorization = `Bearer ${newToken.data.access_token}`;
 
           return client(originalRequest);
         }
@@ -54,9 +60,9 @@ export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
         return Promise.reject(error);
       },
     );
-  }, [auth?.access_token, auth?.refresh_token, setAuthData]);
+  }, [auth, setAuthData]);
 
-  return (
-    <Context.Provider value={{ setAuthData, signOut: () => setAuthData(null), auth }}>{children}</Context.Provider>
-  );
+  const values = useMemo(() => ({ auth, setAuthData, signOut: () => setAuthData(null) }), [auth, setAuthData]);
+
+  return <Context.Provider value={values}>{children}</Context.Provider>;
 };

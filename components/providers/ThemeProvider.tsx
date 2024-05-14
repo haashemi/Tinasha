@@ -1,15 +1,9 @@
-import { Material3Scheme, useMaterial3Theme } from "@pchmn/expo-material3-theme";
-import { ThemeProvider as ReactNavigateProvider, Theme } from "@react-navigation/native";
-import * as SystemUI from "expo-system-ui";
-import { useEffect } from "react";
-import {
-  MD3DarkTheme,
-  MD3LightTheme,
-  MD3Theme,
-  Provider as PaperProvider,
-  ProviderProps,
-  useTheme,
-} from "react-native-paper";
+import type { Material3Scheme } from "@pchmn/expo-material3-theme";
+import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
+import type { Theme } from "@react-navigation/native";
+import { ThemeProvider as ReactNavigateProvider } from "@react-navigation/native";
+import type { MD3Theme, ProviderProps } from "react-native-paper";
+import { MD3DarkTheme, MD3LightTheme, Provider as PaperProvider, useTheme } from "react-native-paper";
 
 import { useColorScheme } from "./ColorSchemeProvider";
 
@@ -20,7 +14,7 @@ interface ThemeProviderProps extends ProviderProps {
 
 export const useAppTheme = useTheme<MD3Theme & { colors: Material3Scheme }>;
 
-export function ThemeProvider({ children, sourceColor, fallbackSourceColor, ...props }: ThemeProviderProps) {
+export const ThemeProvider = ({ children, sourceColor, fallbackSourceColor, ...props }: ThemeProviderProps) => {
   const { preferredScheme } = useColorScheme();
   const { theme } = useMaterial3Theme({ sourceColor, fallbackSourceColor });
 
@@ -39,13 +33,9 @@ export function ThemeProvider({ children, sourceColor, fallbackSourceColor, ...p
     dark: preferredScheme === "dark",
   };
 
-  useEffect(() => {
-    SystemUI.setBackgroundColorAsync(paperTheme.colors.background);
-  }, [paperTheme.colors.background]);
-
   return (
     <PaperProvider theme={paperTheme} {...props}>
       <ReactNavigateProvider value={routerTheme}>{children}</ReactNavigateProvider>
     </PaperProvider>
   );
-}
+};

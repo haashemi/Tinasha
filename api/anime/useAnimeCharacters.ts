@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { client } from "../client";
-import { CharacterNode, Paging } from "../models";
+import type { CharacterNode, Paging } from "../models";
 
 interface Request {
-  animeId: string;
+  animeId?: string;
   fields?: string;
 }
 
@@ -19,6 +19,8 @@ export const useAnimeCharacters = (opts: Request) => {
   return useQuery({
     queryKey: ["anime-characters", animeId, fields],
     queryFn: async () => {
+      if (!animeId) return undefined;
+
       const resp = await client.get(`/anime/${animeId}/characters`, { params: { fields } });
       return resp.data as Response;
     },

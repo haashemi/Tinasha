@@ -1,20 +1,20 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { client } from "../client";
-import { Paging, UserAnimeListEdge, WatchingStatus } from "../models";
+import type { Paging, UserAnimeListEdge, WatchingStatus } from "../models";
 
 interface Request {
-  /**User name or \@me. */
+  /** User name or \@me. */
   username?: string;
-  /**Filters returned anime list by these statuses.
+  /** Filters returned anime list by these statuses.
    *
    * To return all anime, don't specify this field.
    */
   status?: WatchingStatus;
   sort?: UserAnimeListSort;
-  /**Default: 100. The maximum value is 1000. */
+  /** Default: 100. The maximum value is 1000. */
   limit?: number;
-  /**Default: 0 */
+  /** Default: 0 */
   offset?: number;
   fields?: string;
 }
@@ -24,7 +24,7 @@ interface Response {
   paging: Paging;
 }
 
-export type UserAnimeListSort = "list_score" | "list_updated_at" | "anime_title" | "anime_start_date" | "anime_id";
+export type UserAnimeListSort = "anime_id" | "anime_start_date" | "anime_title" | "list_score" | "list_updated_at";
 
 export const useUserAnimeList = (opts: Request) => {
   const {

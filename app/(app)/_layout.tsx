@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { useAppTheme, useAuthSession } from "@/components";
 
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync();
 
 const AppLayout = () => {
   const theme = useAppTheme();
@@ -12,11 +12,7 @@ const AppLayout = () => {
 
   useEffect(() => {
     if (auth === undefined) return;
-
-    const hideSplashScreen = async () => {
-      await SplashScreen.hideAsync();
-    };
-    hideSplashScreen();
+    void SplashScreen.hideAsync();
   }, [auth]);
 
   if (auth === undefined) return null;

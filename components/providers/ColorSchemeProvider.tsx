@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
-import { Appearance, ColorSchemeName, useColorScheme as useNativeColorScheme } from "react-native";
+import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import type { ColorSchemeName } from "react-native";
+import { Appearance, useColorScheme as useNativeColorScheme } from "react-native";
 
 import { useAsyncStorage } from "../hooks";
 
@@ -20,12 +21,17 @@ export const ColorSchemeProvider = ({ children }: { children: React.ReactNode })
   const scheme = colorScheme as ColorSchemeName;
   const preferredScheme = useMemo(() => scheme ?? systemColorScheme, [scheme, systemColorScheme]);
 
-  const setScheme = (newScheme: "dark" | "light" | null) => {
-    setColorScheme(newScheme);
-    Appearance.setColorScheme(newScheme);
-  };
+  const setScheme = useCallback(
+    (newScheme: "dark" | "light" | null) => {
+      setColorScheme(newScheme);
+      Appearance.setColorScheme(newScheme);
+    },
+    [setColorScheme],
+  );
 
   useEffect(() => Appearance.setColorScheme(preferredScheme), [preferredScheme]);
 
-  return <Context.Provider value={{ scheme, preferredScheme, setScheme }}>{children}</Context.Provider>;
+  const values = useMemo(() => ({ scheme, preferredScheme, setScheme }), [preferredScheme, scheme, setScheme]);
+
+  return <Context.Provider value={values}>{children}</Context.Provider>;
 };

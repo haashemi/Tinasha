@@ -6,10 +6,11 @@ import { ActivityIndicator, Searchbar, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebounce } from "use-debounce";
 
-import { AnimeNode, useAnimeList } from "@/api";
+import type { AnimeNode } from "@/api";
+import { useAnimeList } from "@/api";
 import { AnimeListView, LoadingView } from "@/components";
 
-export default function Search() {
+const SearchScreen = () => {
   const safeArea = useSafeAreaInsets();
   const navigation = useNavigation();
 
@@ -57,7 +58,7 @@ export default function Search() {
               totalEpisodes={node.num_episodes}
               style={{ margin: 5 }}
               watchedEpisodes={node.my_list_status?.num_episodes_watched}
-              imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+              imageSrc={node.main_picture.large ?? node.main_picture.medium}
             />
           )}
         />
@@ -80,4 +81,6 @@ export default function Search() {
       )}
     </>
   );
-}
+};
+
+export default SearchScreen;

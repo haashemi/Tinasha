@@ -14,8 +14,9 @@ export const useDeleteMyAnimeListItem = () => {
 
       return resp.status === 200;
     },
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });
+    onSuccess: (_, { animeId }) => {
+      void queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });
+      void queryClient.refetchQueries({ queryKey: ["anime-details", animeId] });
     },
   });
 };

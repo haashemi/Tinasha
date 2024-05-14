@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { client } from "../client";
-import {
+import type {
   AnimeNode,
   AnimeRecommendationAggregationEdgeBase,
   Picture,
@@ -10,17 +10,17 @@ import {
 } from "../models";
 
 interface Request {
-  animeId: string;
+  animeId?: string;
   fields?: string;
 }
 
 interface Response extends AnimeNode {
   pictures: Picture[];
-  /**The API strips BBCode tags from the result. */
+  /** The API strips BBCode tags from the result. */
   background: string | null;
   related_anime: RelatedAnimeEdge[];
   related_manga: RelatedMangaEdge[];
-  /**Summary of recommended anime for those who like this anime. */
+  /** Summary of recommended anime for those who like this anime. */
   recommendations: AnimeRecommendationAggregationEdgeBase[];
   statistics: {
     num_list_users: number;
@@ -34,7 +34,7 @@ interface Response extends AnimeNode {
   };
 }
 
-export { Response as AnimeDetails };
+export type { Response as AnimeDetails };
 
 export const useAnimeDetails = (opts: Request) => {
   const {
@@ -45,6 +45,8 @@ export const useAnimeDetails = (opts: Request) => {
   return useQuery({
     queryKey: ["anime-details", animeId, fields],
     queryFn: async () => {
+      if (!animeId) return undefined;
+
       const resp = await client.get(`/anime/${animeId}`, { params: { fields } });
       return resp.data as Response;
     },

@@ -5,14 +5,14 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { AuthSessionProvider, ColorSchemeProvider, ThemeProvider } from "@/components";
 
-NavigationBar.setPositionAsync("absolute");
-NavigationBar.setBackgroundColorAsync("#000000");
-NavigationBar.setButtonStyleAsync("light");
+void NavigationBar.setPositionAsync("absolute");
+void NavigationBar.setBackgroundColorAsync("#000000");
+void NavigationBar.setButtonStyleAsync("light");
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,6 +1,6 @@
 export interface RankingInfo {
-  /**Current rank. */
+  /** Current rank. */
   rank: number;
-  /**Previous rank */
+  /** Previous rank */
   previous_rank: number | null;
 }

@@ -1,10 +1,11 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { ScrollView, Share, StyleSheet, View } from "react-native";
 import { Chip, FAB, Icon, IconButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { AlternativeTitles, AnimeStudio, useAnimeCharacters, useAnimeDetails } from "@/api";
+import type { AlternativeTitles, AnimeStudio } from "@/api";
+import { useAnimeCharacters, useAnimeDetails } from "@/api";
 import { AnimeCharactersView, Image, useAppTheme } from "@/components";
 import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
 
@@ -16,54 +17,52 @@ const AnimeDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors, fonts, roundness } = useAppTheme();
 
-  const { data, isSuccess } = useAnimeDetails({ animeId: id! });
-  const characters = useAnimeCharacters({ animeId: id! });
+  const { data, isSuccess } = useAnimeDetails({ animeId: id });
+  const characters = useAnimeCharacters({ animeId: id });
 
   return (
     <>
       <Stack.Screen
         options={{
           headerTitle: data?.title ?? "Loading...",
-          headerRight: () => {
-            return (
-              <IconButton
-                icon="share-variant"
-                onPress={() => Share.share({ title: data?.title, message: `https://myanimelist.net/anime/${id}` })}
-              />
-            );
-          },
+          headerRight: () => (
+            <IconButton
+              icon="share-variant"
+              onPress={() => Share.share({ title: data?.title, message: `https://myanimelist.net/anime/${id}` })}
+            />
+          ),
         }}
       />
 
-      {data && (
+      {data ? (
         <FAB
           disabled={!data}
           icon="playlist-edit"
           style={[Styles.fab, { bottom: safeArea.bottom + 10 }]}
           onPress={() => router.push(`/anime/${data.id}/edit`)}
         />
-      )}
+      ) : null}
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 15, paddingBottom: safeArea.bottom + 80 }}>
         <View style={Styles.detailsView}>
           <Image
-            source={data?.main_picture.large || data?.main_picture.medium}
+            source={data?.main_picture.large ?? data?.main_picture.medium}
             style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
           />
 
           <View style={{ flex: 1, flexGrow: 1, height: "100%", paddingVertical: 10, gap: 10 }}>
             <View style={{ flexWrap: "wrap", gap: 5, flexDirection: "row" }}>
               <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="fire">
-                {data?.popularity || "N/A"}
+                {data?.popularity ?? "N/A"}
               </Chip>
               <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="star">
-                {data?.mean || "N/A"}
+                {data?.mean ?? "N/A"}
               </Chip>
             </View>
 
             <View style={{ flexWrap: "wrap", gap: 5, flexDirection: "row" }}>
               <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="television-classic">
-                {`${getMediaType(data?.media_type || "N/A")} - ${((data?.average_episode_duration || 0) / 60).toFixed(0)}m`}
+                {`${getMediaType(data?.media_type ?? "N/A")} - ${((data?.average_episode_duration ?? 0) / 60).toFixed(0)}m`}
               </Chip>
               <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="movie-roll">
                 {data?.num_episodes ? `${data.num_episodes} EP` : "?? EP"}
@@ -86,7 +85,7 @@ const AnimeDetailsScreen = () => {
                 adjustsFontSizeToFit
                 style={{ ...fonts.labelLarge, color: colors.onPrimaryContainer }}
               >
-                {data?.genres.map((v) => v.name).join(", ") || "N/A"}
+                {data?.genres.map((v) => v.name).join(", ") ?? "N/A"}
               </Text>
             </View>
           </View>
@@ -94,8 +93,8 @@ const AnimeDetailsScreen = () => {
 
         {isSuccess ? (
           <>
-            <ProductionDetailsView studios={data.studios} source={data.source ?? "Unknown"} />
-            <AlternativeTitlesView data={data.alternative_titles} />
+            <ProductionDetailsView studios={data?.studios ?? "Unknown"} source={data?.source ?? "Unknown"} />
+            <AlternativeTitlesView data={data?.alternative_titles} />
           </>
         ) : (
           <ContentLoader
@@ -151,14 +150,14 @@ const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
       <View style={Styles.titledTextView}>
         <Text variant="bodyMedium">English:</Text>
         <Text variant="titleMedium" style={Styles.titledText} numberOfLines={3}>
-          {data.en || "Unknown"}
+          {data.en ?? "Unknown"}
         </Text>
       </View>
 
       <View style={Styles.titledTextView}>
         <Text variant="bodyMedium">Native:</Text>
         <Text variant="titleMedium" style={Styles.titledText} numberOfLines={3}>
-          {data.ja || "Unknown"}
+          {data.ja ?? "Unknown"}
         </Text>
       </View>
     </View>

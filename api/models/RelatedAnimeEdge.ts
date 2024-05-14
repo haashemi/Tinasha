@@ -1,4 +1,4 @@
-import { MainPicture } from "./MainPicture";
+import type { MainPicture } from "./MainPicture";
 
 export interface RelatedAnimeEdge {
   node: {
@@ -6,16 +6,16 @@ export interface RelatedAnimeEdge {
     title: string;
     main_picture: MainPicture;
   };
-  /**The type of the relationship between this work and related work. */
+  /** The type of the relationship between this work and related work. */
   relation_type:
-    | "sequel"
-    | "prequel"
     | "alternative_setting"
     | "alternative_version"
-    | "side_story"
+    | "full_story"
     | "parent_story"
-    | "summary"
-    | "full_story";
-  /**The format of relation_type for human like "Alternative version". */
+    | "prequel"
+    | "sequel"
+    | "side_story"
+    | "summary";
+  /** The format of relation_type for human like "Alternative version". */
   relation_type_formatted: string;
 }

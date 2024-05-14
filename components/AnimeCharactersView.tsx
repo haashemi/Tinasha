@@ -2,10 +2,10 @@ import ContentLoader, { Rect } from "react-content-loader/native";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
+import type { CharacterNode } from "@/api";
+
 import Image from "./Image";
 import { useAppTheme } from "./providers";
-
-import { CharacterNode } from "@/api";
 
 interface AnimeCharactersViewProps {
   isLoading: boolean;
@@ -48,10 +48,7 @@ const AnimeCharactersView = ({ isLoading, characters }: AnimeCharactersViewProps
                 { borderRadius: roundness * 2.5, backgroundColor: colors.elevation.level3 },
               ]}
             >
-              <Image
-                source={node.main_picture?.medium ?? ""}
-                style={[Styles.image, { borderRadius: roundness * 2.5 }]}
-              />
+              <Image source={node.main_picture.medium} style={[Styles.image, { borderRadius: roundness * 2.5 }]} />
 
               <View style={Styles.nameView}>
                 <Text numberOfLines={2}>

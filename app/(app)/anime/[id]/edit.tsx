@@ -1,14 +1,15 @@
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, ScrollView, View } from "react-native";
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { WatchingStatus, useAnimeDetails, useDeleteMyAnimeListItem, useUpdateMyAnimeListStatus } from "@/api";
+import type { WatchingStatus } from "@/api";
+import { useAnimeDetails, useDeleteMyAnimeListItem, useUpdateMyAnimeListStatus } from "@/api";
 import { Image, useAppTheme } from "@/components";
 import { getStatusColor } from "@/lib";
 
-export default function AnimeEdit() {
+const AnimeEditScreen = () => {
   const [status, setStatus] = useState<WatchingStatus>("watching");
   const [episode, setEpisode] = useState(0);
   const [score, setScore] = useState(0);
@@ -17,7 +18,7 @@ export default function AnimeEdit() {
   const { bottom } = useSafeAreaInsets();
   const { colors, roundness, dark } = useAppTheme();
 
-  const detailAnime = useAnimeDetails({ animeId: id! });
+  const detailAnime = useAnimeDetails({ animeId: id });
   const deleteAnime = useDeleteMyAnimeListItem();
   const updateAnime = useUpdateMyAnimeListStatus();
 
@@ -26,7 +27,10 @@ export default function AnimeEdit() {
 
   const updateEpisode = (ep: number) => {
     if (!data) return;
-    setEpisode(ep < 0 ? 0 : data?.num_episodes === 0 || ep <= data?.num_episodes ? ep : data?.num_episodes);
+
+    if (ep < 0) return setEpisode(0);
+    if (ep > 0) return setEpisode(data.num_episodes);
+    setEpisode(ep);
   };
 
   const updateScore = (newScore: number) => {
@@ -37,14 +41,14 @@ export default function AnimeEdit() {
   const onDeleteAnime = async () => {
     Alert.alert(
       "Are you sure?",
-      `You're going to remove ${data?.title} from your list.`,
+      `You're going to remove ${data?.title ?? "this anime"} from your list.`,
       [
         { text: "No" },
         {
           text: "Yes",
           isPreferred: true,
           onPress: () => {
-            deleteAnime.mutate({ animeId: data!.id });
+            deleteAnime.mutate({ animeId: data?.id });
             router.back();
           },
         },
@@ -57,12 +61,12 @@ export default function AnimeEdit() {
   };
 
   const onUpdateAnime = async () => {
-    await updateAnime.mutateAsync({ animeId: data!.id, body: { status, num_watched_episodes: episode, score } });
+    await updateAnime.mutateAsync({ animeId: data?.id, body: { status, num_watched_episodes: episode, score } });
     router.back();
   };
 
   useEffect(() => {
-    if (!data || !data.my_list_status) return;
+    if (!data?.my_list_status) return;
 
     setStatus(data.my_list_status.status);
     setEpisode(data.my_list_status.num_episodes_watched);
@@ -96,7 +100,7 @@ export default function AnimeEdit() {
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 20, paddingBottom: bottom + 80 }}>
           <View style={{ height: 200, marginVertical: 20, flexDirection: "row", alignItems: "center", gap: 15 }}>
             <Image
-              source={data?.main_picture.large || data?.main_picture.medium}
+              source={data?.main_picture.large ?? data?.main_picture.medium}
               style={{ height: 200, aspectRatio: "4/6", borderRadius: roundness * 3 }}
             />
 
@@ -105,7 +109,7 @@ export default function AnimeEdit() {
             >
               <Text variant="titleMedium">{data?.title}</Text>
               <Chip style={{ backgroundColor: "transparent" }} icon="star">
-                {data?.mean || "N/A"}
+                {data?.mean ?? "N/A"}
               </Chip>
             </View>
           </View>
@@ -142,10 +146,10 @@ export default function AnimeEdit() {
               value={episode.toString()}
               onChangeText={(v) => updateEpisode(v ? parseInt(v, 10) : 0)}
               style={{ textAlign: "center" }}
-              right={<TextInput.Affix text={`/${data?.num_episodes || "??"}`} />}
+              right={<TextInput.Affix text={`/${data?.num_episodes ?? "??"}`} />}
             />
             <IconButton
-              disabled={data?.num_episodes ? episode === data?.num_episodes : false}
+              disabled={data?.num_episodes ? episode === data.num_episodes : false}
               mode="outlined"
               icon="plus"
               onPress={() => updateEpisode(episode + 1)}
@@ -170,4 +174,6 @@ export default function AnimeEdit() {
       </KeyboardAvoidingView>
     </>
   );
-}
+};
+
+export default AnimeEditScreen;

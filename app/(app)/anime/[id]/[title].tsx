@@ -1,7 +1,9 @@
 import { Redirect, useLocalSearchParams } from "expo-router";
 
-export default function AnimeDetailsRedirect() {
+const AnimeDetailsRedirect = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  return <Redirect href={`/anime/${id}`} />;
-}
+  return <Redirect href={id ? `/anime/${id}` : "/"} />;
+};
+
+export default AnimeDetailsRedirect;

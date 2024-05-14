@@ -22,13 +22,13 @@ interface Response {
     num_days_completed: number;
     num_days_on_hold: number;
     num_days_dropped: number;
-    /**num_watching_days + num_completed_days + num_on_hold_days + num_dropped_days */
+    /** num_watching_days + num_completed_days + num_on_hold_days + num_dropped_days */
     num_days: number;
     num_episodes: number;
     num_times_rewatched: number;
     mean_score: number;
   } | null;
-  /**for example: "America/Los_Angeles" */
+  /** for example: "America/Los_Angeles" */
   time_zone: string | null;
   is_supporter: boolean | null;
 }

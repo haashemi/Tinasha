@@ -1,1 +1,1 @@
-export type WatchingStatus = "watching" | "completed" | "on_hold" | "dropped" | "plan_to_watch";
+export type WatchingStatus = "completed" | "dropped" | "on_hold" | "plan_to_watch" | "watching";

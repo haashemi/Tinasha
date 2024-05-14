@@ -5,7 +5,8 @@ import { useCallback, useMemo } from "react";
 import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { UserAnimeListEdge, WatchingStatus, useUpdateMyAnimeListStatus, useUserAnimeList } from "@/api";
+import type { UserAnimeListEdge, WatchingStatus } from "@/api";
+import { useUpdateMyAnimeListStatus, useUserAnimeList } from "@/api";
 import { AnimeListView, LoadingView, useAppTheme } from "@/components";
 
 const Tab = createMaterialTopTabNavigator();
@@ -39,16 +40,16 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
           totalEpisodes={node.num_episodes}
           style={{ margin: 5 }}
           watchedEpisodes={node.my_list_status?.num_episodes_watched}
-          imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+          imageSrc={node.main_picture.large ?? node.main_picture.medium}
           mpPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             mutate({
               animeId: node.id,
               body: { num_watched_episodes: (node.my_list_status?.num_episodes_watched ?? 0) + 1 },
             });
           }}
           mpLongPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             mutate({
               animeId: node.id,
               body: { num_watched_episodes: (node.my_list_status?.num_episodes_watched ?? 0) - 1 },
@@ -60,37 +61,37 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
   );
 };
 
-export default function ListTab() {
+const ListTab = () => {
   const { colors } = useAppTheme();
   const safeArea = useSafeAreaInsets();
 
   return (
-    <>
-      <Tab.Navigator
-        initialRouteName="Watching"
-        screenOptions={{
-          lazy: true,
-          lazyPlaceholder: () => <LoadingView />,
-          tabBarGap: 20,
-          tabBarScrollEnabled: true,
-          tabBarStyle: {
-            marginTop: safeArea.top,
-            paddingHorizontal: 16,
-            backgroundColor: colors.background,
-            shadowColor: "transparent",
-          },
-          tabBarIndicatorContainerStyle: { marginHorizontal: 16 },
-          tabBarItemStyle: { width: "auto", paddingHorizontal: 10 },
-          tabBarLabelStyle: { marginHorizontal: 0 },
-        }}
-      >
-        <Tab.Screen name="All">{() => <ListView />}</Tab.Screen>
-        <Tab.Screen name="Watching">{() => <ListView status="watching" />}</Tab.Screen>
-        <Tab.Screen name="Completed">{() => <ListView status="completed" />}</Tab.Screen>
-        <Tab.Screen name="On Hold">{() => <ListView status="on_hold" />}</Tab.Screen>
-        <Tab.Screen name="Dropped">{() => <ListView status="dropped" />}</Tab.Screen>
-        <Tab.Screen name="Plan to Watch">{() => <ListView status="plan_to_watch" />}</Tab.Screen>
-      </Tab.Navigator>
-    </>
+    <Tab.Navigator
+      initialRouteName="Watching"
+      screenOptions={{
+        lazy: true,
+        lazyPlaceholder: () => <LoadingView />,
+        tabBarGap: 20,
+        tabBarScrollEnabled: true,
+        tabBarStyle: {
+          marginTop: safeArea.top,
+          paddingHorizontal: 16,
+          backgroundColor: colors.background,
+          shadowColor: "transparent",
+        },
+        tabBarIndicatorContainerStyle: { marginHorizontal: 16 },
+        tabBarItemStyle: { width: "auto", paddingHorizontal: 10 },
+        tabBarLabelStyle: { marginHorizontal: 0 },
+      }}
+    >
+      <Tab.Screen name="All">{() => <ListView />}</Tab.Screen>
+      <Tab.Screen name="Watching">{() => <ListView status="watching" />}</Tab.Screen>
+      <Tab.Screen name="Completed">{() => <ListView status="completed" />}</Tab.Screen>
+      <Tab.Screen name="On Hold">{() => <ListView status="on_hold" />}</Tab.Screen>
+      <Tab.Screen name="Dropped">{() => <ListView status="dropped" />}</Tab.Screen>
+      <Tab.Screen name="Plan to Watch">{() => <ListView status="plan_to_watch" />}</Tab.Screen>
+    </Tab.Navigator>
   );
-}
+};
+
+export default ListTab;

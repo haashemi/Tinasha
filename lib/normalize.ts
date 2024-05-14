@@ -27,39 +27,24 @@ export const getNormalizedSeason = (season?: Season) => {
   }
 };
 
-export const getSource = (source?: string | null) => {
-  switch (source) {
-    case "other":
-      return "Other";
-    case "original":
-      return "Original";
-    case "manga":
-      return "Manga";
-    case "4_koma_manga":
-      return "4Koma Manga";
-    case "web_manga":
-      return "Web Manga";
-    case "digital_manga":
-      return "Digital Manga";
-    case "novel":
-      return "Novel";
-    case "light_novel":
-      return "Light Novel";
-    case "visual_novel":
-      return "Visual Novel";
-    case "game":
-      return "Game";
-    case "card_game":
-      return "Card Game";
-    case "book":
-      return "Book";
-    case "picture_book":
-      return "PictureBook";
-    case "radio":
-      return "Radio";
-    case "music":
-      return "Music";
-    default:
-      return "Unknown";
-  }
+const sourceNameTable: Record<string, string> = {
+  other: "Other",
+  original: "Original",
+  manga: "Manga",
+  "4_koma_manga": "4Koma Manga",
+  web_manga: "Web Manga",
+  digital_manga: "Digital Manga",
+  novel: "Novel",
+  light_novel: "Light Novel",
+  visual_novel: "Visual Novel",
+  game: "Game",
+  card_game: "Card Game",
+  book: "Book",
+  picture_book: "PictureBook",
+  radio: "Radio",
+  music: "Music",
+};
+
+export const getSource = (source: string) => {
+  return sourceNameTable[source] ?? "Unknown";
 };

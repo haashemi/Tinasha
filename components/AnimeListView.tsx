@@ -1,14 +1,15 @@
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
-import { ForwardedRef, forwardRef } from "react";
+import type { ForwardedRef } from "react";
+import { forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Chip, IconButton, Text, TouchableRipple } from "react-native-paper";
 
+import type { WatchingStatus } from "@/api";
+import { getStatusColor } from "@/lib";
+
 import Image from "./Image";
 import { useAppTheme } from "./providers";
-
-import { WatchingStatus } from "@/api";
-import { getStatusColor } from "@/lib";
 
 type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
 
@@ -49,7 +50,7 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
       borderless
       onPress={() => router.push(`/anime/${animeId}`)}
       onLongPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         router.push(`/anime/${animeId}/edit`);
       }}
       style={[
@@ -69,13 +70,13 @@ const AnimeListView = (props: AnimeListViewProps, ref: ForwardedRef<View>) => {
 
           <View style={AnimeListViewStyles.actionView}>
             <Chip compact style={AnimeListViewStyles.actionViewChip} icon="star">
-              {score ? `${meanScore || "N/A"} — ${score}` : meanScore || "N/A"}
+              {score ? `${meanScore ?? "N/A"} — ${score}` : meanScore ?? "N/A"}
             </Chip>
 
             <Chip compact style={AnimeListViewStyles.actionViewChip} icon="motion-play-outline">
-              {watchedEpisodes || status === "watching"
-                ? `${watchedEpisodes ?? 0}/${totalEpisodes || "??"}`
-                : totalEpisodes || "N/A"}
+              {watchedEpisodes ?? status === "watching"
+                ? `${watchedEpisodes ?? 0}/${totalEpisodes ?? "??"}`
+                : totalEpisodes ?? "N/A"}
             </Chip>
 
             <View style={AnimeListViewStyles.actionViewButton}>

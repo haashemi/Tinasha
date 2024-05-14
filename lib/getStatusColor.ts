@@ -1,6 +1,6 @@
-import { Status } from "@/api";
+import type { WatchingStatus } from "@/api";
 
-export const getStatusColor = (status: Status | null | undefined) =>
+export const getStatusColor = (status: WatchingStatus | null | undefined) =>
   status === "watching"
     ? "#22c55e"
     : status === "completed"

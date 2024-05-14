@@ -1,14 +1,15 @@
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
-import { ForwardedRef, forwardRef } from "react";
+import type { ForwardedRef } from "react";
+import { forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Icon, Text, TouchableRipple } from "react-native-paper";
 
+import type { WatchingStatus } from "@/api";
+import { getMediaType } from "@/lib";
+
 import Image from "./Image";
 import { useAppTheme } from "./providers";
-
-import { WatchingStatus } from "@/api";
-import { getMediaType } from "@/lib";
 
 type TouchableRippleProps = React.ComponentProps<typeof TouchableRipple>;
 
@@ -32,7 +33,7 @@ const AnimeCardView = (props: AnimeCardViewProps, ref: ForwardedRef<View>) => {
       borderless
       onPress={() => router.push(`/anime/${animeId}`)}
       onLongPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         router.push(`/anime/${animeId}/edit`);
       }}
       style={[

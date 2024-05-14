@@ -10,7 +10,7 @@ const useSecureStorage = (key: string, defaultValue?: string) => {
       setState(storedValue);
     };
 
-    getStoredValue();
+    void getStoredValue();
   }, [key]);
 
   const setValue = useCallback(
@@ -18,9 +18,9 @@ const useSecureStorage = (key: string, defaultValue?: string) => {
       setState(value);
 
       if (value === null) {
-        SecureStore.deleteItemAsync(key);
+        void SecureStore.deleteItemAsync(key);
       } else {
-        SecureStore.setItemAsync(key, value);
+        void SecureStore.setItemAsync(key, value);
       }
     },
     [key],

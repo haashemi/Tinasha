@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMyUserInformation } from "@/api";
 import { Image, useAppTheme, useAuthSession, useColorScheme } from "@/components";
 
-export default function ProfileTab() {
+const ProfileTab = () => {
   const theme = useAppTheme();
   const safeArea = useSafeAreaInsets();
   const { setAuthData } = useAuthSession();
@@ -105,4 +105,6 @@ export default function ProfileTab() {
       </ScrollView>
     </>
   );
-}
+};
+
+export default ProfileTab;

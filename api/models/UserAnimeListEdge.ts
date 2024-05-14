@@ -1,5 +1,5 @@
-import { AnimeListStatus } from "./AnimeListStatus";
-import { AnimeNode } from "./AnimeNode";
+import type { AnimeListStatus } from "./AnimeListStatus";
+import type { AnimeNode } from "./AnimeNode";
 
 export interface UserAnimeListEdge {
   node: AnimeNode;

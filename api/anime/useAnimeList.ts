@@ -1,14 +1,14 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { client } from "../client";
-import { AnimeNode, Paging } from "../models";
+import type { AnimeNode, Paging } from "../models";
 
 interface Request {
-  /**Search. */
+  /** Search. */
   q: string;
-  /**Default: 100. The maximum value is 100. */
+  /** Default: 100. The maximum value is 100. */
   limit?: number;
-  /**Default: 0 */
+  /** Default: 0 */
   offset?: number;
   fields?: string;
 }
@@ -34,6 +34,6 @@ export const useAnimeList = (opts: Request) => {
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
-      lastPage.paging?.next ? lastPageParam + 1 : undefined,
+      lastPage.paging.next ? lastPageParam + 1 : undefined,
   });
 };

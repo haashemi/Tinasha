@@ -1,4 +1,4 @@
-import { MainPicture } from "./MainPicture";
+import type { MainPicture } from "./MainPicture";
 
 export interface CharacterNode {
   id: number;

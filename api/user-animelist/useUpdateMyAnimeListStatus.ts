@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "../client";
-import { WatchingStatus } from "../models";
+import type { WatchingStatus } from "../models";
 
 interface Request {
   status?: WatchingStatus;
   is_rewatching?: boolean;
-  /**0-10 */
+  /** 0-10 */
   score?: number;
   num_watched_episodes?: number;
   priority?: number;
@@ -18,10 +18,10 @@ interface Request {
 
 interface Response {
   status: WatchingStatus | null;
-  /**0-10 */
+  /** 0-10 */
   score: number;
   num_episodes_watched: number;
-  /**If authorized user watches an anime again after completion, this field value is true.
+  /** If authorized user watches an anime again after completion, this field value is true.
    *
    * In this case, MyAnimeList treats the anime as 'watching' in the user's anime list.
    */
@@ -36,7 +36,7 @@ interface Response {
   updated_at: Date;
 }
 
-export { Request as UpdateAnimeListStatusBody };
+export type { Request as UpdateAnimeListStatusBody };
 
 export const useUpdateMyAnimeListStatus = () => {
   const queryClient = useQueryClient();
@@ -49,8 +49,9 @@ export const useUpdateMyAnimeListStatus = () => {
       });
       return resp.data as Response;
     },
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });
+    onSuccess: (_, { animeId }) => {
+      void queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });
+      void queryClient.refetchQueries({ queryKey: ["anime-details", animeId] });
     },
   });
 };

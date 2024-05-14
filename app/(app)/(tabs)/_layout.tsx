@@ -4,7 +4,7 @@ import { Icon } from "react-native-paper";
 
 import { BottomNavigationBar } from "@/components";
 
-export default function TabLayout() {
+const TabsLayout = () => {
   return (
     <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <BottomNavigationBar tabBarProps={props} />}>
       <Tabs.Screen
@@ -36,4 +36,6 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-}
+};
+
+export default TabsLayout;

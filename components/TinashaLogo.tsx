@@ -1,4 +1,5 @@
-import Svg, { Path, SvgProps } from "react-native-svg";
+import type { SvgProps } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 
 const TinashaLogo = (props: SvgProps) => (
   <Svg width="477" height="111" viewBox="0 0 477 111" {...props}>

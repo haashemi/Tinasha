@@ -1,10 +1,10 @@
 export interface AnimeListStatus {
-  status: "watching" | "completed" | "on_hold" | "dropped" | "plan_to_watch" | null;
-  /**0-10 */
+  status: "completed" | "dropped" | "on_hold" | "plan_to_watch" | "watching" | null;
+  /** 0-10 */
   score: number;
-  /**0 or the number of watched episodes. */
+  /** 0 or the number of watched episodes. */
   num_episodes_watched: number;
-  /**If authorized user watches an anime again after completion, this field value is true.
+  /** If authorized user watches an anime again after completion, this field value is true.
    * In this case, MyAnimeList treats the anime as 'watching' in the user's anime list.*/
   is_rewatching: boolean;
   start_date: Date | null;
@@ -13,7 +13,7 @@ export interface AnimeListStatus {
   num_times_rewatched: number;
   rewatch_value: number;
   tags: string[];
-  /**You cannot contain this field in a list. */
+  /** You cannot contain this field in a list. */
   comments: string;
   updated_at: Date;
 }

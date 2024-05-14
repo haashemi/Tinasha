@@ -10,7 +10,7 @@ const useAsyncStorage = (key: string, defaultValue?: string) => {
       setState(storedValue);
     };
 
-    getStoredValue();
+    void getStoredValue();
   }, [key]);
 
   const setValue = useCallback(
@@ -18,9 +18,9 @@ const useAsyncStorage = (key: string, defaultValue?: string) => {
       setState(value);
 
       if (value === null) {
-        AsyncStorage.removeItem(key);
+        void AsyncStorage.removeItem(key);
       } else {
-        AsyncStorage.setItem(key, value);
+        void AsyncStorage.setItem(key, value);
       }
     },
     [key],

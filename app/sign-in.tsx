@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { exchangeCode, getAuthUrl, makeKeyCode, redirectUri } from "@/api";
 import { TinashaLogo, useAuthSession } from "@/components";
 
-export default function SignIn() {
+const SignInScreen = () => {
   const [codeState] = useState(makeKeyCode(24));
   const [codeChallenge] = useState(makeKeyCode(128));
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ export default function SignIn() {
 
   useEffect(() => {
     setLoading(true);
-    authorize().then(() => setLoading(false));
+    void authorize().then(() => setLoading(false));
   }, [authorize]);
 
   return (
@@ -65,4 +65,6 @@ export default function SignIn() {
       </View>
     </SafeAreaView>
   );
-}
+};
+
+export default SignInScreen;

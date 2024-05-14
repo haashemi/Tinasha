@@ -1,12 +1,13 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, FAB, Icon, SegmentedButtons, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { AnimeNode, Season, SeasonalAnimeSort, getSeason, useSeasonalAnime } from "@/api";
+import type { AnimeNode, Season, SeasonalAnimeSort } from "@/api";
+import { getSeason, useSeasonalAnime } from "@/api";
 import { AnimeCardView, LoadingView, useAppTheme } from "@/components";
 
 const seasonsList = [
@@ -30,11 +31,9 @@ const Header = ({ season, year }: { season: Season; year: number }) => {
         {season.toLocaleUpperCase()} {year}
       </Text>
 
-      <Link asChild href="/anime/search">
-        <Button mode="outlined" icon="magnify" style={{ flex: 1 }} onPress={() => {}}>
-          Search
-        </Button>
-      </Link>
+      <Button mode="outlined" icon="magnify" style={{ flex: 1 }} onPress={() => router.push("/anime/search")}>
+        Search
+      </Button>
     </View>
   );
 };
@@ -57,7 +56,7 @@ const SeasonTab = () => {
     () =>
       data?.pages
         .flatMap((page) => page.data)
-        .filter(({ node }) => node.start_season!.year === year && node.start_season!.season === season),
+        .filter(({ node }) => node.start_season?.year === year && node.start_season.season === season),
     [data?.pages, season, year],
   );
 
@@ -67,6 +66,7 @@ const SeasonTab = () => {
 
   return (
     <View style={{ flex: 1 }}>
+      {/* eslint-disable-next-line react/jsx-pascal-case */}
       <FAB icon="filter" loading={isFetching} style={Styles.fab} onPress={showFilterSheet} />
 
       <BottomSheetModal
@@ -108,7 +108,7 @@ const SeasonTab = () => {
         onEndReached={hasNextPage ? fetchNextPage : undefined}
         onEndReachedThreshold={0.5}
         ListHeaderComponent={() => <Header season={season} year={year} />}
-        ListFooterComponent={() => <Footer isLoading={hasNextPage && isFetching} />}
+        ListFooterComponent={() => <Footer isLoading={isFetching} />}
         keyExtractor={keyExtractor}
         renderItem={({ item: { node } }) => (
           <AnimeCardView
@@ -116,7 +116,7 @@ const SeasonTab = () => {
             title={node.title}
             status={node.my_list_status?.status}
             meanScore={node.mean}
-            imageSrc={node.main_picture?.large ?? node.main_picture?.medium}
+            imageSrc={node.main_picture.large ?? node.main_picture.medium}
             mediaType={node.media_type}
             style={{ margin: 5 }}
           />
