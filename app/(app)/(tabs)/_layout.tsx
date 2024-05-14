@@ -6,10 +6,7 @@ import { BottomNavigationBar } from "@/components";
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{ headerShown: false }}
-      tabBar={(props) => <BottomNavigationBar compact shifting tabBarProps={props} />}
-    >
+    <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <BottomNavigationBar tabBarProps={props} />}>
       <Tabs.Screen
         name="index"
         options={{
