@@ -17,6 +17,7 @@ interface Request {
   /** Default: 0 */
   offset?: number;
   fields?: string;
+  nsfw: boolean;
 }
 
 interface Response {
@@ -34,13 +35,14 @@ export const useUserAnimeList = (opts: Request) => {
     limit = 24,
     offset = 0,
     fields = "alternative_titles,num_episodes,mean,my_list_status",
+    nsfw,
   } = opts;
 
   return useInfiniteQuery({
-    queryKey: ["user-anime-list", username, status, sort, limit],
+    queryKey: ["user-anime-list", username, status, sort, limit, nsfw],
     queryFn: async ({ pageParam }) => {
       const resp = await client.get(`/users/${username}/animelist`, {
-        params: { status, sort, limit, offset: offset + pageParam * limit, fields, nsfw: 1 },
+        params: { status, sort, limit, offset: offset + pageParam * limit, fields, nsfw },
       });
 
       return resp.data as Response;

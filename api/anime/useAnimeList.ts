@@ -11,6 +11,7 @@ interface Request {
   /** Default: 0 */
   offset?: number;
   fields?: string;
+  nsfw: boolean;
 }
 
 interface Response {
@@ -19,15 +20,15 @@ interface Response {
 }
 
 export const useAnimeList = (opts: Request) => {
-  const { q, limit = 24, offset = 0, fields = "alternative_titles,num_episodes,mean,my_list_status" } = opts;
+  const { q, limit = 24, offset = 0, fields = "alternative_titles,num_episodes,mean,my_list_status", nsfw } = opts;
 
   return useInfiniteQuery({
-    queryKey: ["anime-list", q],
+    queryKey: ["anime-list", q, nsfw],
     queryFn: async ({ pageParam }) => {
       if (q === "") return {} as Response;
 
       const resp = await client.get("/anime", {
-        params: { q, limit, offset: offset + pageParam * limit, fields, nsfw: 1 },
+        params: { q, limit, offset: offset + pageParam * limit, fields, nsfw },
       });
 
       return resp.data as Response;

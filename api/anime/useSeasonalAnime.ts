@@ -10,6 +10,7 @@ interface Request {
   /** Default: 0 */
   offset?: number;
   fields?: string;
+  nsfw: boolean;
 }
 
 interface Response {
@@ -20,13 +21,13 @@ interface Response {
 export type SeasonalAnimeSort = "anime_num_list_users" | "anime_score";
 
 export const useSeasonalAnime = (year: number, season: Season, opts: Request) => {
-  const { sort, limit = 27, offset = 0, fields = "start_season,mean,my_list_status,media_type" } = opts;
+  const { sort, limit = 27, offset = 0, fields = "start_season,mean,my_list_status,media_type", nsfw } = opts;
 
   return useInfiniteQuery({
-    queryKey: ["seasonal-anime", year, season.toString(), sort],
+    queryKey: ["seasonal-anime", year, season.toString(), sort, nsfw],
     queryFn: async ({ pageParam }) => {
       const resp = await client.get(`/anime/season/${year}/${season}`, {
-        params: { sort, limit, offset: offset + pageParam * limit, fields, nsfw: 1 },
+        params: { sort, limit, offset: offset + pageParam * limit, fields, nsfw },
       });
 
       return resp.data as Response;
