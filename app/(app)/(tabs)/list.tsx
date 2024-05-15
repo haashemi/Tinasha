@@ -6,13 +6,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { UserAnimeListEdge, WatchingStatus } from "@/api";
 import { useUserAnimeList } from "@/api";
-import { LoadingView, useAppTheme } from "@/components";
+import { LoadingScreen } from "@/components";
 import { Card, CardDetails } from "@/components/Card";
+import { useAppTheme } from "@/context";
 
 const Tab = createMaterialTopTabNavigator();
 
 const ListView = ({ status }: { status?: WatchingStatus }) => {
-  // const { mutate } = useUpdateMyAnimeListStatus();
   const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList({ status });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
@@ -31,7 +31,11 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
       ListFooterComponent={() => (hasNextPage && isFetching ? <ProgressBar indeterminate /> : null)}
       keyExtractor={keyExtractor}
       renderItem={({ item: { node } }) => (
-        <Card animeId={node.id} imageSource={node.main_picture.large ?? node.main_picture.medium}>
+        <Card
+          animeId={node.id}
+          imageSource={node.main_picture.large ?? node.main_picture.medium}
+          style={{ marginVertical: 5 }}
+        >
           <CardDetails
             animeId={node.id}
             title={node.title}
@@ -56,7 +60,7 @@ const ListTab = () => {
       initialRouteName="Watching"
       screenOptions={{
         lazy: true,
-        lazyPlaceholder: () => <LoadingView />,
+        lazyPlaceholder: () => <LoadingScreen />,
         tabBarGap: 20,
         tabBarScrollEnabled: true,
         tabBarStyle: {

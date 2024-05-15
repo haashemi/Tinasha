@@ -8,7 +8,7 @@ import { useDebounce } from "use-debounce";
 
 import type { AnimeNode } from "@/api";
 import { useAnimeList } from "@/api";
-import { Card, CardDetails, LoadingView } from "@/components";
+import { Card, CardDetails, LoadingScreen } from "@/components";
 
 const SearchScreen = () => {
   const safeArea = useSafeAreaInsets();
@@ -23,11 +23,11 @@ const SearchScreen = () => {
 
   const keyExtractor = useCallback((item: { node: AnimeNode }, i: number) => `${i}-${item.node.id}`, []);
 
-  const [paddingTop, paddingBottom] = [safeArea.top + 80, safeArea.bottom + 20];
+  const [marginTop, paddingBottom] = [safeArea.top + 35, safeArea.bottom + 20];
 
   return (
     <>
-      <View style={{ position: "absolute", width: "100%", zIndex: 1, top: safeArea.top + 10, paddingHorizontal: 10 }}>
+      <View style={{ position: "absolute", width: "100%", zIndex: 1, top: safeArea.top + 5, paddingHorizontal: 10 }}>
         <Searchbar
           autoFocus
           icon="arrow-left"
@@ -40,33 +40,39 @@ const SearchScreen = () => {
       </View>
 
       {q !== "" && isSuccess && allItems?.length ? (
-        <FlashList
-          data={allItems}
-          contentContainerStyle={{ paddingHorizontal: 10, paddingTop, paddingBottom }}
-          estimatedItemSize={100}
-          onEndReached={hasNextPage ? fetchNextPage : undefined}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={() => hasNextPage && isFetching && <LoadingView style={{ paddingVertical: 20 }} />}
-          keyExtractor={keyExtractor}
-          renderItem={({ item: { node } }) => (
-            <Card animeId={node.id} imageSource={node.main_picture.large ?? node.main_picture.medium}>
-              <CardDetails
+        <View style={{ flex: 1, marginTop }}>
+          <FlashList
+            data={allItems}
+            contentContainerStyle={{ paddingHorizontal: 10, paddingTop: 30, paddingBottom }}
+            estimatedItemSize={100}
+            onEndReached={hasNextPage ? fetchNextPage : undefined}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={() => hasNextPage && isFetching && <LoadingScreen style={{ paddingVertical: 20 }} />}
+            keyExtractor={keyExtractor}
+            renderItem={({ item: { node } }) => (
+              <Card
                 animeId={node.id}
-                title={node.title}
-                status={node.my_list_status?.status}
-                score={node.my_list_status?.score}
-                meanScore={node.mean}
-                totalEpisodes={node.num_episodes}
-                watchedEpisodes={node.my_list_status?.num_episodes_watched}
-              />
-            </Card>
-          )}
-        />
+                imageSource={node.main_picture.large ?? node.main_picture.medium}
+                style={{ marginVertical: 5 }}
+              >
+                <CardDetails
+                  animeId={node.id}
+                  title={node.title}
+                  status={node.my_list_status?.status}
+                  score={node.my_list_status?.score}
+                  meanScore={node.mean}
+                  totalEpisodes={node.num_episodes}
+                  watchedEpisodes={node.my_list_status?.num_episodes_watched}
+                />
+              </Card>
+            )}
+          />
+        </View>
       ) : (
         <KeyboardAvoidingView
           enabled
           behavior="height"
-          style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingTop, paddingBottom }}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop, paddingBottom }}
         >
           {!searchQuery || !q ? (
             <Text variant="bodyLarge">Search for something</Text>
