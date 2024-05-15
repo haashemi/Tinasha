@@ -50,7 +50,7 @@ const AnimeEditScreen = () => {
     if (!data) return;
 
     if (ep < 0) return setEpisode(0);
-    else if (ep > data.num_episodes) return setEpisode(data.num_episodes);
+    else if (ep > data.num_episodes && data.num_episodes > 0) return setEpisode(data.num_episodes);
     else setEpisode(ep);
   };
 
@@ -156,7 +156,7 @@ const AnimeEditScreen = () => {
               value={episode.toString()}
               onChangeText={(v) => updateEpisode(v ? parseInt(v, 10) : 0)}
               style={{ textAlign: "center" }}
-              right={<TextInput.Affix text={`/${data?.num_episodes ?? "??"}`} />}
+              right={<TextInput.Affix text={`/${data && data.num_episodes > 0 ? data.num_episodes : "??"}`} />}
             />
             <IconButton
               disabled={data?.num_episodes ? episode === data.num_episodes : false}

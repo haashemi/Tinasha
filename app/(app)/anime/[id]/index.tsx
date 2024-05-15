@@ -158,7 +158,7 @@ const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
         </Text>
       </View>
 
-      {data.synonyms ? (
+      {data.synonyms && data.synonyms.length > 0 ? (
         <View style={Styles.titledTextView}>
           <Text variant="bodyMedium">Synonyms:</Text>
           <Text variant="titleMedium" style={Styles.titledText}>
