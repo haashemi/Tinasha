@@ -1,4 +1,5 @@
 import { Link, router, Stack, useLocalSearchParams } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import { useMemo } from "react";
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { ScrollView, Share, StyleSheet, View } from "react-native";
@@ -16,64 +17,74 @@ const MainDetailsView = ({ data }: { data: AnimeNode }) => {
 
   return (
     <View style={{ flex: 1, flexGrow: 1, height: "100%", paddingVertical: 10 }}>
-      <View style={{ flexWrap: "wrap", gap: 5, paddingVertical: 10, flexDirection: "row" }}>
-        <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="fire">
+      <Divider />
+      <View style={{ flexWrap: "wrap", paddingHorizontal: 15, gap: 5, flexDirection: "row" }}>
+        <Chip style={{ flex: 1, paddingVertical: 10, backgroundColor: "transparent" }} compact icon="fire">
           {data.popularity}
         </Chip>
 
         <Divider style={{ width: 1, height: "100%" }} />
 
-        <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="star">
+        <Chip style={{ flex: 1, paddingVertical: 10, backgroundColor: "transparent" }} compact icon="star">
           {data.mean}
         </Chip>
       </View>
 
       <Divider />
 
-      <View style={{ flexWrap: "wrap", gap: 5, paddingVertical: 10, flexDirection: "row" }}>
-        <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="television-classic">
+      <View style={{ flexWrap: "wrap", paddingHorizontal: 15, gap: 5, flexDirection: "row" }}>
+        <Chip
+          style={{ flex: 1, paddingVertical: 10, backgroundColor: "transparent" }}
+          compact
+          icon="television-classic"
+        >
           {`${getMediaType(data.media_type)} - ${((data.average_episode_duration ?? 0) / 60).toFixed(0)}m`}
         </Chip>
 
         <Divider style={{ width: 1, height: "100%" }} />
 
-        <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="movie-roll">
+        <Chip style={{ flex: 1, paddingVertical: 10, backgroundColor: "transparent" }} compact icon="movie-roll">
           {data.num_episodes ? `${data.num_episodes} EP` : "?? EP"}
         </Chip>
       </View>
 
       <Divider />
 
-      <View style={{ flexWrap: "wrap", gap: 5, paddingVertical: 10, flexDirection: "row" }}>
-        <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="calendar-month">
+      <View style={{ flexWrap: "wrap", paddingHorizontal: 15, gap: 5, flexDirection: "row" }}>
+        <Chip style={{ flex: 1, paddingVertical: 10, backgroundColor: "transparent" }} compact icon="calendar-month">
           {getNormalizedSeason(data.start_season?.season)} {data.start_season?.year ?? "0000"}
         </Chip>
 
         <Divider style={{ width: 1, height: "100%" }} />
 
-        <Chip style={{ flex: 1, backgroundColor: "transparent" }} compact icon="satellite-variant">
+        <Chip style={{ flex: 1, paddingVertical: 10, backgroundColor: "transparent" }} compact icon="satellite-variant">
           {getAiringStatus(data.status)}
         </Chip>
       </View>
 
       <Divider />
 
-      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 5, paddingVertical: 10 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: 5,
+          paddingTop: 15,
+          paddingBottom: 5,
+        }}
+      >
         {data.genres.map((v) => (
           <Chip
+            compact
             mode="flat"
+            onPress={() => WebBrowser.openBrowserAsync(`https://myanimelist.net/anime/genre/${v.id}`)}
             style={{ borderWidth: 1, borderColor: colors.surfaceContainerHighest, backgroundColor: "transparent" }}
             key={v.id.toString()}
           >
             {v.name}
           </Chip>
         ))}
-
-        {/* OLD: */}
-        {/* <Icon source="drama-masks" size={20} color={colors.primary} />
-        <Text numberOfLines={3} adjustsFontSizeToFit style={{ ...fonts.labelLarge, color: colors.onPrimaryContainer }}>
-          {data.genres.map((v) => v.name).join(", ")}
-        </Text> */}
       </View>
     </View>
   );
@@ -307,18 +318,16 @@ const AnimeDetailsScreen = () => {
 
         <Divider />
 
-        <View style={{ paddingHorizontal: 15, gap: 15 }}>
+        <View style={{ gap: 5 }}>
           <Headline style={{ textAlign: "center" }}>{data.title}</Headline>
           <MainDetailsView data={data} />
-        </View>
 
-        <Divider />
-
-        <View style={{ paddingHorizontal: 15, gap: 15 }}>
-          <ProductionDetailsView studios={data.studios} source={data.source ?? "Unknown"} />
-          <AlternativeTitlesView data={data.alternative_titles} />
-          <AnimeCharactersView isLoading={characters.isLoading} characters={characters.data?.data} />
-          {data.related_anime.length > 0 ? <RelatedAnimeView data={data.related_anime} /> : null}
+          <View style={{ paddingHorizontal: 15, gap: 15 }}>
+            <ProductionDetailsView studios={data.studios} source={data.source ?? "Unknown"} />
+            <AlternativeTitlesView data={data.alternative_titles} />
+            <AnimeCharactersView isLoading={characters.isLoading} characters={characters.data?.data} />
+            {data.related_anime.length > 0 ? <RelatedAnimeView data={data.related_anime} /> : null}
+          </View>
         </View>
       </ScrollView>
     </>
