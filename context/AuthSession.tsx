@@ -55,13 +55,11 @@ export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
           !originalRequest._retry &&
           auth
         ) {
-          // eslint-disable-next-line fp/no-mutation
           originalRequest._retry = true;
 
           const newToken = await refreshToken(auth.refresh_token);
           setAuthData(JSON.stringify(newToken.data));
 
-          // eslint-disable-next-line fp/no-mutation
           client.defaults.headers.common.Authorization = `Bearer ${newToken.data.access_token}`;
 
           return client(originalRequest);
