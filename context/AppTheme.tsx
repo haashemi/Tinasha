@@ -5,16 +5,16 @@ import { ThemeProvider as ReactNavigateProvider } from "@react-navigation/native
 import type { MD3Theme, ProviderProps } from "react-native-paper";
 import { MD3DarkTheme, MD3LightTheme, Provider as PaperProvider, useTheme } from "react-native-paper";
 
-import { useColorScheme } from "./ColorSchemeProvider";
+import { useColorScheme } from "./ColorScheme";
 
-interface ThemeProviderProps extends ProviderProps {
+interface AppThemeProviderProps extends ProviderProps {
   sourceColor?: string;
   fallbackSourceColor?: string;
 }
 
 export const useAppTheme = useTheme<MD3Theme & { colors: Material3Scheme }>;
 
-export const ThemeProvider = ({ children, sourceColor, fallbackSourceColor, ...props }: ThemeProviderProps) => {
+export const AppThemeProvider = ({ children, sourceColor, fallbackSourceColor, ...props }: AppThemeProviderProps) => {
   const { preferredScheme } = useColorScheme();
   const { theme } = useMaterial3Theme({ sourceColor, fallbackSourceColor });
 

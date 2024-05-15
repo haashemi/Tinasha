@@ -9,13 +9,15 @@ import { useSecureStorage } from "../hooks";
 
 const EXPIRED_TOKEN_HEADER = `Bearer error="invalid_token",error_description="The access token expired"`;
 
-interface ContextValues {
+const Context = createContext<{
   auth: AuthResponse | null | undefined;
   setAuthData: (value: string | null) => void;
   signOut: () => void;
-}
-
-const Context = createContext<ContextValues>({ setAuthData: () => null, signOut: () => null, auth: null });
+}>({
+  setAuthData: () => null,
+  signOut: () => null,
+  auth: null,
+});
 
 export const useAuthSession = () => useContext(Context);
 
