@@ -1,3 +1,4 @@
+import type { AxiosRequestConfig } from "axios";
 import { createContext, useContext, useEffect, useMemo } from "react";
 
 import type { AuthResponse } from "@/api";
@@ -21,7 +22,11 @@ export const useAuthSession = () => useContext(Context);
 export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
   const [authData, setAuthData] = useSecureStorage("auth");
 
-  const auth = useMemo(() => (authData ? (JSON.parse(authData) as AuthResponse) : undefined), [authData]);
+  const auth = useMemo(() => {
+    if (authData === undefined) return undefined;
+    else if (authData === null) return null;
+    else return JSON.parse(authData) as AuthResponse;
+  }, [authData]);
 
   useEffect(() => {
     client.interceptors.request.clear();
@@ -39,24 +44,28 @@ export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
     client.interceptors.response.use(
       (response) => response,
       async (error) => {
-        const originalRequest = error.config;
+        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
         if (
           error.response.status === 401 &&
           error.response.headers["WWW-Authenticate"] === EXPIRED_TOKEN_HEADER &&
           error.response.data?.error === "invalid_token" &&
-          !originalRequest._retry
+          !originalRequest._retry &&
+          auth
         ) {
+          // eslint-disable-next-line fp/no-mutation
           originalRequest._retry = true;
 
-          const newToken = await refreshToken(auth?.refresh_token);
+          const newToken = await refreshToken(auth.refresh_token);
           setAuthData(JSON.stringify(newToken.data));
 
+          // eslint-disable-next-line fp/no-mutation
           client.defaults.headers.common.Authorization = `Bearer ${newToken.data.access_token}`;
 
           return client(originalRequest);
         }
 
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
         return Promise.reject(error);
       },
     );
