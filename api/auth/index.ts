@@ -17,7 +17,9 @@ export const makeKeyCode = (length: number) => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
   const charactersLength = characters.length;
 
-  return new Array(length).reduce((prev) => prev + characters.charAt(Math.floor(Math.random() * charactersLength)));
+  return new Array(length)
+    .fill("")
+    .reduce((prev) => prev + characters.charAt(Math.floor(Math.random() * charactersLength)));
 };
 
 export const getAuthUrl = (state: string, codeChallenge: string) => {
