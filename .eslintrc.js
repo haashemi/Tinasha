@@ -13,6 +13,7 @@ module.exports = init({
   rules: {
     "no-void": ["error", { allowAsStatement: true }],
     "fp/no-nil": "off",
+    "fp/no-mutation": "off",
     "fp/no-mutating-methods": "off",
     "fp/no-unused-expression": "off",
     "@typescript-eslint/no-use-before-define": "off",
