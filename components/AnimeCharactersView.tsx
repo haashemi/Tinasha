@@ -48,7 +48,10 @@ const AnimeCharactersView = ({ isLoading, characters }: AnimeCharactersViewProps
                 { borderRadius: roundness * 2.5, backgroundColor: colors.elevation.level3 },
               ]}
             >
-              <Image source={node.main_picture.medium} style={[Styles.image, { borderRadius: roundness * 2.5 }]} />
+              <Image
+                source={node.main_picture?.medium ?? ""}
+                style={[Styles.image, { borderRadius: roundness * 2.5 }]}
+              />
 
               <View style={Styles.nameView}>
                 <Text numberOfLines={2}>

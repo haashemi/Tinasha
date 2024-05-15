@@ -5,7 +5,7 @@ export interface CharacterNode {
   first_name: string;
   last_name: string;
   alternative_name: string;
-  main_picture: MainPicture;
+  main_picture?: MainPicture;
   biography: string;
   num_favorites: number;
 }
