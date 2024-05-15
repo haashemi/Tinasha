@@ -39,7 +39,7 @@ export type { Response as AnimeDetails };
 export const useAnimeDetails = (opts: Request) => {
   const {
     animeId,
-    fields = "id,title,main_picture,alternative_titles,mean,popularity,genres,media_type,status,my_list_status,num_episodes,start_season,source,average_episode_duration,studios,statistics",
+    fields = "id,title,main_picture,alternative_titles,mean,popularity,genres,media_type,status,my_list_status,num_episodes,start_season,source,average_episode_duration,studios,pictures,related_anime,statistics",
   } = opts;
 
   return useQuery({
