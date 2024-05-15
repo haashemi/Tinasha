@@ -1,4 +1,3 @@
-export { default as AnimeCharactersView } from "./AnimeCharactersView";
 export { default as BottomNavigationBar } from "./BottomNavigationBar";
 export * from "./Card";
 export { default as Image } from "./Image";
