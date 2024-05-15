@@ -2,16 +2,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useState } from "react";
 
 const useAsyncStorage = (key: string, defaultValue?: string) => {
-  const [state, setState] = useState<string | null | undefined>(defaultValue);
+  const [state, setState] = useState<string | null | undefined>();
 
   useEffect(() => {
     const getStoredValue = async () => {
       const storedValue = await AsyncStorage.getItem(key);
+
+      if (!storedValue && defaultValue) {
+        return AsyncStorage.setItem(key, defaultValue);
+      }
+
       setState(storedValue);
     };
 
     void getStoredValue();
-  }, [key]);
+  }, [defaultValue, key]);
 
   const setValue = useCallback(
     (value: string | null) => {
