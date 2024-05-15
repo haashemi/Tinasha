@@ -1,6 +1,7 @@
 import { View } from "react-native";
-import { List, Switch } from "react-native-paper";
+import { List } from "react-native-paper";
 
+import { MaterialSwitchListItem } from "@/components/MaterialSwitchListItem";
 import { useNSFW } from "@/context";
 
 const NSFWScreen = () => {
@@ -15,44 +16,29 @@ const NSFWScreen = () => {
 
   return (
     <View>
-      <List.Item
+      <MaterialSwitchListItem
+        fluid
+        selected={animeListNsfw}
+        onPress={toggleAnimeListNsfw}
         title="NSFW in search"
         description="Include NSFW anime in search screen."
-        left={(props) => <List.Icon {...props} icon="magnify" />}
-        right={(props) => (
-          <Switch
-            color={props.color}
-            style={props.style}
-            value={animeListNsfw}
-            onValueChange={(v) => toggleAnimeListNsfw()}
-          />
-        )}
+        leftIcon={(props) => <List.Icon icon="magnify" style={{ paddingLeft: 20 }} {...props} />}
       />
-      <List.Item
+      <MaterialSwitchListItem
+        fluid
+        selected={seasonalAnimeNsfw}
+        onPress={toggleSeasonalAnimeNsfw}
         title="NSFW in seasonal"
         description="Include NSFW anime in seasonal screen."
-        left={(props) => <List.Icon {...props} icon="calendar" />}
-        right={(props) => (
-          <Switch
-            color={props.color}
-            style={props.style}
-            value={seasonalAnimeNsfw}
-            onValueChange={(v) => toggleSeasonalAnimeNsfw()}
-          />
-        )}
+        leftIcon={(props) => <List.Icon icon="calendar" style={{ paddingLeft: 20 }} {...props} />}
       />
-      <List.Item
+      <MaterialSwitchListItem
+        fluid
+        selected={userAnimeListNsfw}
+        onPress={toggleUserAnimeListNsfw}
         title="NSFW in my list"
         description="Include NSFW anime in my anime list screen."
-        left={(props) => <List.Icon {...props} icon="view-list" />}
-        right={(props) => (
-          <Switch
-            color={props.color}
-            style={props.style}
-            value={userAnimeListNsfw}
-            onValueChange={(v) => toggleUserAnimeListNsfw()}
-          />
-        )}
+        leftIcon={(props) => <List.Icon icon="view-list" style={{ paddingLeft: 20 }} {...props} />}
       />
     </View>
   );
