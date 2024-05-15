@@ -2,12 +2,12 @@ import type { ViewProps } from "react-native";
 import { View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 
-const LoadingView = ({ style, ...props }: ViewProps) => {
+const LoadingScreen = ({ style, ...props }: ViewProps) => {
   return (
-    <View style={[style, { flex: 1, justifyContent: "center", alignItems: "center" }]} {...props}>
+    <View style={[{ flex: 1, justifyContent: "center", alignItems: "center" }, style]} {...props}>
       <ActivityIndicator size="large" />
     </View>
   );
 };
 
-export default LoadingView;
+export default LoadingScreen;
