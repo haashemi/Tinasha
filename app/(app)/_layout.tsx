@@ -23,9 +23,12 @@ const AppLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: theme.colors.elevation.level2 }} />
+
       <Stack.Screen name="anime/[id]/index" />
       <Stack.Screen name="anime/[id]/edit" />
       <Stack.Screen name="anime/search" options={{ headerShown: false }} />
+
+      <Stack.Screen name="settings/nsfw" options={{ headerTitle: "NSFW Settings" }} />
     </Stack>
   );
 };

@@ -1,3 +1,4 @@
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
 import { router } from "expo-router";
@@ -86,6 +87,14 @@ const ProfileTab = () => {
           description="Change the current Tinasha's theme."
           left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
           onPress={() => themeSheet.current?.present()}
+        />
+        <List.Item
+          title="NSFW settings"
+          description="Age restricted pages settings."
+          left={(props) => (
+            <List.Icon {...props} icon={(prop) => <MaterialIcons name="no-adult-content" {...prop} />} />
+          )}
+          onPress={() => router.push("/settings/nsfw")}
         />
         <List.Item
           title="GitHub"
