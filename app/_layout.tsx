@@ -4,7 +4,13 @@ import { Stack } from "expo-router";
 import type { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { AppThemeProvider, AuthSessionProvider, ColorSchemeProvider, QueryClientProvider } from "@/context";
+import {
+  AppThemeProvider,
+  AuthSessionProvider,
+  ColorSchemeProvider,
+  NSFWProvider,
+  QueryClientProvider,
+} from "@/context";
 
 void NavigationBar.setPositionAsync("absolute");
 void NavigationBar.setBackgroundColorAsync("transparent");
@@ -15,9 +21,11 @@ const Providers = ({ children }: PropsWithChildren) => (
     <ColorSchemeProvider>
       <AppThemeProvider>
         <AuthSessionProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-          </GestureHandlerRootView>
+          <NSFWProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+            </GestureHandlerRootView>
+          </NSFWProvider>
         </AuthSessionProvider>
       </AppThemeProvider>
     </ColorSchemeProvider>
