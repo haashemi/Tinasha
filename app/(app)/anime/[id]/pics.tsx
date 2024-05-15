@@ -12,7 +12,10 @@ import { Image, LoadingScreen } from "@/components";
 const PicsScreen = () => {
   const { bottom } = useSafeAreaInsets();
   const { id, index } = useLocalSearchParams<{ id: string; index: string }>();
-  const [currentIndex, setCurrentIndex] = useState(parseInt(index ?? "0", 10));
+
+  const initialIndex = useMemo(() => parseInt(index ?? "0", 10), [index]);
+
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const { data, isLoading, isError } = useAnimeDetails({ animeId: id });
 
   const pictures = useMemo(
@@ -53,8 +56,9 @@ const PicsScreen = () => {
 
       <View style={{ flex: 1, paddingBottom: bottom + 20, backgroundColor: "#000000C0" }}>
         <Gallery
+          loop
           data={pictures}
-          initialIndex={currentIndex}
+          initialIndex={initialIndex}
           onIndexChange={setCurrentIndex}
           renderItem={renderItem}
           onSwipeToClose={() => (router.canGoBack() ? router.back() : router.push(`/anime/${id}`))}
