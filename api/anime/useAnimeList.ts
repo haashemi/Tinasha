@@ -15,7 +15,7 @@ interface Request {
 
 interface Response {
   data: { node: AnimeNode }[];
-  paging: Paging;
+  paging?: Paging;
 }
 
 export const useAnimeList = (opts: Request) => {
@@ -34,6 +34,6 @@ export const useAnimeList = (opts: Request) => {
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
-      lastPage.paging.next ? lastPageParam + 1 : undefined,
+      lastPage.paging?.next ? lastPageParam + 1 : undefined,
   });
 };
