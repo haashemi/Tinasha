@@ -1,0 +1,196 @@
+import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
+import type { ForwardedRef } from "react";
+import { StyleSheet, View } from "react-native";
+import { Chip, Icon, IconButton, Text, TouchableRipple } from "react-native-paper";
+
+import type { WatchingStatus } from "@/api";
+import { getMediaType, getStatusColor } from "@/lib";
+
+import Image from "./Image";
+import { useAppTheme } from "./providers";
+
+interface CardProps {
+  animeId: number | string;
+  orientation?: "horizontal" | "vertical";
+  imageSource: string;
+  children: React.ReactNode;
+}
+
+export const Card = (props: CardProps, ref: ForwardedRef<View>) => {
+  const { animeId, orientation = "horizontal", imageSource, children } = props;
+  const theme = useAppTheme();
+
+  return (
+    <TouchableRipple
+      ref={ref}
+      borderless
+      onPress={() => router.push(`/anime/${animeId}`)}
+      onLongPress={() => {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        router.push(`/anime/${animeId}/edit`);
+      }}
+      style={{
+        height: orientation === "horizontal" ? 140 : 260,
+        flex: 1,
+        borderRadius: 12,
+        backgroundColor: theme.colors.elevation.level1,
+        margin: 5,
+      }}
+    >
+      <View style={{ flex: 1, flexDirection: orientation === "horizontal" ? "row" : "column" }}>
+        <Image
+          recyclingKey={imageSource}
+          style={{
+            height: orientation === "horizontal" ? "100%" : undefined,
+            width: orientation === "vertical" ? "100%" : undefined,
+            aspectRatio: "4/6",
+            borderRadius: 12,
+          }}
+          source={imageSource}
+        />
+
+        <View
+          style={{
+            paddingTop: orientation === "horizontal" ? 20 : 8,
+            paddingBottom: 5,
+            paddingLeft: 5,
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          {children}
+        </View>
+      </View>
+    </TouchableRipple>
+  );
+};
+
+interface CardSummaryProps {
+  title: string;
+  meanScore: number | null | undefined;
+  mediaType: string | undefined;
+}
+
+export const CardSummary = ({ title, meanScore, mediaType }: CardSummaryProps) => {
+  const { colors, fonts } = useAppTheme();
+
+  return (
+    <>
+      <Text variant="titleSmall" numberOfLines={2} ellipsizeMode="tail" style={stylesCS.titleText}>
+        {title}
+      </Text>
+
+      <View style={stylesCS.statusView}>
+        <Icon source="star" color={colors.onSecondaryContainer} size={18} />
+
+        <View style={[stylesCS.statusView2]}>
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={[{ color: colors.onSecondaryContainer }, fonts.labelLarge]}
+          >
+            {meanScore ?? "N/A"}
+          </Text>
+
+          {mediaType ? (
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={[{ color: colors.onSecondaryContainer }, fonts.labelLarge]}
+            >
+              {getMediaType(mediaType)}
+            </Text>
+          ) : null}
+        </View>
+      </View>
+    </>
+  );
+};
+
+interface CardDetailsProps {
+  animeId: number;
+  title: string;
+  status: WatchingStatus | null | undefined;
+  score: number | undefined;
+  meanScore: number | null | undefined;
+  totalEpisodes: number | undefined;
+  watchedEpisodes: number | undefined;
+}
+
+export const CardDetails = ({
+  animeId,
+  title,
+  status,
+  meanScore,
+  score,
+  watchedEpisodes,
+  totalEpisodes,
+}: CardDetailsProps) => {
+  return (
+    <>
+      <Text variant="titleMedium" numberOfLines={1} ellipsizeMode="middle" style={stylesCD.titleText}>
+        {title}
+      </Text>
+
+      <View style={stylesCD.actionView}>
+        <Chip compact style={stylesCD.actionViewChip} icon="star">
+          {score ? `${meanScore ?? "N/A"} — ${score}` : meanScore ?? "N/A"}
+        </Chip>
+
+        <Chip compact style={stylesCD.actionViewChip} icon="motion-play-outline">
+          {watchedEpisodes ?? status === "watching"
+            ? `${watchedEpisodes ?? 0}/${totalEpisodes ?? "??"}`
+            : totalEpisodes ?? "N/A"}
+        </Chip>
+
+        <View style={stylesCD.actionViewButton}>
+          {/* {status === "watching" && (
+                <IconButton
+                  onPress={mpPress}
+                  onLongPress={mpLongPress}
+                  mode="contained"
+                  icon="plus-minus"
+                  iconColor="white"
+                  containerColor="transparent"
+                />
+              )} */}
+          <IconButton
+            onPress={() => router.push(`/anime/${animeId}/edit`)}
+            mode="contained"
+            icon="playlist-edit"
+            iconColor="white"
+            containerColor={getStatusColor(status)}
+          />
+        </View>
+      </View>
+    </>
+  );
+};
+
+const stylesCS = StyleSheet.create({
+  //   touchable: { height: 260, flex: 1 },
+  //   surface: { flex: 1 },
+  //   image: { width: "100%", aspectRatio: "4/6" },
+  //   contentView: { paddingTop: 0, paddingLeft: 5, flex: 1, justifyContent: "space-around" },
+  titleText: { paddingHorizontal: 5 },
+  statusView: { flexDirection: "row", alignItems: "center", paddingHorizontal: 5, paddingBottom: 5, gap: 5 },
+  statusView2: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingRight: 5,
+    alignItems: "center",
+  },
+});
+
+const stylesCD = StyleSheet.create({
+  touchable: { height: 100 },
+  surface: { flexDirection: "row" },
+  image: { height: 100, width: 100 },
+  contentView: { paddingTop: 10, paddingLeft: 5, flex: 1, justifyContent: "space-around" },
+  titleText: { paddingHorizontal: 10 },
+  actionView: { paddingRight: 5, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  actionViewChip: { flex: 1, backgroundColor: "transparent" },
+  actionViewButton: { flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center" },
+});

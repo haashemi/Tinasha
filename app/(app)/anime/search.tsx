@@ -8,7 +8,7 @@ import { useDebounce } from "use-debounce";
 
 import type { AnimeNode } from "@/api";
 import { useAnimeList } from "@/api";
-import { AnimeListView, LoadingView } from "@/components";
+import { Card, CardDetails, LoadingView } from "@/components";
 
 const SearchScreen = () => {
   const safeArea = useSafeAreaInsets();
@@ -49,17 +49,17 @@ const SearchScreen = () => {
           ListFooterComponent={() => hasNextPage && isFetching && <LoadingView style={{ paddingVertical: 20 }} />}
           keyExtractor={keyExtractor}
           renderItem={({ item: { node } }) => (
-            <AnimeListView
-              animeId={node.id}
-              title={node.title}
-              status={node.my_list_status?.status}
-              score={node.my_list_status?.score}
-              meanScore={node.mean}
-              totalEpisodes={node.num_episodes}
-              style={{ margin: 5 }}
-              watchedEpisodes={node.my_list_status?.num_episodes_watched}
-              imageSrc={node.main_picture.large ?? node.main_picture.medium}
-            />
+            <Card animeId={node.id} imageSource={node.main_picture.large ?? node.main_picture.medium}>
+              <CardDetails
+                animeId={node.id}
+                title={node.title}
+                status={node.my_list_status?.status}
+                score={node.my_list_status?.score}
+                meanScore={node.mean}
+                totalEpisodes={node.num_episodes}
+                watchedEpisodes={node.my_list_status?.num_episodes_watched}
+              />
+            </Card>
           )}
         />
       ) : (

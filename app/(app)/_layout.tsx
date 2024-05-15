@@ -2,7 +2,7 @@ import { Redirect, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
-import { useAppTheme, useAuthSession } from "@/components";
+import { LoadingView, useAppTheme, useAuthSession } from "@/components";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -12,10 +12,11 @@ const AppLayout = () => {
 
   useEffect(() => {
     if (auth === undefined) return;
+
     void SplashScreen.hideAsync();
   }, [auth]);
 
-  if (auth === undefined) return null;
+  if (auth === undefined) return <LoadingView />;
   if (!auth) return <Redirect href="/sign-in" />;
 
   return (

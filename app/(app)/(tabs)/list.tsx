@@ -1,18 +1,18 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { FlashList } from "@shopify/flash-list";
-import * as Haptics from "expo-haptics";
 import { useCallback, useMemo } from "react";
 import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { UserAnimeListEdge, WatchingStatus } from "@/api";
-import { useUpdateMyAnimeListStatus, useUserAnimeList } from "@/api";
-import { AnimeListView, LoadingView, useAppTheme } from "@/components";
+import { useUserAnimeList } from "@/api";
+import { LoadingView, useAppTheme } from "@/components";
+import { Card, CardDetails } from "@/components/Card";
 
 const Tab = createMaterialTopTabNavigator();
 
 const ListView = ({ status }: { status?: WatchingStatus }) => {
-  const { mutate } = useUpdateMyAnimeListStatus();
+  // const { mutate } = useUpdateMyAnimeListStatus();
   const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList({ status });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
@@ -31,31 +31,17 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
       ListFooterComponent={() => (hasNextPage && isFetching ? <ProgressBar indeterminate /> : null)}
       keyExtractor={keyExtractor}
       renderItem={({ item: { node } }) => (
-        <AnimeListView
-          animeId={node.id}
-          title={node.title}
-          status={node.my_list_status?.status}
-          score={node.my_list_status?.score}
-          meanScore={node.mean}
-          totalEpisodes={node.num_episodes}
-          style={{ margin: 5 }}
-          watchedEpisodes={node.my_list_status?.num_episodes_watched}
-          imageSrc={node.main_picture.large ?? node.main_picture.medium}
-          mpPress={() => {
-            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            mutate({
-              animeId: node.id,
-              body: { num_watched_episodes: (node.my_list_status?.num_episodes_watched ?? 0) + 1 },
-            });
-          }}
-          mpLongPress={() => {
-            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            mutate({
-              animeId: node.id,
-              body: { num_watched_episodes: (node.my_list_status?.num_episodes_watched ?? 0) - 1 },
-            });
-          }}
-        />
+        <Card animeId={node.id} imageSource={node.main_picture.large ?? node.main_picture.medium}>
+          <CardDetails
+            animeId={node.id}
+            title={node.title}
+            status={node.my_list_status?.status}
+            score={node.my_list_status?.score}
+            meanScore={node.mean}
+            totalEpisodes={node.num_episodes}
+            watchedEpisodes={node.my_list_status?.num_episodes_watched}
+          />
+        </Card>
       )}
     />
   );

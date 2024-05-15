@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { AnimeNode, Season, SeasonalAnimeSort } from "@/api";
 import { getSeason, useSeasonalAnime } from "@/api";
-import { AnimeCardView, LoadingView, useAppTheme } from "@/components";
+import { Card, CardSummary, LoadingView, useAppTheme } from "@/components";
 
 const seasonsList = [
   { value: "winter", label: "Winter" },
@@ -110,15 +110,13 @@ const SeasonTab = () => {
         ListFooterComponent={() => <Footer isLoading={isFetching} />}
         keyExtractor={keyExtractor}
         renderItem={({ item: { node } }) => (
-          <AnimeCardView
+          <Card
             animeId={node.id}
-            title={node.title}
-            status={node.my_list_status?.status}
-            meanScore={node.mean}
-            imageSrc={node.main_picture.large ?? node.main_picture.medium}
-            mediaType={node.media_type}
-            style={{ margin: 5 }}
-          />
+            orientation="vertical"
+            imageSource={node.main_picture.large ?? node.main_picture.medium}
+          >
+            <CardSummary title={node.title} meanScore={node.mean} mediaType={node.media_type} />
+          </Card>
         )}
       />
     </View>
