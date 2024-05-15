@@ -40,6 +40,7 @@
     "react": "18.2.0",
     "react-content-loader": "7.0.0",
     "react-native": "0.74.1",
+    "react-native-awesome-gallery": "^0.3.9",
     "react-native-gesture-handler": "2.16.2",
     "react-native-pager-view": "6.3.0",
     "react-native-paper": "5.12.3",

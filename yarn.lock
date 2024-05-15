@@ -3690,6 +3690,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"abs-svg-path@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "abs-svg-path@npm:0.1.1"
+  checksum: 10c0/aa763f3843cd4d7c3eabcddc91834ab27def4c1f470b98a3bf01ebe82928629c5aeaa97766252781449e0c722e1785f8e512fea79f86d3d10f8eca220d6aa292
+  languageName: node
+  linkType: hard
+
 "accepts@npm:^1.3.7, accepts@npm:^1.3.8, accepts@npm:~1.3.5, accepts@npm:~1.3.7":
   version: 1.3.8
   resolution: "accepts@npm:1.3.8"
@@ -9670,6 +9677,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"normalize-svg-path@npm:^1.0.1":
+  version: 1.1.0
+  resolution: "normalize-svg-path@npm:1.1.0"
+  dependencies:
+    svg-arc-to-cubic-bezier: "npm:^3.0.0"
+  checksum: 10c0/2e24e1d0a9ca7f172cec161d9c14fef616c57040664d82f6077d97c42e6e8a113f288dc0cb55e19fc4873baa0c5ddc7857d24d4a1b6df594924451d1adbb1b41
+  languageName: node
+  linkType: hard
+
 "npm-package-arg@npm:^7.0.0":
   version: 7.0.0
   resolution: "npm-package-arg@npm:7.0.0"
@@ -10068,6 +10084,13 @@ __metadata:
   dependencies:
     pngjs: "npm:^3.3.0"
   checksum: 10c0/5157a8bbb976ae1ca990fc53c7014d42aac0967cb30e2daf36c3fef1876c8db0d551e695400c904f33c5c5add76a572c65b5044721d62417d8cc7abe4c4ffa41
+  languageName: node
+  linkType: hard
+
+"parse-svg-path@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "parse-svg-path@npm:0.1.2"
+  checksum: 10c0/005af72d535f47bbe4673108e51d657b81cb19dcc4f10ab425dd9f824066ef300ddbc83640607ef318f853a9fce7065114705531dcf88fb87fe58c287b562f2b
   languageName: node
   linkType: hard
 
@@ -10544,6 +10567,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-awesome-gallery@npm:^0.3.9":
+  version: 0.3.9
+  resolution: "react-native-awesome-gallery@npm:0.3.9"
+  dependencies:
+    react-native-redash: "npm:^16.0.8"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: ^2.0.0
+    react-native-reanimated: ^3.2.0
+  checksum: 10c0/56164c0494d88c9f065b8cc5a9f5ee869b9392a3a1a03fc4ff12cd97d58a3860060e91f9e9c0786470cdba271570e5e9b5e3bfaca11078a4f9a559444a293ac7
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:2.16.2":
   version: 2.16.2
   resolution: "react-native-gesture-handler@npm:2.16.2"
@@ -10616,6 +10653,22 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/0154123649214bd8a83710056594590d9b5f073c5f8911f5b59a0a4f5dcca671d98b475bc4f3bb106b6c8b5c3dcb645a4973efdbe8dbd997bfae2797bd83f546
+  languageName: node
+  linkType: hard
+
+"react-native-redash@npm:^16.0.8":
+  version: 16.3.0
+  resolution: "react-native-redash@npm:16.3.0"
+  dependencies:
+    abs-svg-path: "npm:^0.1.1"
+    normalize-svg-path: "npm:^1.0.1"
+    parse-svg-path: "npm:^0.1.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: "*"
+    react-native-reanimated: ">=2.0.0"
+  checksum: 10c0/0913cebe9dba4a013568e3bc2dd3ea7c5b7f6df783d0b4cd9591a75f57af6de0a879773a49b834a521d3d106dafcdf53f49029d1c021deba2ca103c26c98af4d
   languageName: node
   linkType: hard
 
@@ -12005,6 +12058,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"svg-arc-to-cubic-bezier@npm:^3.0.0":
+  version: 3.2.0
+  resolution: "svg-arc-to-cubic-bezier@npm:3.2.0"
+  checksum: 10c0/6dddbaff9defa55a891593b48ba6bd5f1b3c89d747cf818a8342ec4cac10b06de6cd37478dc9483cba5e8d1a7d3dac2d0bbab47858d207a2d1a6a61b5acdd442
+  languageName: node
+  linkType: hard
+
 "synckit@npm:^0.8.6":
   version: 0.8.8
   resolution: "synckit@npm:0.8.8"
@@ -12205,6 +12265,7 @@ __metadata:
     react: "npm:18.2.0"
     react-content-loader: "npm:7.0.0"
     react-native: "npm:0.74.1"
+    react-native-awesome-gallery: "npm:^0.3.9"
     react-native-gesture-handler: "npm:2.16.2"
     react-native-pager-view: "npm:6.3.0"
     react-native-paper: "npm:5.12.3"
