@@ -8,12 +8,16 @@ import type { UserAnimeListEdge, WatchingStatus } from "@/api";
 import { useUserAnimeList } from "@/api";
 import { LoadingScreen } from "@/components";
 import { Card, CardDetails } from "@/components/Card";
-import { useAppTheme } from "@/context";
+import { useAppTheme, useNSFW } from "@/context";
 
 const Tab = createMaterialTopTabNavigator();
 
 const ListView = ({ status }: { status?: WatchingStatus }) => {
-  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList({ status });
+  const { userAnimeListNsfw } = useNSFW();
+  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useUserAnimeList({
+    status,
+    nsfw: userAnimeListNsfw,
+  });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
 

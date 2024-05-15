@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { AnimeNode, Season, SeasonalAnimeSort } from "@/api";
 import { getSeason, useSeasonalAnime } from "@/api";
 import { Card, CardSummary, LoadingScreen } from "@/components";
-import { useAppTheme } from "@/context";
+import { useAppTheme, useNSFW } from "@/context";
 
 const seasonsList = [
   { value: "winter", label: "Winter" },
@@ -51,7 +51,11 @@ const SeasonTab = () => {
   const { colors } = useAppTheme();
   const safeArea = useSafeAreaInsets();
   const filterSheet = useRef<BottomSheetModal>(null);
-  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useSeasonalAnime(year, season, { sort });
+  const { seasonalAnimeNsfw } = useNSFW();
+  const { fetchNextPage, hasNextPage, data, isFetching, refetch } = useSeasonalAnime(year, season, {
+    sort,
+    nsfw: seasonalAnimeNsfw,
+  });
 
   const allItems = useMemo(
     () =>

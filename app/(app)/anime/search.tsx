@@ -9,6 +9,7 @@ import { useDebounce } from "use-debounce";
 import type { AnimeNode } from "@/api";
 import { useAnimeList } from "@/api";
 import { Card, CardDetails, LoadingScreen } from "@/components";
+import { useNSFW } from "@/context";
 
 const SearchScreen = () => {
   const safeArea = useSafeAreaInsets();
@@ -17,7 +18,8 @@ const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [q] = useDebounce(searchQuery, 500);
 
-  const { fetchNextPage, hasNextPage, data, isSuccess, isFetching, isError } = useAnimeList({ q });
+  const { animeListNsfw } = useNSFW();
+  const { fetchNextPage, hasNextPage, data, isSuccess, isFetching, isError } = useAnimeList({ q, nsfw: animeListNsfw });
 
   const allItems = useMemo(() => data?.pages.flatMap((page) => page.data), [data]);
 

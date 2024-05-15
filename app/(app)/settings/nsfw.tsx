@@ -1,12 +1,17 @@
 import { View } from "react-native";
 import { List, Switch } from "react-native-paper";
 
-import { useAnimeListNsfw, useSeasonalAnimeNsfw, useUserAnimeListNsfw } from "@/hooks";
+import { useNSFW } from "@/context";
 
 const NSFWScreen = () => {
-  const [animeListNsfw, toggleAnimeListNsfw] = useAnimeListNsfw();
-  const [seasonalAnimeNsfw, toggleSeasonalAnimeNsfw] = useSeasonalAnimeNsfw();
-  const [userAnimeListNsfw, toggleUserAnimeListNsfw] = useUserAnimeListNsfw();
+  const {
+    animeListNsfw,
+    toggleAnimeListNsfw,
+    seasonalAnimeNsfw,
+    toggleSeasonalAnimeNsfw,
+    userAnimeListNsfw,
+    toggleUserAnimeListNsfw,
+  } = useNSFW();
 
   return (
     <View>
