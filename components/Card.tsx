@@ -1,16 +1,17 @@
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import type { ForwardedRef } from "react";
+import type { ViewProps } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Chip, Icon, IconButton, Text, TouchableRipple } from "react-native-paper";
 
 import type { WatchingStatus } from "@/api";
+import { useAppTheme } from "@/context";
 import { getMediaType, getStatusColor } from "@/lib";
 
 import Image from "./Image";
-import { useAppTheme } from "./providers";
 
-interface CardProps {
+interface CardProps extends ViewProps {
   animeId: number | string;
   orientation?: "horizontal" | "vertical";
   imageSource: string;
@@ -18,7 +19,7 @@ interface CardProps {
 }
 
 export const Card = (props: CardProps, ref: ForwardedRef<View>) => {
-  const { animeId, orientation = "horizontal", imageSource, children } = props;
+  const { animeId, orientation = "horizontal", imageSource, children, style, ...otherProps } = props;
   const theme = useAppTheme();
 
   return (
@@ -30,13 +31,16 @@ export const Card = (props: CardProps, ref: ForwardedRef<View>) => {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         router.push(`/anime/${animeId}/edit`);
       }}
-      style={{
-        height: orientation === "horizontal" ? 140 : 260,
-        flex: 1,
-        borderRadius: 12,
-        backgroundColor: theme.colors.elevation.level1,
-        margin: 5,
-      }}
+      style={[
+        {
+          height: orientation === "horizontal" ? 140 : 260,
+          flex: 1,
+          borderRadius: 12,
+          backgroundColor: theme.colors.elevation.level1,
+        },
+        style,
+      ]}
+      {...otherProps}
     >
       <View style={{ flex: 1, flexDirection: orientation === "horizontal" ? "row" : "column" }}>
         <Image
@@ -140,8 +144,10 @@ export const CardDetails = ({
 
         <Chip compact style={stylesCD.actionViewChip} icon="motion-play-outline">
           {watchedEpisodes ?? status === "watching"
-            ? `${watchedEpisodes ?? 0}/${totalEpisodes ?? "??"}`
-            : totalEpisodes ?? "N/A"}
+            ? `${watchedEpisodes ?? 0}/${totalEpisodes && totalEpisodes > 0 ? totalEpisodes : "??"}`
+            : totalEpisodes && totalEpisodes > 0
+              ? totalEpisodes
+              : "N/A"}
         </Chip>
 
         <View style={stylesCD.actionViewButton}>
@@ -169,10 +175,6 @@ export const CardDetails = ({
 };
 
 const stylesCS = StyleSheet.create({
-  //   touchable: { height: 260, flex: 1 },
-  //   surface: { flex: 1 },
-  //   image: { width: "100%", aspectRatio: "4/6" },
-  //   contentView: { paddingTop: 0, paddingLeft: 5, flex: 1, justifyContent: "space-around" },
   titleText: { paddingHorizontal: 5 },
   statusView: { flexDirection: "row", alignItems: "center", paddingHorizontal: 5, paddingBottom: 5, gap: 5 },
   statusView2: {
