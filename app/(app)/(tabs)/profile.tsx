@@ -1,9 +1,10 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { ScrollView, View } from "react-native";
 import { Divider, Icon, List, RadioButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -32,12 +33,20 @@ const ProfileTab = () => {
     router.replace("/sign-in");
   };
 
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} onPress={themeSheet.current?.close} />
+    ),
+    [],
+  );
+
   return (
     <>
       <BottomSheetModal
         ref={themeSheet}
         enableDynamicSizing
         stackBehavior="replace"
+        backdropComponent={renderBackdrop}
         handleIndicatorStyle={{ backgroundColor: theme.colors.onSurface }}
         backgroundStyle={{ backgroundColor: theme.colors.elevation.level2 }}
       >

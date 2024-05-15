@@ -1,4 +1,5 @@
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -68,6 +69,14 @@ const SeasonTab = () => {
   const keyExtractor = useCallback(({ node }: { node: AnimeNode }, i: number) => `${i}-${node.id}`, []);
 
   const showFilterSheet = () => filterSheet.current?.present();
+  const hideFilterSheet = () => filterSheet.current?.close();
+
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} onPress={hideFilterSheet} />
+    ),
+    [],
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -77,6 +86,7 @@ const SeasonTab = () => {
         ref={filterSheet}
         enableDynamicSizing
         stackBehavior="replace"
+        backdropComponent={renderBackdrop}
         handleIndicatorStyle={{ backgroundColor: colors.onSurface }}
         backgroundStyle={{ backgroundColor: colors.elevation.level2 }}
       >
