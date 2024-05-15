@@ -5,7 +5,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { AlternativeTitles, AnimeStudio } from "@/api";
 import { useAnimeCharacters, useAnimeDetails } from "@/api";
-import { AnimeCharactersView, Image, useAppTheme } from "@/components";
+import { AnimeCharactersView, Image } from "@/components";
+import { useAppTheme } from "@/context";
 import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
 
 // TODO: Re-add this

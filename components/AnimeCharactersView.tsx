@@ -5,7 +5,7 @@ import { Text } from "react-native-paper";
 import type { CharacterNode } from "@/api";
 
 import Image from "./Image";
-import { useAppTheme } from "./providers";
+import { useAppTheme } from "../context";
 
 interface AnimeCharactersViewProps {
   isLoading: boolean;

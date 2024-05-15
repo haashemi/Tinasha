@@ -8,7 +8,7 @@ import { Stack } from "expo-router";
 import type { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { AuthSessionProvider, ColorSchemeProvider, ThemeProvider } from "@/components";
+import { AppThemeProvider, AuthSessionProvider, ColorSchemeProvider } from "@/context";
 
 void NavigationBar.setPositionAsync("absolute");
 void NavigationBar.setBackgroundColorAsync("#000000");
@@ -30,13 +30,13 @@ const asyncStoragePersister = createAsyncStoragePersister({
 const Providers = ({ children }: PropsWithChildren) => (
   <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
     <ColorSchemeProvider>
-      <ThemeProvider>
+      <AppThemeProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
             <AuthSessionProvider>{children}</AuthSessionProvider>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
-      </ThemeProvider>
+      </AppThemeProvider>
     </ColorSchemeProvider>
   </PersistQueryClientProvider>
 );

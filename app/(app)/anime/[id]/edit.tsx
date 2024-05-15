@@ -6,7 +6,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { AnimeDetails, WatchingStatus } from "@/api";
 import { useAnimeDetails, useDeleteMyAnimeListItem, useUpdateMyAnimeListStatus } from "@/api";
-import { Image, useAppTheme } from "@/components";
+import { Image } from "@/components";
+import { useAppTheme } from "@/context";
 import { getStatusColor } from "@/lib";
 
 const AnimeDetailsView = ({ data }: { data?: AnimeDetails }) => {

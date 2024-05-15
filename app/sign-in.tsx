@@ -7,7 +7,8 @@ import { Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { exchangeCode, getAuthUrl, makeKeyCode, redirectUri } from "@/api";
-import { TinashaLogo, useAuthSession } from "@/components";
+import { TinashaLogo } from "@/components";
+import { useAuthSession } from "@/context";
 
 const SignInScreen = () => {
   const [codeState] = useState(makeKeyCode(24));

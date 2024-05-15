@@ -8,7 +8,8 @@ import { Divider, Icon, List, RadioButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMyUserInformation } from "@/api";
-import { Image, useAppTheme, useAuthSession, useColorScheme } from "@/components";
+import { Image } from "@/components";
+import { useAppTheme, useAuthSession, useColorScheme } from "@/context";
 
 const ProfileTab = () => {
   const theme = useAppTheme();
