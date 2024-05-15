@@ -6,6 +6,7 @@ import { StyleSheet, View } from "react-native";
 import { Chip, Icon, IconButton, Text, TouchableRipple } from "react-native-paper";
 
 import type { WatchingStatus } from "@/api";
+import { useUpdateMyAnimeListStatus } from "@/api";
 import { useAppTheme } from "@/context";
 import { getMediaType, getStatusColor } from "@/lib";
 
@@ -131,6 +132,9 @@ export const CardDetails = ({
   watchedEpisodes,
   totalEpisodes,
 }: CardDetailsProps) => {
+  const theme = useAppTheme();
+  const { mutate, isPending } = useUpdateMyAnimeListStatus();
+
   return (
     <>
       <Text variant="titleMedium" numberOfLines={1} ellipsizeMode="middle" style={stylesCD.titleText}>
@@ -151,16 +155,28 @@ export const CardDetails = ({
         </Chip>
 
         <View style={stylesCD.actionViewButton}>
-          {/* {status === "watching" && (
-                <IconButton
-                  onPress={mpPress}
-                  onLongPress={mpLongPress}
-                  mode="contained"
-                  icon="plus-minus"
-                  iconColor="white"
-                  containerColor="transparent"
-                />
-              )} */}
+          {status === "watching" && (
+            <IconButton
+              disabled={isPending}
+              loading={isPending}
+              onPress={() => {
+                if (!watchedEpisodes) return;
+
+                void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                mutate({ animeId, body: { num_watched_episodes: watchedEpisodes + 1 } });
+              }}
+              onLongPress={() => {
+                if (!watchedEpisodes) return;
+
+                void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                mutate({ animeId, body: { num_watched_episodes: watchedEpisodes - 1 } });
+              }}
+              mode="outlined"
+              icon="plus-minus"
+              iconColor={theme.colors.onSurface}
+              containerColor="transparent"
+            />
+          )}
           <IconButton
             onPress={() => router.push(`/anime/${animeId}/edit`)}
             mode="contained"
