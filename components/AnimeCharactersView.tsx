@@ -3,9 +3,9 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
 import type { CharacterNode } from "@/api";
+import { useAppTheme } from "@/context";
 
 import Image from "./Image";
-import { useAppTheme } from "../context";
 
 interface AnimeCharactersViewProps {
   isLoading: boolean;
