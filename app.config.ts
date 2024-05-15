@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "tinasha",
   owner: "haashemi",
   privacy: "public",
-  version: "0.2.2",
+  version: "0.2.3",
   platforms: ["android"],
   githubUrl: "https://github.com/haashemi/Tinasha",
   orientation: "portrait",
@@ -69,7 +69,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     eas: { projectId: "20bb87cb-0cc2-4c74-bc1e-55c4c48f8158" },
   },
   updates: {
-    checkAutomatically: "NEVER",
     url: "https://u.expo.dev/20bb87cb-0cc2-4c74-bc1e-55c4c48f8158",
   },
   runtimeVersion: {
