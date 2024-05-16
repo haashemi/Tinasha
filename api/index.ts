@@ -16,9 +16,15 @@ export * from "./user-animelist/useDeleteMyAnimeListItem";
 export * from "./user-animelist/useUpdateMyAnimeListStatus";
 export * from "./user-animelist/useUserAnimeList";
 
-// TODO: Manga
+// Manga:
+// TODO: "./anime/useMangaDetails";
+// TODO: "./manga/useMangaList";
+// TODO: "./manga/useMangaRanking";
 
-// TODO: User Manga List
+// User Manga List
+// TODO: "./user-mangalist/useDeleteMyMangaListItem";
+// TODO: "./user-mangalist/useUpdateMyMangaListStatus";
+// TODO: "./user-mangalist/useUserMangaList";
 
 // User
 export * from "./user/useMyUserInformation";
