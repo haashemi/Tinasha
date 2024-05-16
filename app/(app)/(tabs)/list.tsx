@@ -1,6 +1,7 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { FlashList } from "@shopify/flash-list";
 import { useCallback, useMemo } from "react";
+import { StyleSheet } from "react-native";
 import { ProgressBar } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -26,7 +27,7 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
   return (
     <FlashList
       data={allItems}
-      contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 10 }}
+      contentContainerStyle={styles.listContainer}
       estimatedItemSize={300}
       refreshing={isFetching}
       onRefresh={refetch}
@@ -38,7 +39,7 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
         <Card
           animeId={node.id}
           imageSource={node.main_picture.large ?? node.main_picture.medium}
-          style={{ marginVertical: 5 }}
+          style={styles.listCard}
         >
           <CardDetails
             animeId={node.id}
@@ -67,15 +68,8 @@ const ListTab = () => {
         lazyPlaceholder: () => <LoadingScreen />,
         tabBarGap: 20,
         tabBarScrollEnabled: true,
-        tabBarStyle: {
-          marginTop: safeArea.top,
-          paddingHorizontal: 16,
-          backgroundColor: colors.background,
-          shadowColor: "transparent",
-        },
-        tabBarIndicatorContainerStyle: { marginHorizontal: 16 },
-        tabBarItemStyle: { width: "auto", paddingHorizontal: 10 },
-        tabBarLabelStyle: { marginHorizontal: 0 },
+        tabBarStyle: [styles.tabBar, { marginTop: safeArea.top, backgroundColor: colors.background }],
+        tabBarItemStyle: styles.tabBarItem,
       }}
     >
       <Tab.Screen name="All">{() => <ListView />}</Tab.Screen>
@@ -87,5 +81,13 @@ const ListTab = () => {
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  tabBar: { shadowColor: "transparent" },
+  tabBarItem: { width: "auto" },
+
+  listContainer: { paddingVertical: 10, paddingHorizontal: 10 },
+  listCard: { marginVertical: 5 },
+});
 
 export default ListTab;
