@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAnimeDetails } from "@/api";
 import { Image, LoadingScreen } from "@/components";
+import { mergePictureUrls } from "@/lib";
 
 const PicsScreen = () => {
   const { bottom } = useSafeAreaInsets();
@@ -19,13 +20,8 @@ const PicsScreen = () => {
   const { data, isLoading, isError } = useAnimeDetails({ animeId: id });
 
   const pictures = useMemo(
-    () => [
-      ...new Set([
-        data?.main_picture.large ?? data?.main_picture.medium,
-        ...(data?.pictures.map((v) => v.large ?? v.medium) ?? []),
-      ]),
-    ],
-    [data?.main_picture.large, data?.main_picture.medium, data?.pictures],
+    () => mergePictureUrls(data?.main_picture, ...(data?.pictures ?? [])),
+    [data?.main_picture, data?.pictures],
   );
 
   const renderItem = ({ item, setImageDimensions }: RenderItemInfo<string | undefined>) => {

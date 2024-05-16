@@ -10,7 +10,12 @@ import type { AlternativeTitles, AnimeNode, AnimeStudio, CharacterNode, RelatedA
 import { useAnimeCharacters, useAnimeDetails } from "@/api";
 import { Card, Image, LoadingScreen } from "@/components";
 import { useAppTheme } from "@/context";
-import { getAiringStatus, getMediaType, getNormalizedSeason, getSource } from "@/lib";
+import { getAiringStatus, getMediaType, getNormalizedSeason, getSource, mergePictureUrls } from "@/lib";
+
+interface AnimeCharactersViewProps {
+  isLoading: boolean;
+  characters?: { node: CharacterNode; role: string }[];
+}
 
 const MainDetailsView = ({ data }: { data: AnimeNode }) => {
   const { colors } = useAppTheme();
@@ -26,7 +31,7 @@ const MainDetailsView = ({ data }: { data: AnimeNode }) => {
         <Divider style={{ width: 1, height: "100%" }} />
 
         <Chip style={{ flex: 1, paddingVertical: 10, backgroundColor: "transparent" }} compact icon="star">
-          {data.mean}
+          {data.mean ?? "N/A"}
         </Chip>
       </View>
 
@@ -38,7 +43,10 @@ const MainDetailsView = ({ data }: { data: AnimeNode }) => {
           compact
           icon="television-classic"
         >
-          {`${getMediaType(data.media_type)} - ${((data.average_episode_duration ?? 0) / 60).toFixed(0)}m`}
+          {getMediaType(data.media_type)}
+          {data.average_episode_duration && data.average_episode_duration > 0
+            ? ` - ${(data.average_episode_duration / 60).toFixed(0)}m`
+            : null}
         </Chip>
 
         <Divider style={{ width: 1, height: "100%" }} />
@@ -94,17 +102,17 @@ const ProductionDetailsView = ({ studios, source }: { studios: AnimeStudio[]; so
   const { colors } = useAppTheme();
 
   return (
-    <View style={[PDStyles.productionDetailsView, { borderRadius: 12, backgroundColor: colors.elevation.level1 }]}>
-      <View style={[PDStyles.titledTextView, { justifyContent: "center", alignItems: "center" }]}>
+    <View style={[styles.productionDetailsView, { borderRadius: 12, backgroundColor: colors.elevation.level1 }]}>
+      <View style={[styles.titledTextView, { justifyContent: "center", alignItems: "center" }]}>
         <Text variant="bodyMedium">Studios:</Text>
-        <Text variant="titleMedium" style={[PDStyles.titledText, { paddingLeft: 0 }]} numberOfLines={2}>
+        <Text variant="titleMedium" style={[styles.titledText, { paddingLeft: 0 }]} numberOfLines={2}>
           {studios.map((v) => v.name).join(", ") || "N/A"}
         </Text>
       </View>
 
-      <View style={[PDStyles.titledTextView, { justifyContent: "center", alignItems: "center" }]}>
+      <View style={[styles.titledTextView, { justifyContent: "center", alignItems: "center" }]}>
         <Text variant="bodyMedium">Source:</Text>
-        <Text variant="titleMedium" style={[PDStyles.titledText, { paddingLeft: 0 }]} numberOfLines={1}>
+        <Text variant="titleMedium" style={[styles.titledText, { paddingLeft: 0 }]} numberOfLines={1}>
           {getSource(source)}
         </Text>
       </View>
@@ -112,35 +120,29 @@ const ProductionDetailsView = ({ studios, source }: { studios: AnimeStudio[]; so
   );
 };
 
-const PDStyles = StyleSheet.create({
-  titledTextView: { flex: 1, minHeight: 60, gap: 10 },
-  titledText: { paddingLeft: 5 },
-  productionDetailsView: { padding: 15, height: 100, flexDirection: "row" },
-});
-
 const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
   const { colors } = useAppTheme();
 
   return (
-    <View style={[ATStyles.alternativeTitlesView, { borderRadius: 12, backgroundColor: colors.elevation.level1 }]}>
-      <View style={ATStyles.titledTextView}>
+    <View style={[styles.alternativeTitlesView, { borderRadius: 12, backgroundColor: colors.elevation.level1 }]}>
+      <View style={styles.titledTextView}>
         <Text variant="bodyMedium">English:</Text>
-        <Text variant="titleMedium" style={ATStyles.titledText} numberOfLines={3}>
+        <Text variant="titleMedium" style={styles.titledText} numberOfLines={3}>
           {data.en ?? "Unknown"}
         </Text>
       </View>
 
-      <View style={ATStyles.titledTextView}>
+      <View style={styles.titledTextView}>
         <Text variant="bodyMedium">Native:</Text>
-        <Text variant="titleMedium" style={ATStyles.titledText} numberOfLines={3}>
+        <Text variant="titleMedium" style={styles.titledText} numberOfLines={3}>
           {data.ja ?? "Unknown"}
         </Text>
       </View>
 
       {data.synonyms && data.synonyms.length > 0 ? (
-        <View style={ATStyles.titledTextView}>
+        <View style={styles.titledTextView}>
           <Text variant="bodyMedium">Synonyms:</Text>
-          <Text variant="titleMedium" style={ATStyles.titledText}>
+          <Text variant="titleMedium" style={styles.titledText}>
             {data.synonyms.join("\n")}
           </Text>
         </View>
@@ -148,17 +150,6 @@ const AlternativeTitlesView = ({ data }: { data: AlternativeTitles }) => {
     </View>
   );
 };
-
-const ATStyles = StyleSheet.create({
-  titledTextView: { flex: 1, minHeight: 60, gap: 10 },
-  titledText: { paddingLeft: 5 },
-  alternativeTitlesView: { gap: 10, padding: 15 },
-});
-
-interface AnimeCharactersViewProps {
-  isLoading: boolean;
-  characters?: { node: CharacterNode; role: string }[];
-}
 
 // TODO: Add a placeholder for empty images.
 const AnimeCharactersView = ({ isLoading, characters }: AnimeCharactersViewProps) => {
@@ -212,16 +203,6 @@ const AnimeCharactersView = ({ isLoading, characters }: AnimeCharactersViewProps
   );
 };
 
-const ACStyles = StyleSheet.create({
-  mainView: { overflow: "hidden" },
-  titleText: { paddingTop: 15, paddingHorizontal: 15 },
-  scrollView: { padding: 10, paddingHorizontal: 10 },
-
-  characterCard: { margin: 5, width: 100, height: 195 },
-  image: { width: 100, aspectRatio: "4/5" },
-  nameView: { height: 70, padding: 7, gap: 5, justifyContent: "space-between" },
-});
-
 const RelatedAnimeView = ({ data }: { data: RelatedAnimeEdge[] }) => {
   const { colors } = useAppTheme();
 
@@ -268,13 +249,8 @@ const AnimeDetailsScreen = () => {
   const characters = useAnimeCharacters({ animeId: id });
 
   const pictures = useMemo(
-    () => [
-      ...new Set([
-        data?.main_picture.large ?? data?.main_picture.medium,
-        ...(data?.pictures.map((v) => v.large ?? v.medium) ?? []),
-      ]),
-    ],
-    [data?.main_picture.large, data?.main_picture.medium, data?.pictures],
+    () => mergePictureUrls(data?.main_picture, ...(data?.pictures ?? [])),
+    [data?.main_picture, data?.pictures],
   );
 
   if (!id || isError) return router.canGoBack() ? router.back() : router.replace("/");
@@ -319,7 +295,7 @@ const AnimeDetailsScreen = () => {
         <Divider />
 
         <View style={{ gap: 5 }}>
-          <Headline style={{ textAlign: "center" }}>{data.title}</Headline>
+          <Headline style={{ textAlign: "center", paddingHorizontal: 15 }}>{data.title}</Headline>
           <MainDetailsView data={data} />
 
           <View style={{ paddingHorizontal: 15, gap: 15 }}>
@@ -334,9 +310,25 @@ const AnimeDetailsScreen = () => {
   );
 };
 
+const ACStyles = StyleSheet.create({
+  mainView: { overflow: "hidden" },
+  titleText: { paddingTop: 15, paddingHorizontal: 15 },
+  scrollView: { padding: 10, paddingHorizontal: 10 },
+
+  characterCard: { margin: 5, width: 100, height: 195 },
+  image: { width: 100, aspectRatio: "4/5" },
+  nameView: { height: 70, padding: 7, gap: 5, justifyContent: "space-between" },
+});
+
 const styles = StyleSheet.create({
   fab: { zIndex: 1, position: "absolute", margin: 16, right: 0 },
   image: { height: 200, aspectRatio: "4/6", borderRadius: 12 },
+
+  titledTextView: { flex: 1, minHeight: 60, gap: 10 },
+  titledText: { paddingLeft: 5 },
+
+  productionDetailsView: { padding: 15, height: 100, flexDirection: "row" },
+  alternativeTitlesView: { gap: 10, padding: 15 },
 });
 
 export default AnimeDetailsScreen;
