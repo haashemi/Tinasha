@@ -2,15 +2,15 @@ import type { AlternativeTitles } from "./AlternativeTitles";
 import type { AnimeStudio } from "./AnimeStudio";
 import type { Broadcast } from "./Broadcast";
 import type { Genre } from "./Genre";
-import type { MainPicture } from "./MainPicture";
 import type { MyListStatus } from "./MyListStatus";
+import type { Picture } from "./Picture";
 import type { Rating } from "./Rating";
 import type { StartSeason } from "./StartSeason";
 
 export interface AnimeNode {
   id: number;
   title: string;
-  main_picture: MainPicture;
+  main_picture: Picture;
   /** "synonyms" or ISO 639-1 */
   alternative_titles: AlternativeTitles;
   start_date: string | null;

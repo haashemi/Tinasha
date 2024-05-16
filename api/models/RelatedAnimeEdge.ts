@@ -1,10 +1,10 @@
-import type { MainPicture } from "./MainPicture";
+import type { Picture } from "./Picture";
 
 export interface RelatedAnimeEdge {
   node: {
     id: number;
     title: string;
-    main_picture: MainPicture;
+    main_picture: Picture;
   };
   /** The type of the relationship between this work and related work. */
   relation_type:

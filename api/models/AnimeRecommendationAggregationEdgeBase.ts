@@ -1,10 +1,10 @@
-import type { MainPicture } from "./MainPicture";
+import type { Picture } from "./Picture";
 
 export interface AnimeRecommendationAggregationEdgeBase {
   node: {
     id: number;
     title: string;
-    main_picture: MainPicture;
+    main_picture: Picture;
   };
   num_recommendations: number;
 }
