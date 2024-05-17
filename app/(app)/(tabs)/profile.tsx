@@ -3,6 +3,7 @@ import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
 import { router } from "expo-router";
+import { useUpdates } from "expo-updates";
 import * as WebBrowser from "expo-web-browser";
 import { useCallback, useRef } from "react";
 import { ScrollView, View } from "react-native";
@@ -14,6 +15,7 @@ import { Image } from "@/components";
 import { useAppTheme, useAuthSession, useColorScheme } from "@/context";
 
 const ProfileTab = () => {
+  const update = useUpdates();
   const theme = useAppTheme();
   const safeArea = useSafeAreaInsets();
   const { setAuthData } = useAuthSession();
@@ -121,6 +123,28 @@ const ProfileTab = () => {
         {/* TODO: Add Statistics */}
 
         {/* TODO: Add Debug button */}
+
+        <Divider />
+
+        <View style={{ flex: 1, paddingVertical: 20 }}>
+          <Text variant="bodySmall" style={{ textAlign: "center" }}>
+            {[
+              `Tinasha ${update.currentlyRunning.runtimeVersion ?? "unknown-build"}`,
+              update.currentlyRunning.updateId,
+              update.isChecking
+                ? "Checking for updates..."
+                : update.isDownloading
+                  ? "Downloading update..."
+                  : update.isUpdatePending
+                    ? "Update is pending"
+                    : update.isUpdateAvailable
+                      ? "Update available"
+                      : "Latest",
+            ]
+              .filter((v) => v)
+              .join(" - ")}
+          </Text>
+        </View>
       </ScrollView>
     </>
   );
