@@ -46,16 +46,10 @@ export const useUpdateMyAnimeListStatus = () => {
   return useMutation({
     mutationKey: ["update-my-anime-list-status"],
     mutationFn: async ({ animeId, body }: { animeId: number; body: Request }) => {
-      try {
-        const resp = await client.patch(`/anime/${animeId}/my_list_status`, body, {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        });
-        console.log(resp);
-        return resp.data as Response;
-      } catch (error) {
-        console.log(error);
-        return null;
-      }
+      const resp = await client.patch(`/anime/${animeId}/my_list_status`, body, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      });
+      return resp.data as Response;
     },
     onSuccess: (_, { animeId }) => {
       void queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });
