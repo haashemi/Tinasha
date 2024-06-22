@@ -1,7 +1,7 @@
 import { Season } from "@/api";
 
-export const getMediaType = (mediaType: string) =>
-  mediaType.includes("special") ? "SPECIAL" : mediaType.toUpperCase().replaceAll("_", " ");
+export const getMediaType = (mediaType: string | null | undefined) =>
+  mediaType ? (mediaType.includes("special") ? "SPECIAL" : mediaType.toUpperCase().replaceAll("_", " ")) : "Unknown";
 
 export const getAiringStatus = (status?: string) =>
   status === "finished_airing"
