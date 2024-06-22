@@ -6,6 +6,8 @@ import type { WatchingStatus } from "../models";
 interface Request {
   status?: WatchingStatus;
   is_rewatching?: boolean;
+  start_date?: string;
+  finish_date?: string;
   /** 0-10 */
   score?: number;
   num_watched_episodes?: number;
@@ -26,8 +28,8 @@ interface Response {
    * In this case, MyAnimeList treats the anime as 'watching' in the user's anime list.
    */
   is_rewatching: boolean;
-  start_date: Date | null;
-  finish_date: Date | null;
+  start_date?: string;
+  finish_date?: string;
   priority: number;
   num_times_rewatched: number;
   rewatch_value: number;
@@ -44,10 +46,16 @@ export const useUpdateMyAnimeListStatus = () => {
   return useMutation({
     mutationKey: ["update-my-anime-list-status"],
     mutationFn: async ({ animeId, body }: { animeId: number; body: Request }) => {
-      const resp = await client.patch(`/anime/${animeId}/my_list_status`, body, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      });
-      return resp.data as Response;
+      try {
+        const resp = await client.patch(`/anime/${animeId}/my_list_status`, body, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        });
+        console.log(resp);
+        return resp.data as Response;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
     },
     onSuccess: (_, { animeId }) => {
       void queryClient.refetchQueries({ queryKey: ["user-anime-list", "@me"] });

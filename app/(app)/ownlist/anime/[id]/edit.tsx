@@ -95,7 +95,16 @@ const AnimeEditScreen = () => {
   const onUpdateAnime = async () => {
     if (!data) return;
 
-    await updateAnime.mutateAsync({ animeId: data.id, body: { status, num_watched_episodes: episode, score } });
+    await updateAnime.mutateAsync({
+      animeId: data.id,
+      body: {
+        status,
+        num_watched_episodes: episode,
+        score,
+        start_date: startDate?.toISOString().split("T")[0],
+        finish_date: finishDate?.toISOString().split("T")[0],
+      },
+    });
     router.back();
   };
 
