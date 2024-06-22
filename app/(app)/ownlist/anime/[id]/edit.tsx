@@ -224,8 +224,13 @@ const AnimeEditScreen = () => {
               inputMode="start"
             />
             <View style={{ width: 100, flexDirection: "row", justifyContent: "center" }}>
-              <Button disabled={isLoading} mode="outlined" style={{ flex: 1 }} onPress={() => setStartDate(new Date())}>
-                Today
+              <Button
+                disabled={isLoading}
+                mode="outlined"
+                style={{ flex: 1 }}
+                onPress={() => setStartDate(startDate ? undefined : new Date())}
+              >
+                {startDate ? "Clear" : "Today"}
               </Button>
             </View>
           </View>
@@ -247,9 +252,9 @@ const AnimeEditScreen = () => {
                 disabled={isLoading}
                 mode="outlined"
                 style={{ flex: 1 }}
-                onPress={() => setFinishDate(new Date())}
+                onPress={() => setFinishDate(finishDate ? undefined : new Date())}
               >
-                Today
+                {finishDate ? "Clear" : "Today"}
               </Button>
             </View>
           </View>
