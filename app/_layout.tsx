@@ -3,6 +3,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
 import type { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { en, registerTranslation } from "react-native-paper-dates";
 
 import {
   AppThemeProvider,
@@ -15,6 +16,7 @@ import {
 void NavigationBar.setPositionAsync("absolute");
 void NavigationBar.setBackgroundColorAsync("transparent");
 void NavigationBar.setButtonStyleAsync("light");
+registerTranslation("en", en);
 
 const Providers = ({ children }: PropsWithChildren) => (
   <QueryClientProvider>
