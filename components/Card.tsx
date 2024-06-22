@@ -116,6 +116,7 @@ export const CardSummary = ({ title, meanScore, mediaType }: CardSummaryProps) =
 interface CardDetailsProps {
   animeId: number;
   title: string;
+  typeAndSeason?: string;
   status: WatchingStatus | null | undefined;
   score: number | undefined;
   meanScore: number | null | undefined;
@@ -126,6 +127,7 @@ interface CardDetailsProps {
 export const CardDetails = ({
   animeId,
   title,
+  typeAndSeason,
   status,
   meanScore,
   score,
@@ -140,6 +142,12 @@ export const CardDetails = ({
       <Text variant="titleMedium" numberOfLines={1} ellipsizeMode="middle" style={stylesCD.titleText}>
         {title}
       </Text>
+
+      {typeAndSeason ? (
+        <Text variant="bodyMedium" numberOfLines={1} style={stylesCD.titleText}>
+          {typeAndSeason}
+        </Text>
+      ) : null}
 
       <View style={stylesCD.actionView}>
         <Chip compact style={stylesCD.actionViewChip} icon="star">

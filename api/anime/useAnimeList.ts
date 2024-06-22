@@ -20,7 +20,13 @@ interface Response {
 }
 
 export const useAnimeList = (opts: Request) => {
-  const { q, limit = 24, offset = 0, fields = "alternative_titles,num_episodes,mean,my_list_status", nsfw } = opts;
+  const {
+    q,
+    limit = 24,
+    offset = 0,
+    fields = "alternative_titles,num_episodes,mean,media_type,my_list_status,start_season",
+    nsfw,
+  } = opts;
 
   return useInfiniteQuery({
     queryKey: ["anime-list", q, nsfw],

@@ -10,6 +10,7 @@ import { useUserAnimeList } from "@/api";
 import { LoadingScreen } from "@/components";
 import { Card, CardDetails } from "@/components/Card";
 import { useAppTheme, useNSFW } from "@/context";
+import { getTypeAndSeason } from "@/lib";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -44,6 +45,7 @@ const ListView = ({ status }: { status?: WatchingStatus }) => {
           <CardDetails
             animeId={node.id}
             title={node.title}
+            typeAndSeason={getTypeAndSeason(node.media_type, node.start_season)}
             status={node.my_list_status?.status}
             score={node.my_list_status?.score}
             meanScore={node.mean}

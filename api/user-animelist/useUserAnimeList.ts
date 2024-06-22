@@ -34,7 +34,7 @@ export const useUserAnimeList = (opts: Request) => {
     sort = "anime_title",
     limit = 24,
     offset = 0,
-    fields = "alternative_titles,num_episodes,mean,my_list_status",
+    fields = "alternative_titles,num_episodes,mean,media_type,my_list_status,start_season",
     nsfw,
   } = opts;
 

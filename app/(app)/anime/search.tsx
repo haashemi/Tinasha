@@ -10,6 +10,7 @@ import type { AnimeNode } from "@/api";
 import { useAnimeList } from "@/api";
 import { Card, CardDetails, LoadingScreen } from "@/components";
 import { useNSFW } from "@/context";
+import { getTypeAndSeason } from "@/lib";
 
 const SearchScreen = () => {
   const safeArea = useSafeAreaInsets();
@@ -60,6 +61,7 @@ const SearchScreen = () => {
                 <CardDetails
                   animeId={node.id}
                   title={node.title}
+                  typeAndSeason={getTypeAndSeason(node.media_type, node.start_season)}
                   status={node.my_list_status?.status}
                   score={node.my_list_status?.score}
                   meanScore={node.mean}
