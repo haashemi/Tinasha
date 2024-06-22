@@ -30,7 +30,7 @@ export const Card = (props: CardProps, ref: ForwardedRef<View>) => {
       onPress={() => router.push(`/anime/${animeId}`)}
       onLongPress={() => {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        router.push(`/anime/${animeId}/edit`);
+        router.push(`/ownlist/anime/${animeId}/edit`);
       }}
       style={[
         {
@@ -178,7 +178,7 @@ export const CardDetails = ({
             />
           )}
           <IconButton
-            onPress={() => router.push(`/anime/${animeId}/edit`)}
+            onPress={() => router.push(`/ownlist/anime/${animeId}/edit`)}
             mode="contained"
             icon="playlist-edit"
             iconColor="white"

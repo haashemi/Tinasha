@@ -296,7 +296,7 @@ const AnimeDetailsScreen = () => {
         disabled={!data}
         icon="playlist-edit"
         style={[styles.fab, { bottom: safeArea.bottom + 10 }]}
-        onPress={() => router.push(`/anime/${data.id}/edit`)}
+        onPress={() => router.push(`/ownlist/anime/${data.id}/edit`)}
       />
 
       <ScrollView contentContainerStyle={{ gap: 15, paddingBottom: safeArea.bottom + 100 }}>
