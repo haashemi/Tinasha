@@ -2,6 +2,7 @@ import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, ScrollView, View } from "react-native";
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Text, TextInput } from "react-native-paper";
+import { DatePickerInput } from "react-native-paper-dates";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { AnimeDetails, WatchingStatus } from "@/api";
@@ -34,6 +35,8 @@ const AnimeEditScreen = () => {
   const [status, setStatus] = useState<WatchingStatus>("watching");
   const [episode, setEpisode] = useState(0);
   const [score, setScore] = useState(0);
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [finishDate, setFinishDate] = useState<Date | undefined>();
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const { bottom } = useSafeAreaInsets();
@@ -52,6 +55,12 @@ const AnimeEditScreen = () => {
     if (ep < 0) return setEpisode(0);
     else if (ep > data.num_episodes && data.num_episodes > 0) return setEpisode(data.num_episodes);
     else setEpisode(ep);
+
+    if (ep === data.num_episodes && data.num_episodes > 0) {
+      setStatus("completed");
+      if (!startDate) setStartDate(new Date());
+      if (!finishDate) setFinishDate(new Date());
+    }
   };
 
   const updateScore = (newScore: number) => {
@@ -96,6 +105,8 @@ const AnimeEditScreen = () => {
     setStatus(data.my_list_status.status);
     setEpisode(data.my_list_status.num_episodes_watched);
     setScore(data.my_list_status.score);
+    setStartDate(data.my_list_status.start_date ? new Date(data.my_list_status.start_date) : undefined);
+    setFinishDate(data.my_list_status.finish_date ? new Date(data.my_list_status.finish_date) : undefined);
   }, [data]);
 
   return (
@@ -120,7 +131,7 @@ const AnimeEditScreen = () => {
         style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
         behavior="padding"
         enabled
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={20}
       >
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 20, paddingBottom: bottom + 80 }}>
           <AnimeDetailsView data={data} />
@@ -132,22 +143,21 @@ const AnimeEditScreen = () => {
               onValueChange={(v) => setStatus(v as WatchingStatus)}
               theme={{ colors: { secondaryContainer: colors.elevation.level5 } }}
               buttons={[
-                { checkedColor: getStatusColor("watching"), value: "watching", label: "Watching" },
-                { checkedColor: getStatusColor("completed"), value: "completed", label: "Completed" },
-                { checkedColor: getStatusColor("on_hold"), value: "on_hold", label: "On Hold" },
-                { checkedColor: getStatusColor("dropped"), value: "dropped", label: "Dropped" },
-                { checkedColor: "#6b7280", value: "plan_to_watch", label: "Plan to Watch" },
+                { checkedColor: getStatusColor("watching"), value: "watching", label: "Watching", disabled: isLoading },
+                {
+                  checkedColor: getStatusColor("completed"),
+                  value: "completed",
+                  label: "Completed",
+                  disabled: isLoading,
+                },
+                { checkedColor: getStatusColor("on_hold"), value: "on_hold", label: "On Hold", disabled: isLoading },
+                { checkedColor: getStatusColor("dropped"), value: "dropped", label: "Dropped", disabled: isLoading },
+                { checkedColor: "#6b7280", value: "plan_to_watch", label: "Plan to Watch", disabled: isLoading },
               ]}
             />
           </ScrollView>
 
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 20, margin: 10 }}>
-            <IconButton
-              disabled={episode === 0}
-              mode="outlined"
-              icon="minus"
-              onPress={() => updateEpisode(episode - 1)}
-            />
             <TextInput
               disabled={isLoading}
               mode="outlined"
@@ -155,19 +165,26 @@ const AnimeEditScreen = () => {
               keyboardType="numeric"
               value={episode.toString()}
               onChangeText={(v) => updateEpisode(v ? parseInt(v, 10) : 0)}
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "center", flex: 1 }}
               right={<TextInput.Affix text={`/${data && data.num_episodes > 0 ? data.num_episodes : "??"}`} />}
             />
-            <IconButton
-              disabled={data?.num_episodes ? episode === data.num_episodes : false}
-              mode="outlined"
-              icon="plus"
-              onPress={() => updateEpisode(episode + 1)}
-            />
+            <View style={{ width: 100, flexDirection: "row" }}>
+              <IconButton
+                disabled={isLoading || episode === 0}
+                mode="outlined"
+                icon="minus"
+                onPress={() => updateEpisode(episode - 1)}
+              />
+              <IconButton
+                disabled={isLoading || (data?.num_episodes ? episode === data.num_episodes : false)}
+                mode="outlined"
+                icon="plus"
+                onPress={() => updateEpisode(episode + 1)}
+              />
+            </View>
           </View>
 
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 20, margin: 10 }}>
-            <IconButton disabled={score === 0} mode="outlined" icon="minus" onPress={() => updateScore(score - 1)} />
             <TextInput
               disabled={isLoading}
               mode="outlined"
@@ -175,10 +192,66 @@ const AnimeEditScreen = () => {
               keyboardType="numeric"
               value={score.toString()}
               onChangeText={(v) => updateScore(v ? parseInt(v, 10) : 0)}
-              style={{ textAlign: "center" }}
+              style={{ textAlign: "center", flex: 1 }}
               right={<TextInput.Affix text="/10" />}
             />
-            <IconButton disabled={score === 10} mode="outlined" icon="plus" onPress={() => updateScore(score + 1)} />
+            <View style={{ width: 100, flexDirection: "row" }}>
+              <IconButton
+                disabled={isLoading || score === 0}
+                mode="outlined"
+                icon="minus"
+                onPress={() => updateScore(score - 1)}
+              />
+              <IconButton
+                disabled={isLoading || score === 10}
+                mode="outlined"
+                icon="plus"
+                onPress={() => updateScore(score + 1)}
+              />
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 20, margin: 10 }}>
+            <DatePickerInput
+              animationType="fade"
+              presentationStyle="pageSheet"
+              disabled={isLoading}
+              mode="outlined"
+              label="Start Date"
+              locale="en"
+              value={startDate}
+              onChange={(d) => setStartDate(d)}
+              inputMode="start"
+            />
+            <View style={{ width: 100, flexDirection: "row", justifyContent: "center" }}>
+              <Button disabled={isLoading} mode="outlined" style={{ flex: 1 }} onPress={() => setStartDate(new Date())}>
+                Today
+              </Button>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 20, margin: 10 }}>
+            <DatePickerInput
+              animationType="fade"
+              presentationStyle="pageSheet"
+              disabled={isLoading}
+              mode="outlined"
+              label="Finish Date"
+              locale="en"
+              value={finishDate}
+              onChange={(d) => setFinishDate(d)}
+              inputMode="start"
+            />
+            <View style={{ width: 100, flexDirection: "row", justifyContent: "center" }}>
+              <Button
+                disabled={isLoading}
+                mode="outlined"
+                style={{ flex: 1 }}
+                onPress={() => setFinishDate(new Date())}
+              >
+                Today
+              </Button>
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
