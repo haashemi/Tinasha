@@ -11,8 +11,8 @@ export interface MyListStatus {
    * In this case, MyAnimeList treats the anime as 'watching' in the user's anime list.
    */
   is_rewatching: boolean;
-  start_date: Date | null;
-  finish_date: Date | null;
+  start_date?: string;
+  finish_date?: string;
   priority: number;
   num_times_rewatched: number;
   rewatch_value: number;
