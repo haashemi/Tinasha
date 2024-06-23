@@ -1,4 +1,4 @@
-import { Redirect, router, Stack, useLocalSearchParams } from "expo-router";
+import { Redirect, Stack, router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import type { RenderItemInfo } from "react-native-awesome-gallery";
@@ -14,7 +14,7 @@ const PicsScreen = () => {
   const { bottom } = useSafeAreaInsets();
   const { id, index } = useLocalSearchParams<{ id: string; index: string }>();
 
-  const initialIndex = useMemo(() => parseInt(index ?? "0", 10), [index]);
+  const initialIndex = useMemo(() => Number.parseInt(index ?? "0", 10), [index]);
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const { data, isLoading, isError } = useAnimeDetails({ animeId: id });
@@ -40,7 +40,9 @@ const PicsScreen = () => {
 
   if (isError || !id) {
     return <Redirect href={id ? `/anime/${id}` : "/"} />;
-  } else if (isLoading) {
+  }
+
+  if (isLoading) {
     return <LoadingScreen />;
   }
 

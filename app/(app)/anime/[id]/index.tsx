@@ -1,4 +1,4 @@
-import { Link, router, Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { Fragment, useMemo } from "react";
 import ContentLoader, { Rect } from "react-content-loader/native";

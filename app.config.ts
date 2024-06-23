@@ -1,7 +1,7 @@
-import type { ConfigContext, ExpoConfig } from "expo/config";
 import type { PluginConfigType as BuildPropertiesConfigType } from "expo-build-properties/build/pluginConfig";
+import type { ConfigContext, ExpoConfig } from "expo/config";
 
-const IS_DEV = process.env["APP_VARIANT"] === "development";
+const IS_DEV = process.env.APP_VARIANT === "development";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,

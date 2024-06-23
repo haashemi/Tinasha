@@ -26,8 +26,8 @@ export const AuthSessionProvider = ({ children }: React.PropsWithChildren) => {
 
   const auth = useMemo(() => {
     if (authData === undefined) return undefined;
-    else if (authData === null) return null;
-    else return JSON.parse(authData) as AuthResponse;
+    if (authData === null) return null;
+    return JSON.parse(authData) as AuthResponse;
   }, [authData]);
 
   useEffect(() => {

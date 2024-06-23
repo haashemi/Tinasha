@@ -1,5 +1,5 @@
 export interface RelatedMangaEdge {
-  node: any; // TODO: fuck around and find out
+  node: unknown; // TODO: fuck around and find out
   relation_type:
     | "alternative_setting"
     | "alternative_version"

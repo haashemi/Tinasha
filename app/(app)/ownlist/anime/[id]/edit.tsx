@@ -1,4 +1,4 @@
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, ScrollView, View } from "react-native";
 import { Button, Chip, Divider, IconButton, SegmentedButtons, Text, TextInput } from "react-native-paper";
@@ -53,8 +53,8 @@ const AnimeEditScreen = () => {
     if (!data) return;
 
     if (ep < 0) return setEpisode(0);
-    else if (ep > data.num_episodes && data.num_episodes > 0) return setEpisode(data.num_episodes);
-    else setEpisode(ep);
+    if (ep > data.num_episodes && data.num_episodes > 0) return setEpisode(data.num_episodes);
+    setEpisode(ep);
 
     if (ep === data.num_episodes && data.num_episodes > 0) {
       setStatus("completed");
@@ -65,8 +65,8 @@ const AnimeEditScreen = () => {
 
   const updateScore = (newScore: number) => {
     if (newScore < 0) return setScore(0);
-    else if (newScore > 10) return setScore(10);
-    else setScore(newScore);
+    if (newScore > 10) return setScore(10);
+    setScore(newScore);
   };
 
   const onDeleteAnime = () => {
@@ -173,7 +173,7 @@ const AnimeEditScreen = () => {
               label="Episodes"
               keyboardType="numeric"
               value={episode.toString()}
-              onChangeText={(v) => updateEpisode(v ? parseInt(v, 10) : 0)}
+              onChangeText={(v) => updateEpisode(v ? Number.parseInt(v, 10) : 0)}
               style={{ textAlign: "center", flex: 1 }}
               right={<TextInput.Affix text={`/${data && data.num_episodes > 0 ? data.num_episodes : "??"}`} />}
             />
@@ -200,7 +200,7 @@ const AnimeEditScreen = () => {
               label="Score"
               keyboardType="numeric"
               value={score.toString()}
-              onChangeText={(v) => updateScore(v ? parseInt(v, 10) : 0)}
+              onChangeText={(v) => updateScore(v ? Number.parseInt(v, 10) : 0)}
               style={{ textAlign: "center", flex: 1 }}
               right={<TextInput.Affix text="/10" />}
             />

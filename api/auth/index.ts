@@ -8,7 +8,7 @@ export interface AuthResponse {
   refresh_token: string;
 }
 
-export const clientId = process.env["EXPO_PUBLIC_MAL_CLIENT_ID"] ?? "";
+export const clientId = process.env.EXPO_PUBLIC_MAL_CLIENT_ID ?? "";
 export const redirectUri = makeRedirectUri({ scheme: "tinasha", path: "sign-in" });
 
 const tokenEndpoint = "https://myanimelist.net/v1/oauth2/token";
