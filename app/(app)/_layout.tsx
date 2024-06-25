@@ -25,12 +25,7 @@ const AppLayout = () => {
       <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: theme.colors.elevation.level2 }} />
 
       <Stack.Screen name="anime/[id]/index" options={{ headerTitle: "Anime Details" }} />
-      <Stack.Screen name="ownlist/anime/[id]/edit" />
-      <Stack.Screen
-        name="anime/[id]/pics"
-        options={{ presentation: "transparentModal", headerShown: false, animation: "fade" }}
-      />
-      <Stack.Screen name="anime/search" options={{ headerShown: false }} />
+      <Stack.Screen name="anime/[id]/[title]/pics" options={{ presentation: "transparentModal", animation: "fade" }} />
 
       <Stack.Screen name="settings/nsfw" options={{ headerTitle: "NSFW Settings" }} />
     </Stack>

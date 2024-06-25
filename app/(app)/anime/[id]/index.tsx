@@ -24,13 +24,16 @@ interface AnimeCharactersViewProps {
   characters?: { node: CharacterNode; role: string }[];
 }
 
+// TODO:
+const TEMP_TITLE = "TODO";
+
 const Pictures = ({ id, mainPicture, pictures }: { id: number; mainPicture: Picture; pictures: Picture[] }) => {
   const sortedPictures = useMemo(() => mergePictureUrls(mainPicture, ...pictures), [mainPicture, pictures]);
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pictureView}>
       {sortedPictures.map((pic, idx) => (
-        <Link asChild key={pic} href={{ pathname: `/anime/${id}/pics`, params: { index: `${idx}` } }}>
+        <Link asChild key={pic} href={{ pathname: `/anime/${id}/${TEMP_TITLE}/pics`, params: { index: `${idx}` } }}>
           <TouchableRipple borderless>
             <Image source={pic} style={styles.pictureViewImage} />
           </TouchableRipple>
