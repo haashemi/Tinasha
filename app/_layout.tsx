@@ -40,6 +40,7 @@ const RootLayout = () => {
       <Stack screenOptions={{ headerShown: false, navigationBarColor: "transparent", animation: "fade" }}>
         <Stack.Screen name="(app)" />
         <Stack.Screen name="sign-in" />
+        <Stack.Screen name="+not-found" options={{ headerShown: true, title: "Oops!", animation: "default" }} />
       </Stack>
     </Providers>
   );
